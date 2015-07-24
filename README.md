@@ -1,6 +1,6 @@
 **Boost.Object** implements simple object-bound signal/slot mechanisms with optional parent/child hierarchy, along with a growing range of utilities and modules.
 
-[Documentation](http://andreasbrueck.github.com/BoostObject)
+[Documentation](http://andreasbrueck.github.io/BoostObject)
 
 ### Status
 Linux g++ 4.9.2  [![Build Status](https://travis-ci.org/andreasbrueck/BoostObject.svg)](https://travis-ci.org/andreasbrueck/BoostObject)
