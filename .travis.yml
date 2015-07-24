@@ -39,7 +39,7 @@ after_success:
     - cd $DOWNLOAD_DIR
     - unzip docbook-xsl*zip && cd docbook-xsl* && export DOCBOOK_XSL_DIR=$PWD && cd ..
     - mkdir docbook-dtd && cd docbook-dtd && unzip ../docbook-xml*zip && export DOCBOOK_DTD_DIR=$PWD && cd ..
-    - echo "using boostbook : $DOCBOOK_XSL_DIR : $DOCBOOK_DTD_DIR ;" > $HOME/user-config.jam
+    - echo "using boostbook ':' $DOCBOOK_XSL_DIR ':' $DOCBOOK_DTD_DIR ;" > $HOME/user-config.jam
     
     # building documentation
     - cd $BOOST_DIR/libs/object/doc 
