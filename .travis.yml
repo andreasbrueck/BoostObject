@@ -24,7 +24,7 @@ install:
     
     # setting up test environment
     - mkdir test && cd test
-    - 7z x $DOWNLOAD_DIR/boost*7z && cd boost*
+    - 7z x $DOWNLOAD_DIR/boost*7z >/dev/null && cd boost*
     - cp -R $ROOT_DIR/boost/* ./boost
     - cp -R $ROOT_DIR/libs/* ./libs
     - ./bootstrap.sh
@@ -37,8 +37,8 @@ script:
 after_success:
     # setting up documentation environment
     - cd $DOWNLOAD_DIR
-    - unzip docbook-xsl*zip && cd docbook-xsl* && export DOCBOOK_XSL_DIR=$PWD && cd ..
-    - mkdir docbook-dtd && cd docbook-dtd && unzip ../docbook-xml*zip && export DOCBOOK_DTD_DIR=$PWD && cd ..
+    - unzip -qq docbook-xsl*zip && cd docbook-xsl* && export DOCBOOK_XSL_DIR=$PWD && cd ..
+    - mkdir docbook-dtd && cd docbook-dtd && unzip -qq ../docbook-xml*zip && export DOCBOOK_DTD_DIR=$PWD && cd ..
     - export COLONFIX=":" && echo "using boostbook $COLONFIX $DOCBOOK_XSL_DIR $COLONFIX $DOCBOOK_DTD_DIR ;" > $HOME/user-config.jam
     
     # building documentation
@@ -61,4 +61,4 @@ after_success:
     - git config user.email "andreasbrueck-travis"
     - git add --all
     - git commit -am "documentation deploy"
-    - git push --force --quiet https://$GH_TOKEN@github.com/andreasbrueck/BoostObject.git gh-pages
+    - git push --force --quiet https://$GH_TOKEN@github.com/andreasbrueck/BoostObject.git master:gh-pages
