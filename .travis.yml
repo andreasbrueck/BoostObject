@@ -48,11 +48,12 @@ after_success:
     # contructing gh-pages repo
     - cd $ROOT_DIR
     - mkdir documentation && cd documentation
-    - mkdir boost
-    - mkdir libs
+    - mkdir boost && mkdir libs && mkdir -p doc/src
     - cp -R $BOOST_DIR/boost/object ./boost/
     - cp -R $BOOST_DIR/boost/object.hpp ./boost/
     - cp -R $BOOST_DIR/libs/object ./libs
+    - cp -R $BOOST_DIR/doc/src ./doc/src/
+    - cp $BOOST_DIR/boost.* ./
     - echo "<html><head><meta http-equiv=\"refresh\" content=\"0; url=/BoostObject/libs/object/doc/html/index.html\" /></head><body></body></html>" > index.html
     
     # creating and pushing repo
