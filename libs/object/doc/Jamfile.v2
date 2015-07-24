@@ -1,0 +1,69 @@
+using quickbook ;
+using doxygen ;
+
+local object_doxy_dependencies = 
+    <dependency>object_core_doxy 
+    <dependency>object_utils_doxy 
+    <dependency>object_network_doxy ;
+
+doxygen object_core_doxy
+    :
+        [ glob ../../../boost/object/*.hpp ]
+    :
+        <doxygen:param>\\@INCLUDE=./doxygen.cfg
+        <xsl:param>"boost.doxygen.reftitle=Boost.Object.Core Header Reference"
+    ;
+    
+doxygen object_utils_doxy
+    :
+        [ glob ../../../boost/object/utils/*.hpp ]
+    :
+        <doxygen:param>\\@INCLUDE=./doxygen.cfg
+        <xsl:param>"boost.doxygen.reftitle=Boost.Object.Utils Header Reference"
+    ;
+    
+doxygen object_network_doxy
+    :
+        [ glob ../../../boost/object/network/*.hpp ]
+    :
+        <doxygen:param>\\@INCLUDE=./doxygen.cfg
+        <xsl:param>"boost.doxygen.reftitle=Boost.Object.Network Header Reference"
+    ;
+
+########################################################################
+# Standalone HTML documentation
+
+xml standalone_doc
+    :
+        object.qbk
+    ;
+    
+boostbook standalone
+    :
+        standalone_doc
+    :
+        $(object_doxy_dependencies)
+        <xsl:param>boost.root=../../../..
+        <xsl:param>nav.layout=none
+        <xsl:param>toc.section.depth=2
+        <xsl:param>chapter.autolabel=0
+    ;
+
+########################################################################
+# HTML documentation for $(BOOST_ROOT)/doc/html
+
+xml object_doc 
+    : 
+        object.qbk 
+    ;
+
+boostbook object 
+    : 
+        object_doc 
+    : 
+        $(object_doxy_dependencies)
+        <xsl:param>toc.section.depth=2
+        <xsl:param>root.filename=boost_object
+    ;
+    
+explicit object ;

@@ -1,0 +1,18 @@
+[section:async_slot Queued ( asynchronous ) slot]
+[h5 Rule]
+The asynchronous slot will [*always] queue its call to the slot implementation and returns immediately. No matter what thread you call it from.
+
+[h5 Macro definitions]
+* [macroref async_slot [^async_slot]]
+* [macroref BOOST_OBJECT_ASYNC_SLOT [^BOOST_OBJECT_ASYNC_SLOT]]
+
+[h5 C++ definitions]
+* [classref bobj::async_slot_t [^bobj::async_slot_t]]
+
+[note If the slot returns non-void ( that is, if its slot implementation returns non-void ), the asynchronous slot will always 
+implicitly evaluate to a [link boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid blocking automatic slot].
+
+This means the above rule for the asynchronous slot no longer applies.]
+
+
+[endsect]

@@ -1,0 +1,17 @@
+[section Declaring a signal]
+Signals are declared almost the same as slots.
+
+[h5 Macro definitions]
+* [macroref bsignal [^bsignal]]
+* [macroref BOOST_OBJECT_SIGNAL [^BOOST_OBJECT_SIGNAL]]
+
+[h5 C++ definitions]
+* [^bobj::signal_t]
+
+Signal macros need the second parameter to be their function prototype. You can see a use of a signal in [@boost:/libs/object/examples/basic_connection/main.cpp $BOOST_ROOT/libs/object/examples/basic_connection/main.cpp].
+
+[import ../../../examples/basic_connection/main.cpp]
+* Declare signal with macro: [signal_macro_declare]
+* Declare signal without macro: [signal_cpp_declare]
+
+[endsect]

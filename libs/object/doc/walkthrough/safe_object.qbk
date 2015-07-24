@@ -1,0 +1,73 @@
+[section Safe bobjects ( BOOST_SAFE_OBJECT macro )]
+The [macroref BOOST_SAFE_OBJECT [^BOOST_SAFE_OBJECT]] macro, whose usage you already saw in the [link boost_object.basic_usage Basic Usage] example, is an attempt to provide a layer of thread safety for your bobject.
+
+Imagine following scenario: 
+
+You have a bobject assigned to thread ['A], and you `delete` that bobject from thread ['B]. If, in that very moment, thread ['A] is executing a slot,
+your program will most probably experience digital hell.
+
+Thats where [^BOOST_SAFE_OBJECT] kicks in. It detects if any thread is currently accessing a slot, and if so, it will block your call to `delete` until that slot returned.
+
+[note The example used `delete`, however, the same also applies if your object simply goes out of scope.] 
+[warning [^BOOST_SAFE_OBJECT] will not kick in if you manually call a slot! Continue reading for detail.]
+
+[^BOOST_SAFE_OBJECT] exists to aid you in situations you cannot control. As an example: You can not control when your asynchronous slot will execute its slot implementation.
+However, it does not aid you in situations you should be able to control. For example, if you manually call a slot just like a member function by having a reference of/pointer to the object. 
+Just like nothing protects you in standard c++ if you call a normal member function. It is your responsibility to make sure nothing deletes your object while you use it. ( By for example using [^shared_ptr] or having an architecture where these problems just don't happen )
+
+[^BOOST_SAFE_OBJECT] will block destruction of your bobject in following situations:
+
+* The internals of [*Boost.Object] asynchronously call a slot implementation 
+* A signal is calling a slot, even if that slot will end up synchronously calling the slot implementation
+
+[h4 How to use [^BOOST_SAFE_OBJECT]]
+To understand how to use [macroref BOOST_SAFE_OBJECT [^BOOST_SAFE_OBJECT]], it is best to understand how it works. Long story in short code:
+```
+    template < class BOBJECT >
+    class safe_object : public BOBJECT {};
+
+    BOOST_SAFE_OBJECT(myObject) // typedef safe_object < unsafe::myObject > myObject;
+```
+Whenever you instantiate a class that is directly or indirectly derived from [classref boost::object::object BObject], [^BOOST_SAFE_OBJECT] ( that is, the [^safe_object] class ) needs to be the highest in inheritance hierarchy.
+You may have multiple [^safe_object]'s in your inheritance hierarchy, but one of them [*must] be the highest.
+
+Lets have a look at some examples:
+```
+namespace unsafe
+{
+    class Vehicle : public BObject {};
+    class Car : public Vehicle {};
+}
+
+BOOST_SAFE_OBJECT(Vehicle)
+BOOST_SAFE_OBJECT(Car)
+
+namespace unsafe
+{
+    class Bicycle : public Vehicle {};
+    class SportsCar : public ::Car {}; // NOTE !! This derives from safe_object<Car>, not unsafe::Car
+}
+
+BOOST_SAFE_OBJECT(Bicycle)
+BOOST_SAFE_OBJECT(SportsCar)
+
+class Ferrari : public SportsCar {};
+
+int main ()
+{
+    //..
+    
+    Vehicle vehicle;        // OK
+    Car car;                // OK
+    Bicycle bicycle;        // OK 
+    SportsCar sportscar;    // OK
+    
+    Ferrari ferrari;        // WRONG
+    
+    //..
+}
+``` 
+Executing this program will cause a fatal error message ( which by default terminates the program immediately ) when you instantiate [^ferrari]. 
+However, the declaration of the class [^Ferrari] ( and using signal/slots/etc in it ) is perfectly valid, as someone might derive from it again and make it a safe bobject at that time.
+  
+[endsect]

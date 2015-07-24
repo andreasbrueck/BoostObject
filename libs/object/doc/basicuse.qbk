@@ -1,0 +1,55 @@
+[section Basic Usage]
+[import ../examples/basic_use/main.cpp]
+[basic_use_cpp_file]
+This is a small example that creates one ['bobject] and uses asynchronous slots to exit the application. Lets walk through this step for step.
+[basic_use_cpp_install]
+[^BOOST_OBJECT_INSTALL] needs to be in at least one of your translation units if you use [*Boost.Object] header only. It defines some static dependencies. 
+If you decide to use [*Boost.Object] as a static or semi-shared library, you can omit [^BOOST_OBJECT_INSTALL].
+[basic_use_cpp_class_foo]
+This is the ['bobject]. Requirements for a valid ['bobject] that wants to use signals or slots are:
+
+* It is inherited from [classref boost::object::object BObject]
+  [basic_use_cpp_class_foo_open]
+* It has [^B_OBJECT] in its body, topmost if possible.
+  [basic_use_cpp_class_foo_b_object]
+  
+To my knowledge, there is currently no way to retrieve the class type automatically in the context its needed using standard c++ techniques.
+You have to insert the type of your class as the parameter for [^B_OBJECT].
+However, once instantiated, [^B_OBJECT] will verify if you made any typos.
+
+Next, lets have a look at the slot, in opposite order.
+[basic_use_cpp_class_foo_slot_bar]
+This declares and defines a public member named [^bar], that will function as an asynchronous slot.
+Because it has only 1 parameter, it will retrieve all the information it needs by searching for a member function named [^\_slot\_[~param]], in this case: [^_slot_bar].
+[basic_use_cpp_class_foo_slot_bar_implementation]
+With that, [^bar] knows it has to overload its [^operator()] with a return type of [^void] and one parameter [^int]
+[warning This deduction only works if there is no overloaded [^_slot_bar] function. If you have multiple [^_slot_bar] member functions, you have to manually declare the slot.]
+And thats all there is you need to implement a slot. Use one of the slot macros to declare a slot ( [^async_slot(P)] ), make a member function with the name [^\_slot\_P] and [*Boost.Object] will take care of the rest.
+[note You are not required to name your slot implementation in the format [^\_slot\_PARAMETER], the slot macros can be called with a second parameter naming the slot implementation function to use.
+``async_slot(bar,my_implementation)`` will search for a slot implementation [^my_implementation] instead of [^_slot_bar].]
+Now we arrive at the point of inspecting a part that you are probably wondering about since the very beginning: [^foo] is nested in `namespace unsafe` and there is some macro
+[basic_use_cpp_class_foo_safe]
+Explaining this is a little too much for the scope of this section, just imagine [^BOOST_SAFE_OBJECT] expands to `typedef unsafe::foo foo;` to understand the rest of this example.
+If you absolutely must know everything about [^BOOST_SAFE_OBJECT] right now, you can skip to where its explained.
+[basic_use_cpp_main]
+Every [*Boost.Object] application needs to instantiate a [classref boost::object::application BApplication] before instantiating any other classes derived from [classref boost::object::object BObject].
+After that, we can create an object of our class [^foo].
+
+Now we are already calling our slot: [^bar]. But remember, this is an asynchronous slot, so it will return immediately without calling [^\_slot\_bar], but queuing to do so.
+
+With [^app.exec()] we are entering the event loop. This call blocks indefinitely, until [^app.quit] is called. Since we are now in the event loop, our previous call to [^f.bar(1)] will be invoked, executing [^\_slot\_bar]
+[basic_use_cpp_class_foo_slot_bar_implementation_body]
+which will then tell the application to quit. The eventloop will exit at the next possible way out, and [^app.exec()] returns with 1.
+
+This is the programs output:
+```
+Created BApplication ...
+Created foo ...
+Called foo::bar ...
+About to enter event loop ...
+About to tell the application to quit ...
+Told the application to quit ...
+Exited event loop with code 1 ...
+```
+
+[endsect]

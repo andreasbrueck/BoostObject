@@ -1,0 +1,6 @@
+[section:auto_slot_void Automatic slot returning void]
+[h5 Rule]
+The automatic slot will, upon call, check which thread you called from. 
+If that thread is the same one its owning bobject instantiation was assigned with, the automatic slot will behave like a [link boost_object.walkthrough.slots.direct_slot direct ( synchronous ) slot].
+Otherwise it will behave like a non-blocking [link boost_object.walkthrough.slots.async_slot queued ( asynchronous ) slot].
+[endsect]

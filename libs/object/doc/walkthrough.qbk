@@ -1,0 +1,6 @@
+[section Walkthrough]
+[include walkthrough/idiom.qbk]
+[include walkthrough/slot.qbk]
+[include walkthrough/signal.qbk]
+[include walkthrough/safe_object.qbk]
+[endsect]

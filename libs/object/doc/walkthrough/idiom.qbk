@@ -1,0 +1,24 @@
+[section The bobject idiom]
+
+Lets have another look at the bobject example from [link boost_object.basic_usage Basic Usage].
+[import ../../examples/basic_use/main.cpp]
+[basic_use_cpp_class_foo]
+
+As you probably noticed, the slot implementation is [^private], but the slot itself is [^public]. Slots are explained in detail in the next section,
+but for now you only need to know, that if you call any slot ( except a [^direct_slot] ), the slot implementation, meaning the member function the slot
+points to, [_will always be called in the same thread] ( that was assigned to the bobject ).
+
+This gives us an interesting design choice for our own classes derived from BObject. If you follow these 3 steps
+
+* Declare all member functions and member variables [^private]
+* Allow [^public] access to your class only via slots
+* Only use [^async_slot] and [^auto_slot], not [^direct_slot]
+
+then the private section of your class [*can never] be run by 2 different threads! That is, if you don't blow this design pattern up with for example declaring a `friend` that knows nothing about what I just told you.
+
+No need to take care of race conditions with mutexes anymore, just access member variables unprotected, the slot already took care for you. 
+One can say that this adds another layer of meaning to the private section of your bobjects. 
+
+This is the recommended way of designing your own bobjects.
+
+[endsect]

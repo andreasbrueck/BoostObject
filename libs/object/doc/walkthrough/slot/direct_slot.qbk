@@ -1,0 +1,19 @@
+[section:direct_slot Direct ( synchronous ) slot]
+[h5 Rule]
+The direct slot will [*always] call its slot implementation synchronously. No matter what thread you call it from.
+
+[h5 Macro definitions]
+* [macroref direct_slot [^direct_slot]]
+* [macroref BOOST_OBJECT_DIRECT_SLOT [^BOOST_OBJECT_DIRECT_SLOT]]
+
+[h5 C++ definitions]
+* [classref bobj::direct_slot_t [^bobj::direct_slot_t]]
+
+[warning Be careful using the direct slot, as it breaks [link boost_object.walkthrough.the_bobject_idiom the bobject idiom].]
+
+[note If the slot returns non-void ( that is, if its slot implementation returns non-void ), the direct slot will always 
+implicitly evaluate to a [link boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid blocking automatic slot].
+
+This means the above rule for the direct slot no longer applies.]
+
+[endsect]

@@ -1,0 +1,21 @@
+[section Qt - Similarities and Differences]
+If you never used Qt before, you can skip this section. For everybody else, this and [link boost_object.basic_usage Basic Usage] can be a quick start into using [*Boost.Object], or at the very least a quick summary of similarities and differences to Qt.
+
+* Similarities
+  * Requires an application object ( Qt: [^QCoreApplication], [*Boost.Object]: [classref boost::object::application BApplication] ).
+  * Inherit from a general base class. In Qt this is [^QObject], for [*Boost.Object] it is [^BObject] ( or [classref boost::object::object] ).
+  * Macro inside the class body. In Qt it is [^Q_OBJECT], for [*Boost.Object] it is [^B_OBJECT]. [^B_OBJECT] however takes one parameter, which is the type of the class.
+* Differences
+  * No need for something like MOC, or any other extra compiler or non-standard c++ technique. [*Boost.Object] utilizes template/macro magic to provide a minimalistic API.
+  * Templated Objects are possible with [*Boost.Object].
+  * The slot declares in what manner ( Queued/Direct/Auto ) it will call its slot implementation, not the connection made between a signal and a slot. This also applies if the slot is called manually and not via a signal.
+  * [*Boost.Object is header only!] However, depending on your setup, it might depend on other non header-only libraries.
+
+You might wonder that [*Boost.Object] is indeed very similar to Qt, and ask yourself why use this library if Qt already exists. The answer to that question is the very reason I developed this:
+
+[:You dont have to drag the entire Qt.Core battleship along!]
+
+Imagine you are developing a library that could really benefit from simple object-bound signal/slot mechanisms. However, adding megabytes of additional Qt.Core dependencies that you don't need kind of kills it for you.
+Well, problem solved now.
+
+[endsect]

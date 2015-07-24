@@ -1,0 +1,14 @@
+[section:bind_to_overload Bind a slot to an overloaded slot implementation]
+If you want to bind a slot to a member function that is overloaded, you partially ( or completely, if you prefer ) have to ditch the slot macros.
+
+Slot macros internally use `decltype()` to deduce the return value and parameters of the slot implementation. `decltype()` however fails on overloaded functions.
+But do not worry, the detour you have to take is short. As you saw above, the slots also have a C++ definition. And this is how to use them:
+
+[import ../../../examples/slot/main.cpp]
+[slot_slot_overload1]
+[note [^boundto(P)] is just a macro that expands to `={this, &classname::P}`]
+[note [^bobj] is a typedef declared in the [^B_OBJECT] macro.]
+Now if we have these slot implementations
+[slot_slotimpl_overload1]
+then the slot [^overload1] will automatically be bound to the correct overload.
+[endsect]

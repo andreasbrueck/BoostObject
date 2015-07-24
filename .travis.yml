@@ -1,0 +1,61 @@
+sudo: false
+language: cpp
+
+addons:
+    apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-4.9
+        - doxygen
+        - xsltproc
+        - p7zip-full
+        - unzip
+        
+install:
+    - export ROOT_DIR=$PWD
+
+    # downloads
+    - mkdir download && cd download && export DOWNLOAD_DIR=$PWD
+    - wget http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.7z
+    - wget http://downloads.sourceforge.net/project/docbook/docbook-xsl/1.78.1/docbook-xsl-1.78.1.zip
+    - wget http://www.oasis-open.org/docbook/xml/4.2/docbook-xml-4.2.zip
+    - cd ..
+    
+    # setting up test environment
+    - mkdir test && cd test
+    - 7z x $DOWNLOAD_DIR/boost*7z && cd boost*
+    - cp -R $ROOT_DIR/boost/* ./boost
+    - cp -R $ROOT_DIR/libs/* ./libs
+    - ./bootstrap.sh
+    - export BOOST_DIR=$PWD
+    
+script:
+    - cd $BOOST_DIR/libs/object/test
+    - $BOOST_DIR/bjam toolset=gcc-4.9 cxxflags="-std=c++11" variant=debug,release threading=multi address-model=64 architecture=x86 include=$BOOST_DIR $PWD
+    
+after_success:
+    # setting up documentation environment
+    - cd $DOWNLOAD_DIR
+    - unzip docbook-xsl*zip && cd docbook-xsl* && export DOCBOOK_XSL_DIR=$PWD && cd ..
+    - mkdir docbook-dtd && cd docbook-dtd && unzip ../docbook-xml*zip && export DOCBOOK_DTD_DIR=$PWD && cd ..
+    - echo "using boostbook : $DOCBOOK_XSL_DIR : $DOCBOOK_DTD_DIR ;" > $HOME/user-config.jam
+    
+    # building documentation
+    - cd $BOOST_DIR/libs/object/doc 
+    - $BOOST_DIR/bjam standalone $PWD
+    
+    # contructing gh-pages repo
+    - cd $ROOT_DIR
+    - mkdir documentation && cd documentation
+    - cp -R $BOOST_DIR/boost ./
+    - cp -R $BOOST_DIR/libs ./
+    - echo "<html><head><meta http-equiv=\"refresh\" content=\"0; url=/BoostObject/libs/object/doc/html/index.html\" /></head><body></body></html>" > index.html
+    
+    # creating and pushing repo
+    - git init
+    - git config user.name "andreasbrueck-travis"
+    - git config user.email "andreasbrueck-travis"
+    - git add --all
+    - git commit -am "documentation deploy"
+    - git push --force --quiet https://$GH_TOKEN@github.com/andreasbrueck/BoostObject.git gh-pages

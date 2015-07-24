@@ -1,0 +1,82 @@
+[section Signal/Slot function mismatch]
+As signals call slots, it is only logical that a slot can only connect to a signal if both their function types are compatible.
+
+However, connections can be tagged with a policy that handles incompatible function types.
+
+If you do not specify a custom policy, the connection will try to deduce if any default policies apply. This deduction processes as following:
+
+[section Default policy deduction]
+Given that a slot with function type [^SLOT_RETURN(SLOT_ARGS...)] connects to a signal with function type [^SIG_RETURN(SIG_ARGS...)], 
+the deduction of a default policy will undergo following steps:
+[h5 Step 1]
+[table Return type validation
+    [[SIG_RETURN type] [SLOT_RETURN type] [Result]]
+    [
+        [any]
+        [same as [^SIG_RETURN] or implicitly convertible]
+        [[role green Step succeeded.] Deduction continues with Step 2]
+    ]
+    [
+        [void]
+        [non-void]
+        [[role green Step succeeded.] [^SLOT_RETURN] will be ignored, deduction continues with Step 2]
+    ]
+    [
+        [non-void]
+        [void]
+        [[role red Step failed.] Deduction failed, compile time error will be thrown]
+    ]
+    [
+        [any]
+        [not implicitly convertible to [^SIG_RETURN]]
+        [[role red Step failed.] Deduction failed, compile time error will be thrown]
+    ]
+]
+[h5 Step 2]
+[table Parameter count validation
+    [[sizeof...(SIG_ARGS)] [sizeof...(SLOT_ARGS)] [Result]]
+    [
+        [any]
+        [same as [^sizeof...(SIG_ARGS)]]
+        [[role green Step succeeded.] Deduction continues with Step 3]
+    ]
+    [
+        [any]
+        [0]
+        [[role green Step succeeded.] [*Deduction completed]. Using policy: ['DropArgumentsConnectionPolicy]]
+    ]
+    [
+        [any]
+        [non-zero and not equal to [^sizeof...(SIG_ARGS)]]
+        [[role red Step failed.] Deduction failed, compile time error will be thrown]
+    ]
+]
+[h5 Step 3]
+For each type in the parameter pack [^SIG_ARGS] equals to [^SIG_ARGS\[n\]], type will be compared to [^SLOT_ARGS\[n\]] as following:
+[table Parameter type validation
+    [[SIG_ARGS\[n\] type] [SLOT_ARGS\[n\] type] [Result]]
+    [
+        [any]
+        [same as [^SIG_ARGS\[n\]] or implicitly convertible]
+        [Validating next parameter]
+    ]
+    [
+        [any]
+        [not implicitly convertible to [^SIG_ARGS\[n\]]]
+        [[role red Step failed.] Deduction failed, compile time error will be thrown]
+    ]
+]
+If no parameter failed this step, deduction is complete and the used policy is: ['DirectConnectionPolicy]
+[endsect]
+[section Default policies]
+Default policies handle the differences in signal function type and slot function type as following:
+
+* ['DirectConnectionPolicy] 
+  * Nothing is done. Compiler can resolve differences itself.
+* ['DropArgumentsConnectionPolicy] 
+  * Policy will ignore whatever parameters are given to the signal, and calls the slot with zero parameters.
+  
+
+[endsect]
+
+[endsect]
