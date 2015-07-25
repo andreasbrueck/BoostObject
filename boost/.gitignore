@@ -1,0 +1,5 @@
+#ignore everything but object directory and object.hpp
+
+/*
+!object*
+!.gitignore

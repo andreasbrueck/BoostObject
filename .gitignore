@@ -1,0 +1,13 @@
+#ignore everything but files part of Boost.Object
+
+/*
+!.gitignore
+!.travis.yml
+!README.md
+!LICENSE_1_0.txt
+!.qmake.conf
+!boost.pri
+!boostobject.pro
+!config.pri
+!boost
+!libs

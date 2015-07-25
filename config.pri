@@ -3,7 +3,7 @@
 ##
 ## You can change it to a hardcoded path too.
 
-BOOST_DIRECTORY=$$(BOOST_ROOT)
+BOOST_DIRECTORY=$$BOOST_OBJECT_TOP_DIR
 #BOOST_DIRECTORY=OR.YOUR.OWN.HARDCODED.PATH
 
 ## BOOST_LIB_DIRECTORY is the path that contains the *.lib files, relative to
