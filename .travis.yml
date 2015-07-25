@@ -1,19 +1,12 @@
-sudo: false
+sudo: required
 language: cpp
-
-addons:
-    apt:
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
-        - g++-4.9
-        - doxygen
-        - xsltproc
-        - p7zip-full
-        - unzip
         
 install:
     - export ROOT_DIR=$PWD
+    
+    # packages
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y && sudo apt-get update -qq
+    - sudo apt-get -qq install g++-4.9-multilib doxygen xsltproc p7zip-full unzip
 
     # downloads
     - mkdir download && cd download && export DOWNLOAD_DIR=$PWD
@@ -32,7 +25,7 @@ install:
     
 script:
     - cd $BOOST_DIR/libs/object/test
-    - $BOOST_DIR/bjam toolset=gcc-4.9 cxxflags="-std=c++11" variant=debug,release threading=multi address-model=64 architecture=x86 include=$BOOST_DIR $PWD
+    - $BOOST_DIR/bjam toolset=gcc-4.9 cxxflags="-std=c++11" variant=debug,release threading=multi address-model=64,32 architecture=x86 include=$BOOST_DIR $PWD
     
 after_success:
     # setting up documentation environment
