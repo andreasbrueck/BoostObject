@@ -39,7 +39,7 @@ public:
         :
           QObject(parent)
     {
-        connect(this,SIGNAL(mySignal),SLOT(mySlot));
+        connect(this,SIGNAL(mySignal(int)),SLOT(mySlot(int)));
     }
     
 public slots:
