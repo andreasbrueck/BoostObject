@@ -1,0 +1,40 @@
+version: {build}
+
+branches:
+  only:
+    - master
+    
+skip_tags: true
+
+clone_depth: 200
+
+install:
+  - SET ROOT_DIR=%cd%
+  
+  # downloads
+  - ( if not exist download md download ) && cd download && SET DOWNLOAD_DIR=%cd% 
+  - appveyor DownloadFile http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.7z
+  - cd ..
+  
+  # set up boost directory 
+  - ( if not exist test md test ) && cd test
+  - 7z x "%DOWNLOAD_DIR%\boost*.7z" >NUL 
+  - cd boost*
+  - SET BOOST_DIR=%cd% 
+  
+  # copy Boost.Object 
+  - XCOPY "%ROOT_DIR%\boost" "%cd%\boost" /E /Y
+  - XCOPY "%ROOT_DIR%\libs" "%cd%\libs" /E /Y
+  
+  # install boost 
+  - bootstrap
+    
+build: off
+
+test_script:
+  - cd "%BOOST_DIR\libs\object\test"
+  - "%BOOST_DIR%\bjam" toolset=msvc-12.0 variant=debug,release address-model=64,32 architecture=x86 include="%BOOST_DIR%" "%cd%"
+  
+deploy: off 
+
+  

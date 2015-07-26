@@ -3,6 +3,7 @@
 /*
 !.gitignore
 !.travis.yml
+!appveyor.yml
 !README.md
 !LICENSE_1_0.txt
 !.qmake.conf
