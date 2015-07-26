@@ -12,12 +12,15 @@ install:
   - SET ROOT_DIR=%cd%
   
   # downloads
-  - ( if not exist download md download ) && cd download && SET DOWNLOAD_DIR=%cd% 
+  - if not exist download md download
+  - cd download
+  - SET DOWNLOAD_DIR=%cd% 
   - appveyor DownloadFile http://downloads.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.7z
   - cd ..
   
   # set up boost directory 
-  - ( if not exist test md test ) && cd test
+  - if not exist test md test 
+  - cd test
   - 7z x "%DOWNLOAD_DIR%\boost*.7z" >NUL 
   - cd boost*
   - SET BOOST_DIR=%cd% 
