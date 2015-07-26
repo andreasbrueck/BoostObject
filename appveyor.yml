@@ -35,7 +35,7 @@ install:
 build: off
 
 test_script:
-  - cd "%BOOST_DIR\libs\object\test"
+  - cd "%BOOST_DIR%\libs\object\test"
   - '"%BOOST_DIR%\bjam" toolset=msvc-12.0 variant=debug,release address-model=64,32 architecture=x86 include="%BOOST_DIR%" "%cd%"'
   
 deploy: off 
