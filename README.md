@@ -10,6 +10,8 @@ To know what Boost.Object is all about, please read through the [Documentation](
 <pre lang="cpp">
 class myObject : public BObject
 {
+    B_OBJECT(myObject)
+    
 public:
     myObject(BObject * parent = 0)
         :
@@ -34,6 +36,8 @@ public:
 <pre lang="cpp">
 class myObject : public QObject
 {
+    Q_OBJECT
+    
 public:
     myObject(QObject * parent = 0)
         :
