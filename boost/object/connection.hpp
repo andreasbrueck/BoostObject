@@ -38,6 +38,11 @@ namespace object {
     {
     public:
         /**
+         * Default constructor
+         */
+        BOOST_OBJECT_DECL connection () = default;
+
+        /**
          * @brief Disconnect the connection.
          * @return True if you disconnected the connection, false if it was
          *         already disconnected.
@@ -69,19 +74,12 @@ namespace object {
         typedef std::weak_ptr < connection_interface_t >
           connection_interface_weakptr_t;
 
-        BOOST_OBJECT_DECL connection () = default;
         BOOST_OBJECT_DECL connection ( connection_interface_weakptr_t && i );
 
     private:
         connection_interface_weakptr_t m_i;
 
 #   else // #ifndef BOOST_OBJECT_DOXYGEN
-
-    private:
-        /**
-         * Default constructor
-         */
-        connection ();
 
     public:
         /**
@@ -101,6 +99,13 @@ namespace object {
     || defined(BOOST_OBJECT__IN_CONNECTION_CPP)
 #include "impl/connection.ipp"
 #endif
+
+#ifndef BOOST_OBJECT_NO_GLOBAL_TYPEDEFS
+/**
+ * @brief Global name for boost::object::connection
+ */
+typedef boost::object::connection BConnection;
+#endif // BOOST_OBJECT_NO_GLOBAL_TYPEDEFS
 
 #endif // BOOST_OBJECT_CONNECTION_HPP
 

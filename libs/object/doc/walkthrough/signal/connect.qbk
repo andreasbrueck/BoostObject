@@ -10,7 +10,7 @@ auto_slot(mySlot) // slot implementation: void _slot_mySlot(int);
 
 mySignal.connect(mySlot);
 ``
-You can also give default arguments, that are only used for this specific connection:
+You can also give default arguments that are only used for this specific connection:
 ``
 bsignal(mySignal_1,void())
 bsignal(mySignal_2,void())
@@ -39,4 +39,6 @@ mySignal.connect(mySlot,3);
 
 mySignal("abc"); // _slot_mySlot will be called like _slot_mySlot("abc",3); 
 ``
+
+[link boost_object.advanced.signal_connections Advanced Signal Connections] goes into more detail.
 [endsect]

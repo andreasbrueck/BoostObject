@@ -1,0 +1,54 @@
+[section Signal connections]
+[import ../../examples/advanced_connection/main.cpp]
+So far, the documentation only talked about simple signal to slot connections. That is, if we have these signals:
+[advanced_connection_cpp__signals]
+and this slot:
+[advanced_connection_cpp__mySlot]
+[advanced_connection_cpp__mySlot_implementation_declaration]
+you have been told that a connection can be made like this
+[advanced_connection_cpp__simple_slot]
+However, the ['connect] function is alot more powerful. First of all, you can not only connect to slots, you can also connect to
+
+* Signals:
+  [advanced_connection_cpp__simple_signal]
+* Functions 
+  [advanced_connection_cpp__myFunction] 
+  [advanced_connection_cpp__simple_function]
+* Static Functions
+  [advanced_connection_cpp__myStaticFunction]
+  [advanced_connection_cpp__simple_static_function]
+* Lambdas/Functors
+  [advanced_connection_cpp__simple_lambda]
+
+Connecting to (static)functions/lambdas/functors has the [link boost_object.walkthrough.slots.direct_slot.rule same rule as a direct slot], meaning they will be synchronously (directly) called
+from the same thread that called the signal emission. Their connections will stay connected for as long as the signal lives, or until you manually disconnect them by calling 
+[memberref boost::object::connection::disconnect disconnect] on the [classref boost::object::connection connection] instance returned.
+
+If you automatically want to disconnect a connection to a (static)function/lambda/functor, you can pass a context bobject as the first parameter:
+[advanced_connection_cpp__context_function]
+[advanced_connection_cpp__context_static_function]
+[advanced_connection_cpp__context_lambda]
+Now, the connection will automatically disconnect if either the bobject that holds the signal ( ['obj] ) goes out of scope/deletes, or ['context_obj] does - whichever happens first.
+
+For all destinations to connect to, you can also provide default arguments that are private to the connection made. It was already mentioned 
+[link boost_object.walkthrough.signals.connecting_to_a_slot here], but lets go into more detail:
+[advanced_connection_cpp__defaultarg_slot]
+[advanced_connection_cpp__defaultarg_signal]
+[advanced_connection_cpp__defaultarg_function]
+[advanced_connection_cpp__defaultarg_static_function]
+[advanced_connection_cpp__defaultarg_lambda]
+[note You can also provide a context bobject as first parameter when using default arguments]
+You can see above that the signature of ['mySignalVoid] is [~void()]. However, the signatures of the destinations are [~void(int)]. As you read in 
+[link boost_object.walkthrough.signals.signal_slot_function_mismatch Connection Policies], this signal should fail to connect to any of those slots/(static)functions/lambdas/functors.
+However, there was a default argument of type ['int] provided that appends to the parameters in the signals signature. The signature [~void()] thus evaluates to [~void(int)], which matches to the 
+slots signature, and the connection can be successfully made.
+
+Here are some examples of what happens with default arguments:
+[table Default arguments signature evaluation
+    [[Signal signature] [Slot signature]          [Connecting]                   [Signal signature evaluates to:]  [Emitting signal:]    [Slot called with:]]
+    [[void()]           [void(int)]               [signal.connect(slot,5);]      [void(int)]                       [signal();]           [slot(5);]]
+    [[void(int)]        [void(int,float)]         [signal.connect(slot,.1f);]    [void(int,float)]                 [signal(5);]          [slot(5,.1f);]]
+    [[void()]           [void(int,float)]         [signal.connect(slot,5,.1f);]  [void(int,float)]                 [signal();]           [slot(5,.1f);]]
+    [[void(int)]        [void(int,int,int,int)]   [signal.connect(slot,1,2,3);]  [void(int,int,int,int)]           [signal(0);]          [slot(0,1,2,3);]]
+]
+[endsect]

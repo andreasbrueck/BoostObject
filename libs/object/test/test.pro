@@ -12,7 +12,9 @@ OTHER_FILES += \
     tests.h \
     generic.cpp \
     network/tcp.cpp \
-    bbytearray.cpp
+    bbytearray.cpp \
+    connection.cpp \
+    detail/callable.cpp
 
 include($$BOOST_OBJECT_TOP_DIR/config.pri)
 
@@ -53,7 +55,6 @@ JAMFILE_COMPILE.commands = $$BJAM_COMMAND \
                                 toolset=$$BJAM_TOOLSET \
                                 $$BJAM_ARCH \
                                 include=$$BOOST_OBJECT_TOP_DIR \
-                                include=$$(BOOST_ROOT) \
                                 $$_PRO_FILE_PWD_/
 
 QMAKE_EXTRA_TARGETS += JAMFILE_COMPILE

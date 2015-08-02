@@ -18,6 +18,7 @@
 
 #include "sender_scope.hpp"
 #include "slot_context.hpp"
+#include "slot_type.hpp"
 
 #include <functional>
 #include <future>
@@ -26,7 +27,8 @@ namespace boost {
 namespace object {
 namespace detail {
 
-    class slot_impl_base
+    template < typename RET, typename...  ARGS >
+    class slot_impl_base : public slot_type < RET, ARGS... >
     {
         template < typename, typename... > friend class signal_impl_base;
 
@@ -43,15 +45,14 @@ namespace detail {
     template < typename RET, typename... ARGS >
     class auto_slot_impl
             :
-            public connectable_type < RET, ARGS ... >,
-            public slot_impl_base
+            public slot_impl_base < RET, ARGS ... >
     {
         typedef std::function < RET ( ARGS ... ) > func_t;
 
     protected:
         auto_slot_impl ( object_internals * obj, func_t && func )
             :
-              slot_impl_base ( obj ),
+              slot_impl_base < RET, ARGS... > ( obj ),
               m_func ( func )
         {}
 
@@ -66,7 +67,7 @@ namespace detail {
             static_assert ( std::is_default_constructible < RET >::value,
                             "The return type must be default constructible!");
 
-            if ( ! m_obj->isInHomeThread () )
+            if ( ! this->m_obj->isInHomeThread () )
             {
                 std::promise < RET > promise;
 
@@ -78,14 +79,14 @@ namespace detail {
                 auto setSlotValueToPromise =
                 [&] ()
                 {
-                    sender_scope s ( m_obj, ctx );
+                    sender_scope s ( this->m_obj, ctx );
                     BOOST_OBJECT_UNUSED(s);
 
                     promise.set_value ( m_func ( args ... ) );
                 };
 
-                m_obj->promisedPost ( setSlotValueToPromise,
-                                      setDefaultValToPromise );
+                this->m_obj->promisedPost ( setSlotValueToPromise,
+                                            setDefaultValToPromise );
 
                 std::future < RET > future = promise.get_future ();
 
@@ -98,7 +99,7 @@ namespace detail {
             }
             else
             {
-                sender_scope s ( m_obj, ctx );
+                sender_scope s ( this->m_obj, ctx );
                 BOOST_OBJECT_UNUSED(s);
 
                 return m_func ( args ... );
@@ -112,8 +113,7 @@ namespace detail {
     template < typename... ARGS >
     class auto_slot_impl < void, ARGS... >
         :
-            public connectable_type < void, ARGS ... >,
-            public slot_impl_base
+            public slot_impl_base < void, ARGS... >
     {
         typedef std::function < void ( ARGS ... ) > func_t;
         typedef auto_slot_impl < void, ARGS... > mytype_t;
@@ -121,7 +121,7 @@ namespace detail {
     protected:
         auto_slot_impl ( object_internals * obj, func_t && func )
             :
-              slot_impl_base ( obj ),
+              slot_impl_base < void, ARGS... > ( obj ),
               m_func ( func )
         {}
 
@@ -133,13 +133,17 @@ namespace detail {
 
         void operator () ( ARGS... args, const slot_context & ctx ) const
         {
-            if ( ! m_obj->isInHomeThread () )
+            if ( ! this->m_obj->isInHomeThread () )
             {
-                m_obj->post ( [&](){ this->operator() ( args..., ctx ); } );
+                this->m_obj->post ( [&]()
+                    {
+                        this->operator() ( args..., ctx );
+                    }
+                );
             }
             else
             {
-                sender_scope s ( m_obj, ctx );
+                sender_scope s ( this->m_obj, ctx );
                 BOOST_OBJECT_UNUSED(s);
 
                 m_func ( args ... );
@@ -168,8 +172,7 @@ namespace detail {
     template < typename... ARGS >
     class async_slot_impl < void, ARGS... >
         :
-            public connectable_type < void, ARGS ... >,
-            public slot_impl_base
+            public slot_impl_base < void, ARGS... >
     {
         typedef std::function < void ( ARGS ... ) > func_t;
         typedef async_slot_impl < void, ARGS... > mytype_t;
@@ -177,7 +180,7 @@ namespace detail {
     protected:
         async_slot_impl ( object_internals * obj, func_t && func )
             :
-              slot_impl_base ( obj ),
+              slot_impl_base < void, ARGS... > ( obj ),
               m_func ( func )
         {}
 
@@ -189,7 +192,7 @@ namespace detail {
 
         void operator () ( ARGS... args, const slot_context & ctx ) const
         {
-            m_obj->post
+            this->m_obj->post
             (
                 std::bind
                 (
@@ -204,7 +207,7 @@ namespace detail {
     private:
         void async_wrap ( ARGS... args, const slot_context & ctx ) const
         {
-            sender_scope s ( m_obj, ctx );
+            sender_scope s ( this->m_obj, ctx );
             BOOST_OBJECT_UNUSED(s);
 
             m_func ( args ... );
@@ -232,15 +235,14 @@ namespace detail {
     template < typename... ARGS >
     class direct_slot_impl < void, ARGS... >
         :
-            public connectable_type < void, ARGS ... >,
-            public slot_impl_base
+            public slot_impl_base < void, ARGS... >
     {
         typedef std::function < void ( ARGS ... ) > func_t;
 
     protected:
         direct_slot_impl ( object_internals * obj, func_t && func )
             :
-              slot_impl_base ( obj ),
+              slot_impl_base < void, ARGS... > ( obj ),
               m_func ( func )
         {}
 

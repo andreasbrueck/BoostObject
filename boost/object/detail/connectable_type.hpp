@@ -18,17 +18,6 @@ namespace detail {
 
     struct generic_connectable_type {};
 
-    template < typename RET, typename... ARGS >
-    struct connectable_type : generic_connectable_type
-    {
-        using connectable_func_t =
-    #   ifdef BOOST_MSVC
-        typename std::remove_pointer < RET (*) ( ARGS ... ) >::type;
-    #   else
-        RET ( ARGS ... );
-    #   endif
-    };
-
     template < typename TYPE >
     struct is_generic_connectable_type
       :

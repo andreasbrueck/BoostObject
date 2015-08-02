@@ -8,6 +8,7 @@
 [include introduction.qbk]
 [include basicuse.qbk]
 [include walkthrough.qbk]
+[include advanced.qbk]
 [include modules.qbk]
 [section Reference]
 [xinclude object_core_doxy.xml]

@@ -83,9 +83,9 @@ namespace unsafe
               emitter ( emitter ),
               test_count ( 0 )
         {
-            emitter->send.connect ( auto_void );
-            emitter->send.connect ( async_void );
-            emitter->send.connect ( auto_nonvoid );
+            isConnected & emitter->send.connect ( auto_void );
+            isConnected & emitter->send.connect ( async_void );
+            isConnected & emitter->send.connect ( auto_nonvoid );
         }
 
     private:
@@ -267,13 +267,13 @@ BOOST_OBJECT_TEST_CASE(signalContext_dontSendTo)
                                     f4 ( true );
     fail_if_called_or_not_emitter   fe;
 
-    fe.sig.connect ( f1.slot );
-    fe.sig.connect ( f2.slot );
-    fe.sig.connect ( f3.slot );
+    isConnected & fe.sig.connect ( f1.slot );
+    isConnected & fe.sig.connect ( f2.slot );
+    isConnected & fe.sig.connect ( f3.slot );
 
     fe.sig.emit ( boost::object::signalcontext::dontSendTo ( & f3 ) );
 
-    fe.sig.connect ( f4.slot );
+    isConnected & fe.sig.connect ( f4.slot );
 
     fe.sig.emit ( boost::object::signalcontext::dontSendTo ( & f3 ),
                   boost::object::signalcontext::dontSendTo ( & f4 ) );

@@ -28,6 +28,8 @@ rule rotate_run_folder ( source : folder )
 
 test-suite "object" :
   [ rotate_run generic.cpp ]
+  [ rotate_run connection.cpp ]
   [ rotate_run_folder tcp.cpp : network ]
   [ run bbytearray.cpp ]
+  [ compile detail/callable.cpp ]
   ;

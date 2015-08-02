@@ -47,9 +47,9 @@ namespace unsafe
             m_connection_count++;
             m_max_server_connections++;
 
-            s->disconnected.connect ( decConnectionCount );
-            s->disconnected.connect ( cleanDisconnectCheck );
-            s->received.connect ( server_received );
+            isConnected & s->disconnected.connect ( decConnectionCount );
+            isConnected & s->disconnected.connect ( cleanDisconnectCheck );
+            isConnected & s->received.connect ( server_received );
 
             s->start ();
         }
@@ -149,12 +149,12 @@ void start_client ( const std::string & addr, uint16_t port,
 
     checks.addClientCount ();
 
-    c->disconnected.connect ( checks.cleanDisconnectCheck );
-    c->disconnected.connect ( c->deleteLater );
-    c->connected.connect ( checks.client_connected, c );
-    c->connected.connect ( c->write, BByteArray ( __DATE__ __TIME__ ) );
-    c->received.connect ( checks.client_received );
-    c->destroyed.connect ( checks.decClientCount );
+    isConnected & c->disconnected.connect ( checks.cleanDisconnectCheck );
+    isConnected & c->disconnected.connect ( c->deleteLater );
+    isConnected & c->connected.connect ( checks.client_connected, c );
+    isConnected & c->connected.connect ( c->write, BByteArray ( __DATE__ __TIME__ ) );
+    isConnected & c->received.connect ( checks.client_received );
+    isConnected & c->destroyed.connect ( checks.decClientCount );
 
     c->connect ( addr, port );
 }
@@ -170,7 +170,7 @@ BOOST_OBJECT_TEST_CASE(tcp_generic)
     server.setReuseAddress ( false );
     BOOST_CHECK(server.reuseAddress()==false);
 
-    server.newConnection.connect ( checks.server_newConnection );
+    isConnected & server.newConnection.connect ( checks.server_newConnection );
     server.start ();
 
     BOOST_CHECK(server.port()!=0);

@@ -309,18 +309,56 @@ struct bobj
 
     public:
         /**
-         * @brief Connects a slot to this signal.
+         * @brief Connects @p slot to this signal.
          * @tparam DEFAULT_ARGS
-         * @param slot The slot you want to connect to this signal
+         * @param slot The destination you want to connect this signal to
+         *
+         * @p slot may be one of the following:
+         * @li A bobject slot
+         * @li A bobject signal
+         * @li A functor/lambda
+         * @li A (static) function
+         *
+         * When connecting with a functor/lambda/(static)function, the
+         * connection will stay alive for as long as the signal does.
+         *
+         * When connecting with another signal or a slot, the connection will
+         * automatically disconnect if either the owner bobject of @p slot is
+         * destroyed, or this signal - whichever happens first.
+         *
+         * In both cases, you can also disconnect the connection by calling
+         * @c disconnect() on the returned boost::object::connection instance.
          */
         template < class SLOT_TYPE, class... DEFAULT_ARGS >
-        boost::object::connection connect ( SLOT_TYPE & slot, DEFAULT_ARGS... );
+        boost::object::connection connect ( SLOT_TYPE & slot,
+                                            DEFAULT_ARGS&&... );
+
+        /**
+         * @brief Connects @p slot to this signal.
+         * @tparam DEFAULT_ARGS
+         * @param slot The destination you want to connect this signal to
+         * @param context The context bobject for this connection
+         *
+         * @p slot may be one of the following:
+         * @li A functor/lambda
+         * @li A (static) function
+         *
+         * The connection will automatically disconnect if either the @p context
+         * bobject is destroyed, or this signal - whichever happens first.
+         *
+         * You can also disconnect the connection by calling @c disconnect() on
+         * the returned boost::object::connection instance.
+         */
+        template < class SLOT_TYPE, class... DEFAULT_ARGS >
+        boost::object::connection connect ( boost::object::object * context,
+                                            SLOT_TYPE & slot,
+                                            DEFAULT_ARGS&&... );
 
         /**
          * This is a public wrapper around the private operator().
          */
         template < typename... CONTEXT >
-        RET emit ( ARGS... args, CONTEXT & ctx );
+        RET emit ( ARGS... args, CONTEXT... ctx );
     };
 
     /**

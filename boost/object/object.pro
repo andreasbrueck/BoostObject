@@ -77,7 +77,10 @@ HEADERS += \
     network/impl/tcpconnection.hpp \
     network/impl/tcpconnection_p.hpp \
     signal_macros.hpp \
-    slot_macros.hpp
+    slot_macros.hpp \
+    detail/slot_type.hpp \
+    detail/callable.hpp \
+    detail/signal_type.hpp
 
 SOURCES += \
     ../../libs/object/src/object.cpp \

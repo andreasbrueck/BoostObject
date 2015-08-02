@@ -20,7 +20,7 @@ namespace detail {
     template < typename, typename... > class auto_slot_impl;
     template < typename, typename... > class async_slot_impl;
     template < typename, typename... > class direct_slot_impl;
-    template < typename, typename... > class signal_impl_base;
+    template < typename, typename, typename... > class signal_impl;
     class sender_scope;
 
     class slot_context
@@ -28,7 +28,7 @@ namespace detail {
         template < typename, typename... > friend class auto_slot_impl;
         template < typename, typename... > friend class async_slot_impl;
         template < typename, typename... > friend class direct_slot_impl;
-        template < typename, typename... > friend class signal_impl_base;
+        template < typename, typename, typename... > friend class signal_impl;
         friend class sender_scope;
 
     private:

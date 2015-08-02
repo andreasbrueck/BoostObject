@@ -56,4 +56,27 @@ namespace test {
 } // namespace object
 } // namespace boost
 
+////////////////////////////////////////////////////////////////////////////////
+/// Gadgets used in tests
+
+struct checkConnected
+{
+    void operator & ( bool isConnected )
+    {
+        BOOST_REQUIRE(isConnected);
+    }
+};
+
+struct checkNotConnected
+{
+    void operator & ( bool isConnected )
+    {
+        BOOST_REQUIRE(!isConnected);
+    }
+};
+
+// all tests only have one TU
+static checkConnected isConnected;
+static checkNotConnected isNotConnected;
+
 #endif

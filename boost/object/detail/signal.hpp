@@ -10,6 +10,7 @@
 
 #include "config.hpp"
 #include "func_traits.hpp"
+#include "callable.hpp"
 #include "bind_helper.hpp"
 
 #include "object_install.hpp"
@@ -21,6 +22,7 @@
 #include "object_data.hpp"
 
 #include "slot_context.hpp"
+#include "slot_context.hpp"
 
 #include "connection_impl.hpp"
 #include "../connection.hpp"
@@ -30,48 +32,102 @@
 #include "defs/recursive_mutex.hpp"
 #include "defs/mutex.hpp"
 
+#include "log.hpp"
+
 #include <memory>
 #include <type_traits>
 #include <forward_list>
+
+#include <boost/scope_exit.hpp>
 
 namespace boost {
 namespace object {
 namespace detail {
 
     template < typename RET, typename... ARGS >
-    class signal_impl_base
+    class signal_impl_base : public signal_type < RET, ARGS... >
     {
         typedef connection_impl < RET, ARGS ... > connection_impl_t;
         typedef std::shared_ptr < connection_impl_t >
             connection_impl_ptr_t;
 
+        template < typename, typename... >
+        friend class signal_impl_base;
         friend connection_impl_t;
 
     public:
-        template < typename SLOT_TYPE, typename... DEFAULT_ARGS >
-        connection connect ( SLOT_TYPE & slot, DEFAULT_ARGS&&... default_args )
+
+        template < typename FIRST, typename... REST >
+        connection connect ( FIRST&& f, REST&&... rest )
         {
             return connect < DeduceConnectionPolicy >
-            ( slot, std::forward < DEFAULT_ARGS > ( default_args ) ... );
+            ( std::forward < FIRST > ( f ),
+              std::forward < REST > ( rest ) ... );
         }
 
         template < template < typename, typename > class POLICY,
-                   typename SLOT_TYPE,
-                   typename... DEFAULT_ARGS >
-        connection connect ( SLOT_TYPE & slot, DEFAULT_ARGS&&... default_args )
+                   typename FIRST, typename... REST >
+        connection connect ( FIRST&& f, REST&&... rest )
         {
-            static_assert ( is_generic_connectable_type < SLOT_TYPE >::value,
-                            "Unconnectable types" );
+            // TODO nicer errors instead of template soup
 
-            typedef typename POLICY < typename SLOT_TYPE::connectable_func_t,
-              RET ( ARGS..., DEFAULT_ARGS... ) >::template type
-                < RET, SLOT_TYPE, ARGS..., DEFAULT_ARGS... > deduced_policy_t;
+            return __connect_impl < POLICY >
+            ( std::forward < FIRST > ( f ),
+              std::forward < REST > ( rest ) ... );
+        }
+
+        template < typename CONN_TYPE >
+        bool disconnect ( CONN_TYPE & slot )
+        {
+            static_assert ( is_generic_connectable_type < CONN_TYPE >::value,
+                            "Undisconnectable types" );
 
             mutex_locker_t l ( *boost_object_installation::connectionMutex );
 
             BOOST_OBJECT_UNUSED(l);
 
-            object_data * data = slot.m_obj->getData ();
+            return __disconnect_impl
+                    ( & slot, __getObjectData ( slot.m_obj ) );
+        }
+
+    private:
+        object_data * __getObjectData ( base * obj )
+        {
+            return __getObjectData ( object_access::internals ( obj ) );
+        }
+
+        object_data * __getObjectData ( object_internals * obj )
+        {
+            return obj->getData ();
+        }
+
+        template < template < typename, typename > class POLICY,
+                   typename CONN_TYPE, typename... DEFAULT_ARGS >
+        typename std::enable_if
+        <
+            is_generic_connectable_type < CONN_TYPE >::value,
+            connection
+        >::type
+        __connect_impl ( CONN_TYPE & slot, DEFAULT_ARGS&&... default_args )
+        {
+            typedef typename POLICY < typename CONN_TYPE::signature_t,
+              RET ( ARGS..., DEFAULT_ARGS... ) >::template type
+                < RET, CONN_TYPE, ARGS..., DEFAULT_ARGS... > deduced_policy_t;
+
+            if ( static_cast<generic_connectable_type*>(this) ==
+                 static_cast<generic_connectable_type*>(&slot) )
+            {
+                BOOST_OBJECT_LOG_DEBUG
+                    << "Cannot connect a signal to itself";
+
+                return connection ();
+            }
+
+            mutex_locker_t l ( *boost_object_installation::connectionMutex );
+
+            BOOST_OBJECT_UNUSED(l);
+
+            object_data * data = __getObjectData ( slot.m_obj );
 
             if ( ! data->m_enableConnections )
             {
@@ -111,23 +167,101 @@ namespace detail {
             return connection ( connection_ptr );
         }
 
-        template < typename SLOT_TYPE >
-        bool disconnect ( SLOT_TYPE & slot )
-        {
-            static_assert ( is_generic_connectable_type < SLOT_TYPE >::value,
-                            "Unconnectable types" );
+        template < template < typename, typename > class POLICY,
+                   typename FUNC, typename... DEFAULT_ARGS >
+        typename std::enable_if
+        <
+            is_callable<typename std::remove_reference<FUNC>::type>::value,
 
-            mutex_locker_t l ( boost_object_installation::connectionMutex );
+            connection
+        >::type
+        __connect_impl ( FUNC&& f, DEFAULT_ARGS&&... default_args )
+        {
+            typedef typename POLICY< typename callable_signature
+              < typename std::remove_reference < FUNC >::type >::type,
+              RET ( ARGS..., DEFAULT_ARGS... ) >::template type
+                < RET, FUNC, ARGS..., DEFAULT_ARGS... > deduced_policy_t;
+
+            mutex_locker_t l ( *boost_object_installation::connectionMutex );
 
             BOOST_OBJECT_UNUSED(l);
 
-            return __disconnect_impl
-                    ( & slot, slot.m_interface->__bobj_data () );
+            // create connection
+            connection_impl_ptr_t connection_ptr
+            (
+                new connection_impl_t
+                (
+                    nullptr,
+                    nullptr,
+                    this,
+                    bind_by_args < const slot_context &, ARGS... >
+                     ( deduced_policy_t ( f ),
+                       std::forward < DEFAULT_ARGS > ( default_args ) ... )
+                )
+            );
+
+            ++ m_connectionCount;
+
+            // register connection to signal
+            m_connections.push_front ( connection_ptr );
+
+            return connection ( connection_ptr );
         }
 
-    private:
+        template < template < typename, typename > class POLICY,
+                   typename FUNC, typename... DEFAULT_ARGS >
+        typename std::enable_if
+        <
+            is_callable<typename std::remove_reference<FUNC>::type >::value,
+
+            connection
+        >::type
+        __connect_impl ( boost::object::base * obj, FUNC&& f,
+                         DEFAULT_ARGS&&... default_args )
+        {
+            typedef typename POLICY< typename callable_signature <
+              typename std::remove_reference<FUNC>::type >::type,
+              RET ( ARGS..., DEFAULT_ARGS... ) >::template type
+                < RET, FUNC, ARGS..., DEFAULT_ARGS... > deduced_policy_t;
+
+            mutex_locker_t l ( *boost_object_installation::connectionMutex );
+
+            BOOST_OBJECT_UNUSED(l);
+
+            object_data * data = object_access::internals ( obj )->getData ();
+
+            if ( ! data->m_enableConnections )
+            {
+                return connection ();
+            }
+
+            // create connection
+            connection_impl_ptr_t connection_ptr
+            (
+                new connection_impl_t
+                (
+                    nullptr,
+                    data,
+                    this,
+                    bind_by_args < const slot_context &, ARGS... >
+                     ( deduced_policy_t ( f ),
+                       std::forward < DEFAULT_ARGS > ( default_args ) ... )
+                )
+            );
+
+            ++ m_connectionCount;
+
+            // register connection to signal
+            m_connections.push_front ( connection_ptr );
+
+            // register connection to slot owner
+            data->registerConnection ( connection_ptr.get () );
+
+            return connection ( connection_ptr );
+        }
+
         bool __disconnect_impl ( generic_connectable_type * slot,
-                            object_data * data )
+                                 object_data * data )
         {
             for ( auto it = m_connections.begin (),
                        jt = m_connections.end (),
@@ -155,12 +289,41 @@ namespace detail {
             return false;
         }
 
+        bool __disconnect_impl ( connection_impl_t * c, object_data * data )
+        {
+            for ( auto it = m_connections.begin (),
+                       jt = m_connections.end (),
+                       bt = m_connections.before_begin (); it!=jt; ++it, ++bt )
+            {
+                if ( it->get() == c && ! c->m_disconnected )
+                {
+                    c->m_disconnected = true;
+
+                    if ( data )
+                    {
+                        data->unregisterConnection ( c );
+                    }
+
+                    if ( m_callCount == 0 )
+                    {
+                        m_connections.erase_after ( bt );
+                    }
+
+                    -- m_connectionCount;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
     protected:
         signal_impl_base ( object * obj )
             :
               m_callCount ( 0 ),
               m_connectionCount ( 0 ),
-              m_slot_context ( obj )
+              m_obj ( obj )
         {}
 
         ~signal_impl_base ()
@@ -174,7 +337,11 @@ namespace detail {
                 if ( ! c->m_disconnected )
                 {
                     c->m_disconnected = true;
-                    c->m_obj->unregisterConnection ( c.get () );
+
+                    if ( c->m_obj )
+                    {
+                        c->m_obj->unregisterConnection ( c.get () );
+                    }
                 }
             }
         }
@@ -195,7 +362,7 @@ namespace detail {
         std::size_t m_callCount;
         std::size_t m_connectionCount;
         std::forward_list < connection_impl_ptr_t > m_connections;
-        slot_context m_slot_context;
+        object * m_obj;
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -205,7 +372,7 @@ namespace detail {
     template < typename RET, typename... ARGS >
     bool connection_impl < RET, ARGS... >::disconnect ()
     {
-        return m_sig->__disconnect_impl ( m_slot, m_obj );
+        return m_sig->__disconnect_impl ( this, m_obj );
     }
 
     template < typename RET, typename... ARGS >
@@ -238,7 +405,7 @@ namespace detail {
 
     public:
         template < typename... SIGCTX >
-        inline ret_t emit ( ARGS... args, SIGCTX... ctx )
+        inline ret_t emit ( ARGS... args, SIGCTX const & ... ctx )
         {
             return this->operator () ( args ..., ctx ... );
         }
@@ -248,7 +415,7 @@ namespace detail {
             : signal_impl_base < RET, ARGS ... >( obj ) {}
 
         template < typename... SIGCTX >
-        ret_t operator () ( ARGS... args, SIGCTX... ctx )
+        ret_t operator () ( ARGS... args, SIGCTX const & ... ctx )
         {
             if ( ! this->m_connectionCount ) return ret_t ();
 
@@ -260,30 +427,37 @@ namespace detail {
 
             ++ this->m_callCount;
 
+            BOOST_SCOPE_EXIT_ALL(&)
+            {
+                -- this->m_callCount;
+
+                this->__endOfCallOperations ();
+            };
+
+            slot_context slot_ctx ( this->m_obj );
+
             for ( auto c : this->m_connections )
             {
                 if ( c->m_disconnected ) continue;
 
-                object * ownerObject = c->m_obj->getOwnerObject ();
-                BOOST_OBJECT_UNUSED(ownerObject); // msvc warns unused ...
-
-                if ( ! variadic_and ( ctx.onAllowDestinationObject
-                                      ( ownerObject ) ... ) )
+                if ( c->m_obj )
                 {
-                    continue;
+                    object * ownerObject = c->m_obj->getOwnerObject ();
+                    BOOST_OBJECT_UNUSED(ownerObject); // msvc warns unused ...
+
+                    if ( ! variadic_and ( ctx.onAllowDestinationObject
+                                          ( ownerObject ) ... ) )
+                    {
+                        continue;
+                    }
                 }
 
                 l.unlock ();
 
-                retdata.push_back ( c->m_func ( this->m_slot_context,
-                                                args ... ) );
+                retdata.push_back ( c->m_func ( slot_ctx, args ... ) );
 
                 l.lock ();
             }
-
-            -- this->m_callCount;
-
-            this->__endOfCallOperations ();
 
             return retdata;
         }
@@ -297,7 +471,7 @@ namespace detail {
 
     public:
         template < typename... SIGCTX >
-        inline void emit ( ARGS... args, SIGCTX... ctx )
+        inline void emit ( ARGS... args, SIGCTX const & ... ctx )
         {
             this->operator () ( args ..., ctx ... );
         }
@@ -307,7 +481,7 @@ namespace detail {
             : signal_impl_base < void, ARGS ... > ( obj ) {}
 
         template < typename... SIGCTX >
-        void operator () ( ARGS... args, SIGCTX... ctx )
+        void operator () ( ARGS... args, SIGCTX const &... ctx )
         {
             if ( ! this->m_connectionCount ) return;
 
@@ -317,29 +491,37 @@ namespace detail {
 
             ++ this->m_callCount;
 
+            BOOST_SCOPE_EXIT_ALL(&)
+            {
+                -- this->m_callCount;
+
+                this->__endOfCallOperations ();
+            };
+
+            slot_context slot_ctx ( this->m_obj );
+
             for ( auto c : this->m_connections )
             {
                 if ( c->m_disconnected ) continue;
 
-                object * ownerObject = c->m_obj->getOwnerObject ();
-                BOOST_OBJECT_UNUSED(ownerObject); // msvc warns unused ...
-
-                if ( ! variadic_and ( ctx.onAllowDestinationObject
-                                      ( ownerObject ) ... ) )
+                if ( c->m_obj )
                 {
-                    continue;
+                    object * ownerObject = c->m_obj->getOwnerObject ();
+                    BOOST_OBJECT_UNUSED(ownerObject); // msvc warns unused ...
+
+                    if ( ! variadic_and ( ctx.onAllowDestinationObject
+                                          ( ownerObject ) ... ) )
+                    {
+                        continue;
+                    }
                 }
 
                 l.unlock ();
 
-                c->m_func ( this->m_slot_context, args ... );
+                c->m_func ( slot_ctx, args ... );
 
                 l.lock ();
             }
-
-            -- this->m_callCount;
-
-            this->__endOfCallOperations ();
         }
     };
 

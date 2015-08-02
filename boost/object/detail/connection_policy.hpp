@@ -10,6 +10,8 @@
 
 #include "config.hpp"
 #include "slot_context.hpp"
+#include "slot_type.hpp"
+#include "signal_type.hpp"
 
 #include <type_traits>
 #include <tuple>
@@ -18,13 +20,77 @@ namespace boost {
 namespace object {
 namespace detail {
 
+    template < typename FUNC, typename = void >
+    struct ConnectionPolicy
+    {
+        FUNC m_slot;
+
+        ConnectionPolicy ( FUNC & slot )
+        : m_slot ( slot ) {}
+
+        template < typename RET, typename... ARGS >
+        typename std::enable_if < std::is_void < RET >::value, RET >::type
+        call ( const slot_context &, ARGS&&... args )
+        {
+            m_slot ( std::forward < ARGS > ( args ) ... );
+        }
+
+        template < typename RET, typename... ARGS >
+        typename std::enable_if < !std::is_void < RET >::value, RET >::type
+        call ( const slot_context &, ARGS&&... args )
+        {
+            return m_slot ( std::forward < ARGS > ( args ) ... );
+        }
+    };
+
     template < typename SLOT_TYPE >
     struct ConnectionPolicy
+    < SLOT_TYPE,
+      typename std::enable_if < is_slot < SLOT_TYPE >::value >::type >
     {
         SLOT_TYPE & m_slot;
 
         ConnectionPolicy ( SLOT_TYPE & slot )
         : m_slot ( slot ) {}
+
+        template < typename RET, typename... ARGS >
+        typename std::enable_if < std::is_void < RET >::value, RET >::type
+        call ( const slot_context & ctx, ARGS&&... args )
+        {
+            m_slot ( std::forward < ARGS > ( args ) ..., ctx );
+        }
+
+        template < typename RET, typename... ARGS >
+        typename std::enable_if < !std::is_void < RET >::value, RET >::type
+        call ( const slot_context & ctx, ARGS&&... args )
+        {
+            return m_slot ( std::forward < ARGS > ( args ) ..., ctx );
+        }
+    };
+
+    template < typename SIGNAL_TYPE >
+    struct ConnectionPolicy
+    < SIGNAL_TYPE,
+      typename std::enable_if < is_signal < SIGNAL_TYPE >::value >::type >
+    {
+        SIGNAL_TYPE & m_signal;
+
+        ConnectionPolicy ( SIGNAL_TYPE & sig )
+        : m_signal ( sig ) {}
+
+        template < typename RET, typename... ARGS >
+        typename std::enable_if < std::is_void < RET >::value, RET >::type
+        call ( const slot_context &, ARGS&&... args )
+        {
+            m_signal.emit ( std::forward < ARGS > ( args ) ... );
+        }
+
+        template < typename RET, typename... ARGS >
+        typename std::enable_if < !std::is_void < RET >::value, RET >::type
+        call ( const slot_context &, ARGS&&... args )
+        {
+            return m_signal.emit ( std::forward < ARGS > ( args ) ... );
+        }
     };
 
     template < typename SIG_RET, typename SLOT_TYPE, typename... SIG_ARGS >
@@ -34,7 +100,7 @@ namespace detail {
         : ConnectionPolicy < SLOT_TYPE > ( slot ) {}
 
         SIG_RET operator () ( const slot_context & ctx, SIG_ARGS... )
-        { return this->m_slot ( ctx ); }
+        { return this->template call < SIG_RET > ( ctx ); }
     };
 
     template < typename SLOT_TYPE, typename... SIG_ARGS >
@@ -45,7 +111,7 @@ namespace detail {
         : ConnectionPolicy < SLOT_TYPE > ( slot ) {}
 
         void operator () ( const slot_context & ctx, SIG_ARGS... )
-        { this->m_slot ( ctx ); }
+        { this->template call < void > ( ctx ); }
     };
 
     template < typename SIG_RET, typename SLOT_TYPE, typename... SIG_ARGS >
@@ -55,7 +121,7 @@ namespace detail {
         : ConnectionPolicy < SLOT_TYPE > ( slot ) {}
 
         SIG_RET operator () ( const slot_context & ctx, SIG_ARGS... args )
-        { return this->m_slot ( args ..., ctx ); }
+        { return this->template call < SIG_RET > ( ctx, args ... ); }
     };
 
     template < typename SLOT_TYPE, typename... SIG_ARGS >
@@ -66,7 +132,7 @@ namespace detail {
         : ConnectionPolicy < SLOT_TYPE > ( slot ) {}
 
         void operator () ( const slot_context & ctx, SIG_ARGS... args )
-        { this->m_slot ( args ..., ctx ); }
+        { this->template call < void > ( ctx, args ... ); }
     };
 
     // DummyConnectionPolicy is used to have the compiler only output

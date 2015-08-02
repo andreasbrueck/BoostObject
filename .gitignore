@@ -5,6 +5,7 @@
 !.travis.yml
 !appveyor.yml
 !README.md
+!CHANGELOG.md
 !LICENSE_1_0.txt
 !.qmake.conf
 !boost.pri

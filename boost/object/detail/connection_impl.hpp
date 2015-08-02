@@ -10,7 +10,7 @@
 
 #include "config.hpp"
 #include "connection_interface.hpp"
-#include "connectable_type.hpp"
+#include "slot_type.hpp"
 #include "slot_context.hpp"
 
 #include <functional>
