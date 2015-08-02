@@ -1,0 +1,1059 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Walkthrough</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../index.html" title="Boost.Object">
+<link rel="up" href="../index.html" title="Boost.Object">
+<link rel="prev" href="basic_usage.html" title="Basic Usage">
+<link rel="next" href="advanced.html" title="Advanced">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_usage.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="advanced.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_object.walkthrough"></a><a class="link" href="walkthrough.html" title="Walkthrough">Walkthrough</a>
+</h2></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.the_bobject_idiom">The bobject
+      idiom</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.slots">Slots</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.signals">Signals</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.safe_bobjects_boost_safe_object_">Safe
+      bobjects ( BOOST_SAFE_OBJECT macro )</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.walkthrough.the_bobject_idiom"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.the_bobject_idiom" title="The bobject idiom">The bobject
+      idiom</a>
+</h3></div></div></div>
+<p>
+        Lets have another look at the bobject example from <a class="link" href="basic_usage.html" title="Basic Usage">Basic
+        Usage</a>.
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">foo</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">BObject</span>
+<span class="special">{</span>
+    <span class="identifier">B_OBJECT</span><span class="special">(</span><span class="identifier">foo</span><span class="special">)</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">_slot_bar</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">exitCode</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"About to tell the application to quit ..."</span>
+                  <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+        <span class="identifier">bApp</span><span class="special">-&gt;</span><span class="identifier">quit</span> <span class="special">(</span> <span class="identifier">exitCode</span> <span class="special">);</span>
+
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Told the application to quit ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">async_slot</span><span class="special">(</span><span class="identifier">bar</span><span class="special">)</span>
+<span class="special">};</span>
+</pre>
+<p>
+        As you probably noticed, the slot implementation is <code class="literal">private</code>,
+        but the slot itself is <code class="literal">public</code>. Slots are explained in
+        detail in the next section, but for now you only need to know, that if you
+        call any slot ( except a <code class="literal">direct_slot</code> ), the slot implementation,
+        meaning the member function the slot points to, <span class="underline">will
+        always be called in the same thread</span> ( that was assigned to the
+        bobject ).
+      </p>
+<p>
+        This gives us an interesting design choice for our own classes derived from
+        BObject. If you follow these 3 steps
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            Declare all member functions and member variables <code class="literal">private</code>
+          </li>
+<li class="listitem">
+            Allow <code class="literal">public</code> access to your class only via slots
+          </li>
+<li class="listitem">
+            Only use <code class="literal">async_slot</code> and <code class="literal">auto_slot</code>,
+            not <code class="literal">direct_slot</code>
+          </li>
+</ul></div>
+<p>
+        then the private section of your class <span class="bold"><strong>can never</strong></span>
+        be run by 2 different threads! That is, if you don't blow this design pattern
+        up with for example declaring a <code class="computeroutput"><span class="keyword">friend</span></code>
+        that knows nothing about what I just told you.
+      </p>
+<p>
+        No need to take care of race conditions with mutexes anymore, just access
+        member variables unprotected, the slot already took care for you. One can
+        say that this adds another layer of meaning to the private section of your
+        bobjects.
+      </p>
+<p>
+        This is the recommended way of designing your own bobjects.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.walkthrough.slots"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.slots" title="Slots">Slots</a>
+</h3></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.slots.async_slot">Queued (
+        asynchronous ) slot</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.slots.direct_slot">Direct
+        ( synchronous ) slot</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.slots.auto_slot">Automatic
+        slot</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.slots.declare_slot">Declaring
+        a slot</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.slots.bind_to_overload">Bind
+        a slot to an overloaded slot implementation</a></span></dt>
+</dl></div>
+<p>
+        Slots have two main purposes.
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            Defining the manner ( synchronous or asynchronous ) in which their slot
+            implementation will be called
+          </li>
+<li class="listitem">
+            Slots can be connected to signals
+          </li>
+</ul></div>
+<p>
+        You can also call slots directly just like a member function. Connecting
+        them to a signal is not required.
+      </p>
+<p>
+        There are 3 different types of slots:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.async_slot" title="Queued ( asynchronous ) slot">Queued ( asynchronous
+            ) slot</a> ( type: async )
+          </li>
+<li class="listitem">
+            <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.direct_slot" title="Direct ( synchronous ) slot">Direct ( synchronous
+            ) slot</a> ( type: direct )
+          </li>
+<li class="listitem">
+            <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot" title="Automatic slot">Automatic slot</a>
+            ( type: auto )
+          </li>
+</ul></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.walkthrough.slots.async_slot"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.async_slot" title="Queued ( asynchronous ) slot">Queued (
+        asynchronous ) slot</a>
+</h4></div></div></div>
+<h6>
+<a name="boost_object.walkthrough.slots.async_slot.h0"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.slots.async_slot.rule"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.async_slot.rule">Rule</a>
+        </h6>
+<p>
+          The asynchronous slot will <span class="bold"><strong>always</strong></span> queue
+          its call to the slot implementation and returns immediately. No matter
+          what thread you call it from.
+        </p>
+<h6>
+<a name="boost_object.walkthrough.slots.async_slot.h1"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.slots.async_slot.macro_definitions"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.async_slot.macro_definitions">Macro
+          definitions</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <code class="computeroutput"><a class="link" href="../async_slot.html" title="Macro async_slot">async_slot</a></code>
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><a class="link" href="../BOOST_OBJECT_ASYNC_SLOT.html" title="Macro BOOST_OBJECT_ASYNC_SLOT">BOOST_OBJECT_ASYNC_SLOT</a></code>
+            </li>
+</ul></div>
+<h6>
+<a name="boost_object.walkthrough.slots.async_slot.h2"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.slots.async_slot.c_definitions"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.async_slot.c_definitions">C++ definitions</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+              <code class="computeroutput"><a class="link" href="../bobj/async_slot_t.html" title="Class template async_slot_t">bobj::async_slot_t</a></code>
+            </li></ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+            If the slot returns non-void ( that is, if its slot implementation returns
+            non-void ), the asynchronous slot will always implicitly evaluate to
+            a <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid" title="Automatic slot returning non-void">blocking
+            automatic slot</a>.
+          </p>
+<p>
+            This means the above rule for the asynchronous slot no longer applies.
+          </p>
+</td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.walkthrough.slots.direct_slot"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.direct_slot" title="Direct ( synchronous ) slot">Direct
+        ( synchronous ) slot</a>
+</h4></div></div></div>
+<h6>
+<a name="boost_object.walkthrough.slots.direct_slot.h0"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.slots.direct_slot.rule"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.direct_slot.rule">Rule</a>
+        </h6>
+<p>
+          The direct slot will <span class="bold"><strong>always</strong></span> call its slot
+          implementation synchronously. No matter what thread you call it from.
+        </p>
+<h6>
+<a name="boost_object.walkthrough.slots.direct_slot.h1"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.slots.direct_slot.macro_definitions"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.direct_slot.macro_definitions">Macro
+          definitions</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <code class="computeroutput"><a class="link" href="../direct_slot.html" title="Macro direct_slot">direct_slot</a></code>
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><a class="link" href="../BOOST_OBJECT_DIRECT_SLOT.html" title="Macro BOOST_OBJECT_DIRECT_SLOT">BOOST_OBJECT_DIRECT_SLOT</a></code>
+            </li>
+</ul></div>
+<h6>
+<a name="boost_object.walkthrough.slots.direct_slot.h2"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.slots.direct_slot.c_definitions"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.direct_slot.c_definitions">C++
+          definitions</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+              <code class="computeroutput"><a class="link" href="../bobj/direct_slot_t.html" title="Class template direct_slot_t">bobj::direct_slot_t</a></code>
+            </li></ul></div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Be careful using the direct slot, as it breaks <a class="link" href="walkthrough.html#boost_object.walkthrough.the_bobject_idiom" title="The bobject idiom">the
+            bobject idiom</a>.
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+            If the slot returns non-void ( that is, if its slot implementation returns
+            non-void ), the direct slot will always implicitly evaluate to a <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid" title="Automatic slot returning non-void">blocking
+            automatic slot</a>.
+          </p>
+<p>
+            This means the above rule for the direct slot no longer applies.
+          </p>
+</td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.walkthrough.slots.auto_slot"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot" title="Automatic slot">Automatic
+        slot</a>
+</h4></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_void">Automatic
+          slot returning void</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid">Automatic
+          slot returning non-void</a></span></dt>
+</dl></div>
+<h6>
+<a name="boost_object.walkthrough.slots.auto_slot.h0"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.slots.auto_slot.rule"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.rule">Rule</a>
+        </h6>
+<p>
+          Depends on whether you have <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_void" title="Automatic slot returning void">void</a>
+          or <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid" title="Automatic slot returning non-void">non-void</a>
+          return type.
+        </p>
+<h6>
+<a name="boost_object.walkthrough.slots.auto_slot.h1"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.slots.auto_slot.macro_definitions"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.macro_definitions">Macro
+          definitions</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <code class="computeroutput"><a class="link" href="../auto_slot.html" title="Macro auto_slot">auto_slot</a></code>
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><a class="link" href="../BOOST_OBJECT_AUTO_SLOT.html" title="Macro BOOST_OBJECT_AUTO_SLOT">BOOST_OBJECT_AUTO_SLOT</a></code>
+            </li>
+</ul></div>
+<h6>
+<a name="boost_object.walkthrough.slots.auto_slot.h2"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.slots.auto_slot.c_definitions"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.c_definitions">C++ definitions</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+              <code class="computeroutput"><a class="link" href="../bobj/auto_slot_t.html" title="Class template auto_slot_t">bobj::auto_slot_t</a></code>
+            </li></ul></div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_object.walkthrough.slots.auto_slot.auto_slot_void"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_void" title="Automatic slot returning void">Automatic
+          slot returning void</a>
+</h5></div></div></div>
+<h6>
+<a name="boost_object.walkthrough.slots.auto_slot.auto_slot_void.h0"></a>
+            <span class="phrase"><a name="boost_object.walkthrough.slots.auto_slot.auto_slot_void.rule"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_void.rule">Rule</a>
+          </h6>
+<p>
+            The automatic slot will, upon call, check which thread you called from.
+            If that thread is the same one its owning bobject instantiation was assigned
+            with, the automatic slot will behave like a <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.direct_slot" title="Direct ( synchronous ) slot">direct
+            ( synchronous ) slot</a>. Otherwise it will behave like a non-blocking
+            <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.async_slot" title="Queued ( asynchronous ) slot">queued ( asynchronous
+            ) slot</a>.
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid" title="Automatic slot returning non-void">Automatic
+          slot returning non-void</a>
+</h5></div></div></div>
+<h6>
+<a name="boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid.h0"></a>
+            <span class="phrase"><a name="boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid.rule"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid.rule">Rule</a>
+          </h6>
+<p>
+            The automatic slot will, upon call, check which thread you called from.
+            If that thread is the same one its owning bobject instantiation was assigned
+            with, the automatic slot directly calls its slot implementation. Otherwise
+            it will queue its call to the slot implementation and <span class="bold"><strong>block</strong></span>
+            until the event-loop of that other thread has processed this call.
+          </p>
+<h6>
+<a name="boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid.h1"></a>
+            <span class="phrase"><a name="boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid.requirements"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid.requirements">Requirements</a>
+          </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                The returned type must be default and copy constructible.
+              </li></ul></div>
+<h6>
+<a name="boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid.h2"></a>
+            <span class="phrase"><a name="boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid.additional_information"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid.additional_information">Additional
+            information</a>
+          </h6>
+<p>
+            If executing the slot implementation in the target thread fails, the
+            return value is default constructed.
+          </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.walkthrough.slots.declare_slot"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.declare_slot" title="Declaring a slot">Declaring
+        a slot</a>
+</h4></div></div></div>
+<p>
+          After all that theory, lets put it to use after just a little bit more
+          theory.
+        </p>
+<p>
+          All slots have helper macros in the form of
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              short: <code class="literal"><em class="replaceable"><code>[type]</code></em>_slot</code>
+            </li>
+<li class="listitem">
+              long: <code class="literal">BOOST_OBJECT_<em class="replaceable"><code>[TYPE]</code></em>_SLOT</code>
+            </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            You can disable the short macros by defining <code class="literal">BOOST_OBJECT_NO_SHORT_SLOT_MACROS</code>.
+          </p></td></tr>
+</table></div>
+<p>
+          Both the short and the long macro, for all 3 slot types, have the same
+          prototype. We will be using <code class="literal">auto_slot</code> for illustration:
+        </p>
+<pre class="programlisting"><span class="identifier">auto_slot</span><span class="special">(</span><span class="identifier">SlotName</span><span class="special">)</span>                          <span class="comment">// SlotImplementationName will default to _slot_SlotName</span>
+<span class="identifier">auto_slot</span><span class="special">(</span><span class="identifier">SlotName</span><span class="special">,</span> <span class="identifier">SlotImplementationName</span><span class="special">)</span>
+</pre>
+<p>
+          Following examples and more can be found in <a href="../../../../../libs/object/examples/slot/main.cpp" target="_top">$BOOST_ROOT/libs/object/examples/slot/main.cpp</a>
+        </p>
+<pre class="programlisting"><span class="identifier">auto_slot</span><span class="special">(</span><span class="identifier">test1</span><span class="special">)</span>
+</pre>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">_slot_test1</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"_slot_test1("</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="string">")"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<pre class="programlisting"><span class="identifier">auto_slot</span><span class="special">(</span><span class="identifier">test2</span><span class="special">,</span><span class="identifier">my_own_implementation_name</span><span class="special">)</span>
+</pre>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">my_own_implementation_name</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"my_own_implementation_name("</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="string">")"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          They can be called just like member functions that have the name that you
+          gave as the first parameter to the macro.
+        </p>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">test1</span> <span class="special">(</span> <span class="number">25</span> <span class="special">);</span>
+<span class="identifier">obj</span><span class="special">.</span><span class="identifier">test2</span> <span class="special">(</span> <span class="number">0</span> <span class="special">);</span>
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.walkthrough.slots.bind_to_overload"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.slots.bind_to_overload" title="Bind a slot to an overloaded slot implementation">Bind
+        a slot to an overloaded slot implementation</a>
+</h4></div></div></div>
+<p>
+          If you want to bind a slot to a member function that is overloaded, you
+          partially ( or completely, if you prefer ) have to ditch the slot macros.
+        </p>
+<p>
+          Slot macros internally use <code class="computeroutput"><span class="keyword">decltype</span><span class="special">()</span></code> to deduce the return value and parameters
+          of the slot implementation. <code class="computeroutput"><span class="keyword">decltype</span><span class="special">()</span></code> however fails on overloaded functions.
+          But do not worry, the detour you have to take is short. As you saw above,
+          the slots also have a C++ definition. And this is how to use them:
+        </p>
+<pre class="programlisting"><span class="identifier">bobj</span><span class="special">::</span><span class="identifier">auto_slot_t</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">(</span><span class="keyword">double</span><span class="special">)&gt;</span> <span class="identifier">overload1</span> <span class="identifier">boundto</span><span class="special">(</span><span class="identifier">_slot_overload1</span><span class="special">);</span>
+</pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            <code class="literal">boundto(P)</code> is just a macro that expands to <code class="computeroutput"><span class="special">={</span><span class="keyword">this</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">classname</span><span class="special">::</span><span class="identifier">P</span><span class="special">}</span></code>
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            <code class="literal">bobj</code> is a typedef declared in the <code class="literal">B_OBJECT</code>
+            macro.
+          </p></td></tr>
+</table></div>
+<p>
+          Now if we have these slot implementations
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">_slot_overload1</span> <span class="special">(</span> <span class="keyword">int</span> <span class="special">)</span> <span class="special">{}</span>
+<span class="keyword">void</span> <span class="identifier">_slot_overload1</span> <span class="special">(</span> <span class="keyword">double</span> <span class="special">)</span> <span class="special">{}</span>
+</pre>
+<p>
+          then the slot <code class="literal">overload1</code> will automatically be bound
+          to the correct overload.
+        </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.walkthrough.signals"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.signals" title="Signals">Signals</a>
+</h3></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.signals.declaring_a_signal">Declaring
+        a signal</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.signals.connecting_to_a_slot">Connecting
+        to a slot</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch">Signal/Slot
+        function mismatch</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.walkthrough.signals.declaring_a_signal"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.declaring_a_signal" title="Declaring a signal">Declaring
+        a signal</a>
+</h4></div></div></div>
+<p>
+          Signals are declared almost the same as slots.
+        </p>
+<h6>
+<a name="boost_object.walkthrough.signals.declaring_a_signal.h0"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.signals.declaring_a_signal.macro_definitions"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.declaring_a_signal.macro_definitions">Macro
+          definitions</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <code class="computeroutput"><a class="link" href="../bsignal.html" title="Macro bsignal">bsignal</a></code>
+            </li>
+<li class="listitem">
+              <code class="computeroutput"><a class="link" href="../BOOST_OBJECT_SIGNAL.html" title="Macro BOOST_OBJECT_SIGNAL">BOOST_OBJECT_SIGNAL</a></code>
+            </li>
+</ul></div>
+<h6>
+<a name="boost_object.walkthrough.signals.declaring_a_signal.h1"></a>
+          <span class="phrase"><a name="boost_object.walkthrough.signals.declaring_a_signal.c_definitions"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.declaring_a_signal.c_definitions">C++
+          definitions</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+              <code class="literal">bobj::signal_t</code>
+            </li></ul></div>
+<p>
+          Signal macros need the second parameter to be their function prototype.
+          You can see a use of a signal in <a href="../../../../../libs/object/examples/basic_connection/main.cpp" target="_top">$BOOST_ROOT/libs/object/examples/basic_connection/main.cpp</a>.
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+<p class="simpara">
+              Declare signal with macro:
+            </p>
+<pre class="programlisting"><span class="identifier">bsignal</span><span class="special">(</span><span class="identifier">allOperationsDone</span><span class="special">,</span><span class="keyword">void</span><span class="special">(</span><span class="keyword">int</span><span class="special">))</span>
+</pre>
+</li>
+<li class="listitem">
+<p class="simpara">
+              Declare signal without macro:
+            </p>
+<pre class="programlisting"><span class="identifier">bobj</span><span class="special">::</span><span class="identifier">signal_t</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;</span> <span class="identifier">allOperationsDone</span> <span class="special">=</span> <span class="keyword">this</span><span class="special">;</span>
+</pre>
+</li>
+</ul></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.walkthrough.signals.connecting_to_a_slot"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.connecting_to_a_slot" title="Connecting to a slot">Connecting
+        to a slot</a>
+</h4></div></div></div>
+<p>
+          All signals have a member function called <code class="computeroutput"><a class="link" href="../bobj/signal_t.html#idp6407776-bb">connect</a></code>,
+          which is used to connect slots to it.
+        </p>
+<p>
+          When connecting to a slot, the first parameter will be the slot:
+        </p>
+<pre class="programlisting"><span class="identifier">bsignal</span><span class="special">(</span><span class="identifier">mySignal</span><span class="special">,</span><span class="keyword">void</span><span class="special">(</span><span class="keyword">int</span><span class="special">))</span>
+<span class="identifier">auto_slot</span><span class="special">(</span><span class="identifier">mySlot</span><span class="special">)</span> <span class="comment">// slot implementation: void _slot_mySlot(int);</span>
+
+<span class="comment">// ...</span>
+
+<span class="identifier">mySignal</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(</span><span class="identifier">mySlot</span><span class="special">);</span>
+</pre>
+<p>
+          You can also give default arguments that are only used for this specific
+          connection:
+        </p>
+<pre class="programlisting"><span class="identifier">bsignal</span><span class="special">(</span><span class="identifier">mySignal_1</span><span class="special">,</span><span class="keyword">void</span><span class="special">())</span>
+<span class="identifier">bsignal</span><span class="special">(</span><span class="identifier">mySignal_2</span><span class="special">,</span><span class="keyword">void</span><span class="special">())</span>
+<span class="identifier">auto_slot</span><span class="special">(</span><span class="identifier">mySlot</span><span class="special">)</span> <span class="comment">// slot implementation: void _slot_mySlot(int);</span>
+
+<span class="comment">// ...</span>
+
+<span class="identifier">mySignal_1</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(</span><span class="identifier">mySlot</span><span class="special">,</span><span class="number">123</span><span class="special">);</span>
+<span class="identifier">mySignal_2</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(</span><span class="identifier">mySlot</span><span class="special">,</span><span class="number">456</span><span class="special">);</span>
+
+<span class="comment">// ...</span>
+
+<span class="identifier">mySignal_1</span><span class="special">();</span> <span class="comment">// _slot_mySlot will be called like _slot_mySlot(123); </span>
+<span class="identifier">mySignal_2</span><span class="special">();</span> <span class="comment">// _slot_mySlot will be called like _slot_mySlot(456); </span>
+</pre>
+<p>
+          Default arguments are always appended to the parameter list:
+        </p>
+<pre class="programlisting"><span class="identifier">bsignal</span><span class="special">(</span><span class="identifier">mySignal</span><span class="special">,</span><span class="keyword">void</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;))</span>
+<span class="identifier">auto_slot</span><span class="special">(</span><span class="identifier">mySlot</span><span class="special">)</span> <span class="comment">// slot implementation: void _slot_mySlot(const std::string &amp;, int);</span>
+
+<span class="comment">// ...</span>
+
+<span class="identifier">mySignal</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(</span><span class="identifier">mySlot</span><span class="special">,</span><span class="number">3</span><span class="special">);</span>
+
+<span class="comment">// ...</span>
+
+<span class="identifier">mySignal</span><span class="special">(</span><span class="string">"abc"</span><span class="special">);</span> <span class="comment">// _slot_mySlot will be called like _slot_mySlot("abc",3); </span>
+</pre>
+<p>
+          <a class="link" href="advanced.html#boost_object.advanced.signal_connections" title="Signal connections">Advanced Signal
+          Connections</a> goes into more detail.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.walkthrough.signals.signal_slot_function_mismatch"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch" title="Signal/Slot function mismatch">Signal/Slot
+        function mismatch</a>
+</h4></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction">Default
+          policy deduction</a></span></dt>
+<dt><span class="section"><a href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policies">Default
+          policies</a></span></dt>
+</dl></div>
+<p>
+          As signals call slots, it is only logical that a slot can only connect
+          to a signal if both their function types are compatible.
+        </p>
+<p>
+          However, connections can be tagged with a policy that handles incompatible
+          function types.
+        </p>
+<p>
+          If you do not specify a custom policy, the connection will try to deduce
+          if any default policies apply. This deduction processes as following:
+        </p>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction" title="Default policy deduction">Default
+          policy deduction</a>
+</h5></div></div></div>
+<p>
+            Given that a slot with function type <code class="literal">SLOT_RETURN(SLOT_ARGS...)</code>
+            connects to a signal with function type <code class="literal">SIG_RETURN(SIG_ARGS...)</code>,
+            the deduction of a default policy will undergo following steps:
+          </p>
+<h6>
+<a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.h0"></a>
+            <span class="phrase"><a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.step_1"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.step_1">Step
+            1</a>
+          </h6>
+<div class="table">
+<a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.return_type_validation"></a><p class="title"><b>Table&#160;3.&#160;Return type validation</b></p>
+<div class="table-contents"><table class="table" summary="Return type validation">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      SIG_RETURN type
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      SLOT_RETURN type
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Result
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      any
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      same as <code class="literal">SIG_RETURN</code> or implicitly convertible
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="green">Step succeeded.</span> Deduction continues
+                      with Step 2
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      void
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      non-void
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="green">Step succeeded.</span> <code class="literal">SLOT_RETURN</code>
+                      will be ignored, deduction continues with Step 2
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      non-void
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      void
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="red">Step failed.</span> Deduction failed,
+                      compile time error will be thrown
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      any
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      not implicitly convertible to <code class="literal">SIG_RETURN</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="red">Step failed.</span> Deduction failed,
+                      compile time error will be thrown
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.h1"></a>
+            <span class="phrase"><a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.step_2"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.step_2">Step
+            2</a>
+          </h6>
+<div class="table">
+<a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.parameter_count_validation"></a><p class="title"><b>Table&#160;4.&#160;Parameter count validation</b></p>
+<div class="table-contents"><table class="table" summary="Parameter count validation">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      sizeof...(SIG_ARGS)
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      sizeof...(SLOT_ARGS)
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Result
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      any
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      same as <code class="literal">sizeof...(SIG_ARGS)</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="green">Step succeeded.</span> Deduction continues
+                      with Step 3
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      any
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      0
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="green">Step succeeded.</span> <span class="bold"><strong>Deduction
+                      completed</strong></span>. Using policy: <span class="emphasis"><em>DropArgumentsConnectionPolicy</em></span>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      any
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      non-zero and not equal to <code class="literal">sizeof...(SIG_ARGS)</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="red">Step failed.</span> Deduction failed,
+                      compile time error will be thrown
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.h2"></a>
+            <span class="phrase"><a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.step_3"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.step_3">Step
+            3</a>
+          </h6>
+<p>
+            For each type in the parameter pack <code class="literal">SIG_ARGS</code> equals
+            to <code class="literal">SIG_ARGS[n]</code>, type will be compared to <code class="literal">SLOT_ARGS[n]</code>
+            as following:
+          </p>
+<div class="table">
+<a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policy_deduction.parameter_type_validation"></a><p class="title"><b>Table&#160;5.&#160;Parameter type validation</b></p>
+<div class="table-contents"><table class="table" summary="Parameter type validation">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      SIG_ARGS[n] type
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      SLOT_ARGS[n] type
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Result
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      any
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      same as <code class="literal">SIG_ARGS[n]</code> or implicitly convertible
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      Validating next parameter
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      any
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      not implicitly convertible to <code class="literal">SIG_ARGS[n]</code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      <span class="red">Step failed.</span> Deduction failed,
+                      compile time error will be thrown
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+            If no parameter failed this step, deduction is complete and the used
+            policy is: <span class="emphasis"><em>DirectConnectionPolicy</em></span>
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policies"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch.default_policies" title="Default policies">Default
+          policies</a>
+</h5></div></div></div>
+<p>
+            Default policies handle the differences in signal function type and slot
+            function type as following:
+          </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+                <span class="emphasis"><em>DirectConnectionPolicy</em></span>
+                <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+                      Nothing is done. Compiler can resolve differences itself.
+                    </li></ul></div>
+              </li>
+<li class="listitem">
+                <span class="emphasis"><em>DropArgumentsConnectionPolicy</em></span>
+                <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+                      Policy will ignore whatever parameters are given to the signal,
+                      and calls the slot with zero parameters.
+                    </li></ul></div>
+              </li>
+</ul></div>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.walkthrough.safe_bobjects_boost_safe_object_"></a><a class="link" href="walkthrough.html#boost_object.walkthrough.safe_bobjects_boost_safe_object_" title="Safe bobjects ( BOOST_SAFE_OBJECT macro )">Safe
+      bobjects ( BOOST_SAFE_OBJECT macro )</a>
+</h3></div></div></div>
+<p>
+        The <code class="computeroutput"><a class="link" href="../BOOST_SAFE_OBJECT.html" title="Macro BOOST_SAFE_OBJECT">BOOST_SAFE_OBJECT</a></code>
+        macro, whose usage you already saw in the <a class="link" href="basic_usage.html" title="Basic Usage">Basic
+        Usage</a> example, is an attempt to provide a layer of thread safety for
+        your bobject.
+      </p>
+<p>
+        Imagine following scenario:
+      </p>
+<p>
+        You have a bobject assigned to thread <span class="emphasis"><em>A</em></span>, and you <code class="computeroutput"><span class="keyword">delete</span></code> that bobject from thread <span class="emphasis"><em>B</em></span>.
+        If, in that very moment, thread <span class="emphasis"><em>A</em></span> is executing a slot,
+        your program will most probably experience digital hell.
+      </p>
+<p>
+        Thats where <code class="literal">BOOST_SAFE_OBJECT</code> kicks in. It detects if
+        any thread is currently accessing a slot, and if so, it will block your call
+        to <code class="computeroutput"><span class="keyword">delete</span></code> until that slot returned.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The example used <code class="computeroutput"><span class="keyword">delete</span></code>, however,
+          the same also applies if your object simply goes out of scope.
+        </p></td></tr>
+</table></div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          <code class="literal">BOOST_SAFE_OBJECT</code> will not kick in if you manually call
+          a slot! Continue reading for detail.
+        </p></td></tr>
+</table></div>
+<p>
+        <code class="literal">BOOST_SAFE_OBJECT</code> exists to aid you in situations you
+        cannot control. As an example: You can not control when your asynchronous
+        slot will execute its slot implementation. However, it does not aid you in
+        situations you should be able to control. For example, if you manually call
+        a slot just like a member function by having a reference of/pointer to the
+        object. Just like nothing protects you in standard c++ if you call a normal
+        member function. It is your responsibility to make sure nothing deletes your
+        object while you use it. ( By for example using <code class="literal">shared_ptr</code>
+        or having an architecture where these problems just don't happen )
+      </p>
+<p>
+        <code class="literal">BOOST_SAFE_OBJECT</code> will block destruction of your bobject
+        in following situations:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            The internals of <span class="bold"><strong>Boost.Object</strong></span> asynchronously
+            call a slot implementation
+          </li>
+<li class="listitem">
+            A signal is calling a slot, even if that slot will end up synchronously
+            calling the slot implementation
+          </li>
+</ul></div>
+<h5>
+<a name="boost_object.walkthrough.safe_bobjects_boost_safe_object_.h0"></a>
+        <span class="phrase"><a name="boost_object.walkthrough.safe_bobjects_boost_safe_object_.how_to_use_boost_safe_object"></a></span><a class="link" href="walkthrough.html#boost_object.walkthrough.safe_bobjects_boost_safe_object_.how_to_use_boost_safe_object">How
+        to use <code class="literal">BOOST_SAFE_OBJECT</code></a>
+      </h5>
+<p>
+        To understand how to use <code class="computeroutput"><a class="link" href="../BOOST_SAFE_OBJECT.html" title="Macro BOOST_SAFE_OBJECT">BOOST_SAFE_OBJECT</a></code>,
+        it is best to understand how it works. Long story in short code:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">BOBJECT</span> <span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">safe_object</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">BOBJECT</span> <span class="special">{};</span>
+
+<span class="identifier">BOOST_SAFE_OBJECT</span><span class="special">(</span><span class="identifier">myObject</span><span class="special">)</span> <span class="comment">// typedef safe_object &lt; unsafe::myObject &gt; myObject;</span>
+</pre>
+<p>
+        Whenever you instantiate a class that is directly or indirectly derived from
+        <code class="computeroutput"><a class="link" href="../boost/object/object.html" title="Class object">BObject</a></code>, <code class="literal">BOOST_SAFE_OBJECT</code>
+        ( that is, the <code class="literal">safe_object</code> class ) needs to be the highest
+        in inheritance hierarchy. You may have multiple <code class="literal">safe_object</code>'s
+        in your inheritance hierarchy, but one of them <span class="bold"><strong>must</strong></span>
+        be the highest.
+      </p>
+<p>
+        Lets have a look at some examples:
+      </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">unsafe</span>
+<span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">BObject</span> <span class="special">{};</span>
+    <span class="keyword">class</span> <span class="identifier">Car</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">Vehicle</span> <span class="special">{};</span>
+<span class="special">}</span>
+
+<span class="identifier">BOOST_SAFE_OBJECT</span><span class="special">(</span><span class="identifier">Vehicle</span><span class="special">)</span>
+<span class="identifier">BOOST_SAFE_OBJECT</span><span class="special">(</span><span class="identifier">Car</span><span class="special">)</span>
+
+<span class="keyword">namespace</span> <span class="identifier">unsafe</span>
+<span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">Bicycle</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">Vehicle</span> <span class="special">{};</span>
+    <span class="keyword">class</span> <span class="identifier">SportsCar</span> <span class="special">:</span> <span class="keyword">public</span> <span class="special">::</span><span class="identifier">Car</span> <span class="special">{};</span> <span class="comment">// NOTE !! This derives from safe_object&lt;Car&gt;, not unsafe::Car</span>
+<span class="special">}</span>
+
+<span class="identifier">BOOST_SAFE_OBJECT</span><span class="special">(</span><span class="identifier">Bicycle</span><span class="special">)</span>
+<span class="identifier">BOOST_SAFE_OBJECT</span><span class="special">(</span><span class="identifier">SportsCar</span><span class="special">)</span>
+
+<span class="keyword">class</span> <span class="identifier">Ferrari</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">SportsCar</span> <span class="special">{};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span> <span class="special">()</span>
+<span class="special">{</span>
+    <span class="comment">//..</span>
+
+    <span class="identifier">Vehicle</span> <span class="identifier">vehicle</span><span class="special">;</span>        <span class="comment">// OK</span>
+    <span class="identifier">Car</span> <span class="identifier">car</span><span class="special">;</span>                <span class="comment">// OK</span>
+    <span class="identifier">Bicycle</span> <span class="identifier">bicycle</span><span class="special">;</span>        <span class="comment">// OK </span>
+    <span class="identifier">SportsCar</span> <span class="identifier">sportscar</span><span class="special">;</span>    <span class="comment">// OK</span>
+
+    <span class="identifier">Ferrari</span> <span class="identifier">ferrari</span><span class="special">;</span>        <span class="comment">// WRONG</span>
+
+    <span class="comment">//..</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Executing this program will cause a fatal error message ( which by default
+        terminates the program immediately ) when you instantiate <code class="literal">ferrari</code>.
+        However, the declaration of the class <code class="literal">Ferrari</code> ( and using
+        signal/slots/etc in it ) is perfectly valid, as someone might derive from
+        it again and make it a safe bobject at that time.
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="basic_usage.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="advanced.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

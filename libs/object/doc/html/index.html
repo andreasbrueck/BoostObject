@@ -1,0 +1,522 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Boost.Object</title>
+<link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Boost.Object">
+<link rel="next" href="boost_object/basic_usage.html" title="Basic Usage">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_object/basic_usage.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
+<div class="chapter">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="boost_object"></a>Boost.Object</h2></div></div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl class="toc">
+<dt><span class="section"><a href="index.html#boost_object.introduction">Introduction</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost_object.introduction.how_to_read_this_documentation">How
+      to read this documentation</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_object.introduction.configuring_the_library">Configuring
+      the library</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_object.introduction.supported_platforms_and_compiler">Supported
+      platforms and compiler</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_object.introduction.qt_similarities_and_differences">Qt
+      - Similarities and Differences</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_object/basic_usage.html">Basic Usage</a></span></dt>
+<dt><span class="section"><a href="boost_object/walkthrough.html">Walkthrough</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_object/walkthrough.html#boost_object.walkthrough.the_bobject_idiom">The bobject
+      idiom</a></span></dt>
+<dt><span class="section"><a href="boost_object/walkthrough.html#boost_object.walkthrough.slots">Slots</a></span></dt>
+<dt><span class="section"><a href="boost_object/walkthrough.html#boost_object.walkthrough.signals">Signals</a></span></dt>
+<dt><span class="section"><a href="boost_object/walkthrough.html#boost_object.walkthrough.safe_bobjects_boost_safe_object_">Safe
+      bobjects ( BOOST_SAFE_OBJECT macro )</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_object/advanced.html">Advanced</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost_object/advanced.html#boost_object.advanced.signal_connections">Signal connections</a></span></dt></dl></dd>
+<dt><span class="section"><a href="boost_object/modules.html">Modules</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_object/modules.html#boost_object.modules.utils">Utils</a></span></dt>
+<dt><span class="section"><a href="boost_object/modules.html#boost_object.modules.network">Network</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_object/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_object/reference.html#boost_object_core_header_reference">Boost.Object.Core Header Reference</a></span></dt>
+<dt><span class="section"><a href="boost_object/reference.html#boost_object_utils_header_reference">Boost.Object.Utils Header Reference</a></span></dt>
+<dt><span class="section"><a href="boost_object/reference.html#boost_object_network_header_reference">Boost.Object.Network Header Reference</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_object.introduction"></a><a class="link" href="index.html#boost_object.introduction" title="Introduction">Introduction</a>
+</h2></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="index.html#boost_object.introduction.how_to_read_this_documentation">How
+      to read this documentation</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_object.introduction.configuring_the_library">Configuring
+      the library</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_object.introduction.supported_platforms_and_compiler">Supported
+      platforms and compiler</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_object.introduction.qt_similarities_and_differences">Qt
+      - Similarities and Differences</a></span></dt>
+</dl></div>
+<p>
+      <span class="bold"><strong>Boost.Object</strong></span> implements simple object-bound
+      signal/slot mechanisms with optional parent/child hierarchy, along with a growing
+      range of utilities and modules.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.introduction.how_to_read_this_documentation"></a><a class="link" href="index.html#boost_object.introduction.how_to_read_this_documentation" title="How to read this documentation">How
+      to read this documentation</a>
+</h3></div></div></div>
+<p>
+        <span class="bold"><strong>Boost.Object</strong></span> introduces new design patterns.
+        Thus, following new terminology is used in this documentation to describe
+        parts of said design patterns:
+      </p>
+<div class="table">
+<a name="boost_object.introduction.how_to_read_this_documentation.boost_object_terminology"></a><p class="title"><b>Table&#160;1.&#160;Boost.Object terminology</b></p>
+<div class="table-contents"><table class="table" summary="Boost.Object terminology">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Term
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>bobject</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  Any class ( and their instances ) that was directly or indirectly
+                  derived from <code class="computeroutput"><a class="link" href="boost/object/object.html" title="Class object">BObject</a></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Slot</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  A slot is a class member of a <span class="emphasis"><em>bobject</em></span> usually
+                  declared by using one of the slot macros. The <a class="link" href="boost_object/basic_usage.html" title="Basic Usage">Basic
+                  Usage</a> example implements an asynchronous slot named <code class="literal">bar</code>:
+                </p>
+<pre class="programlisting"><span class="identifier">async_slot</span><span class="special">(</span><span class="identifier">bar</span><span class="special">)</span>
+</pre>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Slot implementation</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  The <span class="emphasis"><em>slot implementation</em></span> is the function that
+                  a <span class="emphasis"><em>slot</em></span> will execute when the <span class="emphasis"><em>slot</em></span>
+                  itself was called. Above mentioned <span class="emphasis"><em>slot</em></span> <code class="literal">bar</code>'s
+                  <span class="emphasis"><em>slot implementation</em></span> is:
+                </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">_slot_bar</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">exitCode</span> <span class="special">)</span>
+</pre>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="emphasis"><em>Signal</em></span>
+                </p>
+              </td>
+<td>
+                <p>
+                  The documentation will refer to a <span class="bold"><strong>Boost.Object</strong></span>
+                  signal if not otherwise stated
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+        To get a basic overview for the architecture of a <span class="emphasis"><em>bobject</em></span>,
+        it is recommended to have a look at the <a class="link" href="boost_object/basic_usage.html" title="Basic Usage">Basic
+        Usage</a> example before starting through with the documentation.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.introduction.configuring_the_library"></a><a class="link" href="index.html#boost_object.introduction.configuring_the_library" title="Configuring the library">Configuring
+      the library</a>
+</h3></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="index.html#boost_object.introduction.configuring_the_library.static_build">Static
+        Build</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_object.introduction.configuring_the_library.semi_shared_build">Semi-Shared
+        Build</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_object.introduction.configuring_the_library.configuration_macros">Configuration
+        macros</a></span></dt>
+</dl></div>
+<p>
+        The library will default to header only. You can optionally build it as static
+        or semi-shared:
+      </p>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.introduction.configuring_the_library.static_build"></a><a class="link" href="index.html#boost_object.introduction.configuring_the_library.static_build" title="Static Build">Static
+        Build</a>
+</h4></div></div></div>
+<p>
+          To build the <span class="bold"><strong>Build.Object</strong></span> as a static
+          library, define <code class="literal">BOOST_OBJECT_LIBRARY</code> and <code class="literal">BOOST_OBJECT_STATIC_LINK</code>.
+        </p>
+<p>
+          Using the static built library in your application then only requires the
+          <code class="literal">BOOST_OBJECT_STATIC_LINK</code> macro to be defined.
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.introduction.configuring_the_library.semi_shared_build"></a><a class="link" href="index.html#boost_object.introduction.configuring_the_library.semi_shared_build" title="Semi-Shared Build">Semi-Shared
+        Build</a>
+</h4></div></div></div>
+<p>
+          If you intend to use <span class="bold"><strong>Boost.Object</strong></span> across
+          the boundaries of multiple modules ( e.g. an exe and one or more dlls ),
+          you will most probably want them all to share the same static resources.
+          For example, all calls to <code class="computeroutput"><a class="link" href="boost/object/application.html#idm17136-bb">BApplication::globalInstance()</a></code>
+          shall return the same value, independent from which module you call it.
+          For illustration purposes, let us say you have your application ( foo )
+          and your own shared library ( bar ) that your application depends on, making
+          it 2 modules.
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              In your library "bar", defining <code class="literal">BOOST_OBJECT_SHARED_INSTALL</code>
+              will export the static resources of <span class="bold"><strong>Boost.Object</strong></span>.
+            </li>
+<li class="listitem">
+              In your application "foo", defining <code class="literal">BOOST_OBJECT_SHARED</code>
+              will import the static resources of <span class="bold"><strong>Boost.Object</strong></span>,
+              and find them in your library "bar".
+            </li>
+</ul></div>
+<p>
+          You can have even more modules, simply define <code class="literal">BOOST_OBJECT_SHARED</code>
+          and make them depend on your library "bar".
+        </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            In the Semi-Shared Build, <span class="bold"><strong>Boost.Object</strong></span>
+            is still header only! Only the resources that are needed to make <span class="bold"><strong>Boost.Object</strong></span> behave like it's one unit are exported.
+            Other classes like <code class="computeroutput"><a class="link" href="boost/object/object.html" title="Class object">BObject</a></code>
+            are not exported!
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.introduction.configuring_the_library.configuration_macros"></a><a class="link" href="index.html#boost_object.introduction.configuring_the_library.configuration_macros" title="Configuration macros">Configuration
+        macros</a>
+</h4></div></div></div>
+<p>
+          There is a number of macros to configure the behavior of the library:
+        </p>
+<div class="table">
+<a name="boost_object.introduction.configuring_the_library.configuration_macros.boost_object_configuration_macro"></a><p class="title"><b>Table&#160;2.&#160;<span class="bold">Boost.Object</span> configuration macros</b></p>
+<div class="table-contents"><table class="table" summary="Boost.Object configuration macros">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Macro
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Effect
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="literal">BOOST_OBJECT_DISABLE_HIERARCHY</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    If defined, parent/child hierarchy is disabled and children will
+                    no longer be deleted when their parents are deleted. The <code class="literal">parent</code>
+                    parameter of a <span class="emphasis"><em>bobject</em></span> will only be used
+                    for thread affiliation. Define this macro if you want to use
+                    smart pointers with <span class="bold"><strong>Boost.Object</strong></span>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="literal">BOOST_OBJECT_USE_BOOST</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="bold"><strong>Boost.Object</strong></span> will depend on
+                    <span class="bold"><strong>Boost.Thread</strong></span>. This behavior
+                    is default if <code class="literal">BOOST_OBJECT_USE_STD</code> is not
+                    defined
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="literal">BOOST_OBJECT_USE_STD</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="bold"><strong>Boost.Object</strong></span> will not depend
+                    on <span class="bold"><strong>Boost.Thread</strong></span> and instead
+                    use the standard library.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="literal">BOOST_OBJECT_VERIFY_SAFE_OBJECT</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <span class="bold"><strong>Boost.Object</strong></span> will verify at
+                    runtime that your bobjects are safe. If an unsafe bobject is
+                    detected, the application will output a fatal log message. This
+                    macro is defined by default in debug build.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="literal">BOOST_OBJECT_NO_DEBUG</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Disable debug functionality for <span class="bold"><strong>Boost.Object</strong></span>
+                    even if <code class="literal">NDEBUG</code> is not defined. This does not
+                    affect assertions.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="literal">BOOST_OBJECT_SHARED</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Enables sharing the static resources of <span class="bold"><strong>Boost.Object</strong></span>
+                    across library boundaries. <a class="link" href="index.html#boost_object.introduction.configuring_the_library.semi_shared_build" title="Semi-Shared Build">See
+                    Semi-Shared Build for more information</a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="literal">BOOST_OBJECT_SHARED_INSTALL</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Will export the static resources of <span class="bold"><strong>Boost.Object</strong></span>.
+                    <a class="link" href="index.html#boost_object.introduction.configuring_the_library.semi_shared_build" title="Semi-Shared Build">See
+                    Semi-Shared Build for more information</a>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="literal">BOOST_OBJECT_NO_TLS</code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Disable usage of TLS. If disabled, performance of <span class="bold"><strong>Boost.Object</strong></span>
+                    will significantly drop at certain areas.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            <span class="bold"><strong>Boost.Object</strong></span> ignores the <code class="literal">BOOST_ALL_*_LINK</code>
+            macros.
+          </p></td></tr>
+</table></div>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.introduction.supported_platforms_and_compiler"></a><a class="link" href="index.html#boost_object.introduction.supported_platforms_and_compiler" title="Supported platforms and compiler">Supported
+      platforms and compiler</a>
+</h3></div></div></div>
+<p>
+        <span class="bold"><strong>Boost.Object</strong></span> requires a c++11 compliant
+        compiler and was successfully built and tested on following platforms:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            Windows 7. MSVC 2013 or later.
+          </li>
+<li class="listitem">
+            Linux. GCC 4.9.2 and newer.
+          </li>
+</ul></div>
+<p>
+        Compilers/Platforms not listed above may work, but haven't been tested yet.
+      </p>
+<p>
+        <span class="bold"><strong>Boost.Object</strong></span> also depends on other boost
+        libraries. Please consult their documentation for platform support and dependencies.
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            <a href="../../../../doc/html/boost_asio.html" target="_top">Boost.Asio</a>
+          </li>
+<li class="listitem">
+            If <code class="literal">BOOST_OBJECT_USE_BOOST</code> is defined, <span class="bold"><strong>Boost.Object</strong></span>
+            depends on <a href="../../../../doc/html/thread.html" target="_top">Boost.Thread</a>.
+          </li>
+</ul></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.introduction.qt_similarities_and_differences"></a><a class="link" href="index.html#boost_object.introduction.qt_similarities_and_differences" title="Qt - Similarities and Differences">Qt
+      - Similarities and Differences</a>
+</h3></div></div></div>
+<p>
+        If you never used Qt before, you can skip this section. For everybody else,
+        this and <a class="link" href="boost_object/basic_usage.html" title="Basic Usage">Basic Usage</a> can
+        be a quick start into using <span class="bold"><strong>Boost.Object</strong></span>,
+        or at the very least a quick summary of similarities and differences to Qt.
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            Similarities
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                  Requires an application object ( Qt: <code class="literal">QCoreApplication</code>,
+                  <span class="bold"><strong>Boost.Object</strong></span>: <code class="computeroutput"><a class="link" href="boost/object/application.html" title="Class application">BApplication</a></code>
+                  ).
+                </li>
+<li class="listitem">
+                  Inherit from a general base class. In Qt this is <code class="literal">QObject</code>,
+                  for <span class="bold"><strong>Boost.Object</strong></span> it is <code class="literal">BObject</code>
+                  ( or <code class="computeroutput"><a class="link" href="boost/object/object.html" title="Class object">boost::object::object</a></code>
+                  ).
+                </li>
+<li class="listitem">
+                  Macro inside the class body. In Qt it is <code class="literal">Q_OBJECT</code>,
+                  for <span class="bold"><strong>Boost.Object</strong></span> it is <code class="literal">B_OBJECT</code>.
+                  <code class="literal">B_OBJECT</code> however takes one parameter, which
+                  is the type of the class.
+                </li>
+</ul></div>
+          </li>
+<li class="listitem">
+            Differences
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                  No need for something like MOC, or any other extra compiler or
+                  non-standard c++ technique. <span class="bold"><strong>Boost.Object</strong></span>
+                  utilizes template/macro magic to provide a minimalistic API.
+                </li>
+<li class="listitem">
+                  Templated Objects are possible with <span class="bold"><strong>Boost.Object</strong></span>.
+                </li>
+<li class="listitem">
+                  The slot declares in what manner ( Queued/Direct/Auto ) it will
+                  call its slot implementation, not the connection made between a
+                  signal and a slot. This also applies if the slot is called manually
+                  and not via a signal.
+                </li>
+<li class="listitem">
+                  <span class="bold"><strong>Boost.Object is header only!</strong></span> However,
+                  depending on your setup, it might depend on other non header-only
+                  libraries.
+                </li>
+</ul></div>
+          </li>
+</ul></div>
+<p>
+        You might wonder that <span class="bold"><strong>Boost.Object</strong></span> is indeed
+        very similar to Qt, and ask yourself why use this library if Qt already exists.
+        The answer to that question is the very reason I developed this:
+      </p>
+<div class="blockquote"><blockquote class="blockquote"><p>
+          You dont have to drag the entire Qt.Core battleship along!
+        </p></blockquote></div>
+<p>
+        Imagine you are developing a library that could really benefit from simple
+        object-bound signal/slot mechanisms. However, adding megabytes of additional
+        Qt.Core dependencies that you don't need kind of kills it for you. Well,
+        problem solved now.
+      </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: August 02, 2015 at 23:12:46 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_object/basic_usage.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
+</body>
+</html>

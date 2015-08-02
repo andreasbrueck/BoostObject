@@ -1,0 +1,237 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class server</title>
+<link rel="stylesheet" href="../../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../../../../index.html" title="Boost.Object">
+<link rel="up" href="../../../../boost_object/reference.html#header.boost.object.network.tcpserver_hpp" title="Header &lt;boost/object/network/tcpserver.hpp&gt;">
+<link rel="prev" href="client.html" title="Class client">
+<link rel="next" href="socket.html" title="Class socket">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="client.html"><img src="../../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../boost_object/reference.html#header.boost.object.network.tcpserver_hpp"><img src="../../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="socket.html"><img src="../../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.object.network.tcp.server"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class server</span></h2>
+<p>boost::object::network::tcp::server</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../../../boost_object/reference.html#header.boost.object.network.tcpserver_hpp" title="Header &lt;boost/object/network/tcpserver.hpp&gt;">boost/object/network/tcpserver.hpp</a>&gt;
+
+</span>
+<span class="keyword">class</span> <a class="link" href="server.html" title="Class server">server</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="comment">// <a class="link" href="server.html#boost.object.network.tcp.serverconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">explicit</span> <a class="link" href="server.html#idp6082112-bb"><span class="identifier">server</span></a><span class="special">(</span><span class="identifier">object</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="server.html#idp6086400-bb"><span class="identifier">server</span></a><span class="special">(</span><span class="identifier">uint16_t</span><span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="server.html#idp6091296-bb"><span class="identifier">server</span></a><span class="special">(</span><span class="identifier">IpVersion</span><span class="special">,</span> <span class="identifier">uint16_t</span><span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="server.html#idp6096864-bb"><span class="identifier">server</span></a><span class="special">(</span><span class="emphasis"><em><span class="identifier">unspecified</span></em></span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="server.html#idp6161088-bb">protected member functions</a></span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <a class="link" href="server.html#idp6161664-bb"><span class="identifier">acceptedConnection</span></a><span class="special">(</span><a class="link" href="socket.html" title="Class socket">tcp::socket</a> <span class="special">*</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="server.html#idp6165392-bb"><span class="identifier">start</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="server.html#idp6166624-bb"><span class="identifier">stop</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="identifier">uint16_t</span> <a class="link" href="server.html#idp6167856-bb"><span class="identifier">port</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="keyword">bool</span> <a class="link" href="server.html#idp6169088-bb"><span class="identifier">reuseAddress</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="server.html#idp6170400-bb"><span class="identifier">setReuseAddress</span></a><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">signal</span> <span class="keyword">void</span> <a class="link" href="server.html#idp6172368-bb"><span class="identifier">newConnection</span></a><span class="special">(</span><a class="link" href="socket.html" title="Class socket">tcp::socket</a> <span class="special">*</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="idp9232896"></a><h2>Description</h2>
+<p>The tcp server. </p>
+<div class="refsect2">
+<a name="idp9233600"></a><h3>
+<a name="boost.object.network.tcp.serverconstruct-copy-destruct"></a><code class="computeroutput">server</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6082112-bb"></a><span class="identifier">server</span><span class="special">(</span><span class="identifier">object</span> <span class="special">*</span> parent <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>
+<p>
+<span class="emphasis"><em>Port</em></span> will be automatically assigned. You can use the <code class="computeroutput">port()</code> member function to retrieve that port.</p>
+<p><span class="emphasis"><em>IpVersion</em></span> will default to IPv4. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">parent</code></span></p></td>
+<td><p>Makes this instance the child of <code class="computeroutput">parent</code> </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6086400-bb"></a><span class="identifier">server</span><span class="special">(</span><span class="identifier">uint16_t</span> port<span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> parent <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>
+<p>
+<span class="emphasis"><em>IpVersion</em></span> will default to IPv4. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">parent</code></span></p></td>
+<td><p>Makes this instance the child of <code class="computeroutput">parent</code> </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">port</code></span></p></td>
+<td><p>The port this server shall listen on. May be zero, in which case a port is automatically assigned. You can use the <code class="computeroutput">port()</code> member function to retrieve that port. </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6091296-bb"></a><span class="identifier">server</span><span class="special">(</span><span class="identifier">IpVersion</span> ipver<span class="special">,</span> <span class="identifier">uint16_t</span> port<span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> parent <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>
+<p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">ipver</code></span></p></td>
+<td><p>The IP version ( IPv4/IPv6 ) </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">parent</code></span></p></td>
+<td><p>Makes this instance the child of <code class="computeroutput">parent</code> </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">port</code></span></p></td>
+<td><p>The port this server shall listen on. May be zero, in which case a port is automatically assigned. You can use the <code class="computeroutput">port()</code> member function to retrieve that port. </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6096864-bb"></a><span class="identifier">server</span><span class="special">(</span><span class="emphasis"><em><span class="identifier">unspecified</span></em></span> p<span class="special">)</span><span class="special">;</span></pre>
+<p>Constructor for internal extensions of this class. </p>
+</li>
+</ol></div>
+</div>
+<div class="refsect2">
+<a name="idp9285232"></a><h3>
+<a name="idp6161088-bb"></a><code class="computeroutput">server</code> protected member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">virtual</span> <span class="keyword">void</span> <a name="idp6161664-bb"></a><span class="identifier">acceptedConnection</span><span class="special">(</span><a class="link" href="socket.html" title="Class socket">tcp::socket</a> <span class="special">*</span> sock<span class="special">)</span><span class="special">;</span></pre>
+<p>This function is internally called when a new connection got accepted. It emits the signal <code class="computeroutput">newConnection</code>, so overriding this function will stop that signal from being emitted.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">sock</code></span></p></td>
+<td><p>The newly accepted connection </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6165392-bb"></a><span class="identifier">start</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Starts the server, accepting new connections. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6166624-bb"></a><span class="identifier">stop</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Stops the server, not accepting new connections. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="identifier">uint16_t</span> <a name="idp6167856-bb"></a><span class="identifier">port</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Returns the port this server listens on. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">bool</span> <a name="idp6169088-bb"></a><span class="identifier">reuseAddress</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Gets the current setting of the SO_REUSEADDR socket option. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6170400-bb"></a><span class="identifier">setReuseAddress</span><span class="special">(</span><span class="keyword">bool</span> value<span class="special">)</span><span class="special">;</span></pre>
+<p>Sets the SO_REUSEADDR socket option. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">signal</span> <span class="keyword">void</span> <a name="idp6172368-bb"></a><span class="identifier">newConnection</span><span class="special">(</span><a class="link" href="socket.html" title="Class socket">tcp::socket</a> <span class="special">*</span> sock<span class="special">)</span><span class="special">;</span></pre>
+<p>This signal is emitted when a new connection got accepted.</p>
+<p>Note: If you override <code class="computeroutput">acceptedConnection</code>, this signal is not emitted.</p>
+<p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">sock</code></span></p></td>
+<td><p>The newly accepted connection </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="client.html"><img src="../../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../boost_object/reference.html#header.boost.object.network.tcpserver_hpp"><img src="../../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="socket.html"><img src="../../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

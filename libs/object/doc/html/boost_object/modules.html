@@ -1,0 +1,137 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Modules</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../index.html" title="Boost.Object">
+<link rel="up" href="../index.html" title="Boost.Object">
+<link rel="prev" href="advanced.html" title="Advanced">
+<link rel="next" href="reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="advanced.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_object.modules"></a><a class="link" href="modules.html" title="Modules">Modules</a>
+</h2></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="modules.html#boost_object.modules.utils">Utils</a></span></dt>
+<dt><span class="section"><a href="modules.html#boost_object.modules.network">Network</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.modules.utils"></a><a class="link" href="modules.html#boost_object.modules.utils" title="Utils">Utils</a>
+</h3></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="modules.html#boost_object.modules.utils.class_bytearray">class bytearray</a></span></dt>
+<dt><span class="section"><a href="modules.html#boost_object.modules.utils.class_timer">class timer</a></span></dt>
+<dt><span class="section"><a href="modules.html#boost_object.modules.utils.class_systemsignals">class
+        systemsignals</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.modules.utils.class_bytearray"></a><a class="link" href="modules.html#boost_object.modules.utils.class_bytearray" title="class bytearray">class bytearray</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><a class="link" href="../boost/object/utils/bytearray.html" title="Class bytearray">bytearray</a></code>
+          class is the default contiguous data container class used by <span class="bold"><strong>Boost.Object</strong></span>. When copying a <span class="emphasis"><em>bytearray</em></span>,
+          its internal data is not copied, but instead shared between all future
+          copies of a <span class="emphasis"><em>bytearray</em></span>. The internal data will only
+          be copied when one shared instance of a <span class="emphasis"><em>bytearray</em></span>
+          intends to perform non read-only access on it.
+        </p>
+<p>
+          This boosts performance when for example giving a <span class="emphasis"><em>bytearray</em></span>
+          as a parameter to an <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.auto_slot" title="Automatic slot">automatic
+          slot</a> and you do not know or want to worry about whether its slot
+          implementation will be executed directly or asynchronously - the latter
+          requiring the parameters to be copied.
+        </p>
+<p>
+          This behavior is illustrated in the <span class="emphasis"><em>basic_bytearray</em></span>
+          example:
+        </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">BByteArray</span> <span class="identifier">ar1</span> <span class="special">(</span> <span class="string">"abcdef"</span> <span class="special">);</span>
+    <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">tmp</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+
+    <span class="comment">// Creating another bytearray that shares the internal data with ar1</span>
+    <span class="identifier">BByteArray</span> <span class="identifier">ar2</span> <span class="special">=</span> <span class="identifier">ar1</span><span class="special">;</span>
+
+    <span class="identifier">printf</span><span class="special">(</span><span class="string">"ar1 internal buffer address: %p\n"</span><span class="special">,</span> <span class="special">(</span><span class="keyword">void</span><span class="special">*)</span><span class="identifier">ar1</span><span class="special">.</span><span class="identifier">constData</span><span class="special">());</span>
+    <span class="identifier">printf</span><span class="special">(</span><span class="string">"ar2 internal buffer address: %p\n\n"</span><span class="special">,</span> <span class="special">(</span><span class="keyword">void</span><span class="special">*)</span><span class="identifier">ar2</span><span class="special">.</span><span class="identifier">constData</span><span class="special">());</span>
+
+    <span class="comment">// performing a non read-only operation on ar2, using the non-const version</span>
+    <span class="comment">// of BByteArray::data()</span>
+    <span class="identifier">tmp</span> <span class="special">=</span> <span class="identifier">ar2</span><span class="special">.</span><span class="identifier">data</span><span class="special">();</span>
+
+    <span class="identifier">printf</span><span class="special">(</span><span class="string">"ar1 internal buffer address: %p\n"</span><span class="special">,</span> <span class="special">(</span><span class="keyword">void</span><span class="special">*)</span><span class="identifier">ar1</span><span class="special">.</span><span class="identifier">constData</span><span class="special">());</span>
+    <span class="identifier">printf</span><span class="special">(</span><span class="string">"ar2 internal buffer address: %p\n\n"</span><span class="special">,</span> <span class="special">(</span><span class="keyword">void</span><span class="special">*)</span><span class="identifier">ar2</span><span class="special">.</span><span class="identifier">constData</span><span class="special">());</span>
+
+    <span class="comment">// performing another non read-only operation on ar2, but this time, ar2 is</span>
+    <span class="comment">// not shared, thus it doesn't need to copy its internal data</span>
+    <span class="identifier">tmp</span> <span class="special">=</span> <span class="identifier">ar2</span><span class="special">.</span><span class="identifier">data</span><span class="special">();</span>
+
+    <span class="identifier">printf</span><span class="special">(</span><span class="string">"ar1 internal buffer address: %p\n"</span><span class="special">,</span> <span class="special">(</span><span class="keyword">void</span><span class="special">*)</span><span class="identifier">ar1</span><span class="special">.</span><span class="identifier">constData</span><span class="special">());</span>
+    <span class="identifier">printf</span><span class="special">(</span><span class="string">"ar2 internal buffer address: %p\n\n"</span><span class="special">,</span> <span class="special">(</span><span class="keyword">void</span><span class="special">*)</span><span class="identifier">ar2</span><span class="special">.</span><span class="identifier">constData</span><span class="special">());</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Possible output:
+        </p>
+<pre class="programlisting">ar1 internal buffer address: 007C9918
+ar2 internal buffer address: 007C9918
+
+ar1 internal buffer address: 007C9918
+ar2 internal buffer address: 00797410 // changed
+
+ar1 internal buffer address: 007C9918
+ar2 internal buffer address: 00797410 // same</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.modules.utils.class_timer"></a><a class="link" href="modules.html#boost_object.modules.utils.class_timer" title="class timer">class timer</a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><a class="link" href="../boost/object/utils/timer.html" title="Class timer">BTimer Reference</a></code>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_object.modules.utils.class_systemsignals"></a><a class="link" href="modules.html#boost_object.modules.utils.class_systemsignals" title="class systemsignals">class
+        systemsignals</a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><a class="link" href="../boost/object/utils/systemsignals.html" title="Class systemsignals">BSystemSignals Reference</a></code>
+        </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.modules.network"></a><a class="link" href="modules.html#boost_object.modules.network" title="Network">Network</a>
+</h3></div></div></div>
+<p>
+        The network module is vastly incomplete. Please look at the <a class="link" href="reference.html#boost_object_network_header_reference" title="Boost.Object.Network Header Reference">Network
+        reference</a> or the <span class="emphasis"><em>network_*</em></span> examples while this
+        module and its documentation is under construction.
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="advanced.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

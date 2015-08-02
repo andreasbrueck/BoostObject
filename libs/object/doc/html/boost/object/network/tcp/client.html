@@ -1,0 +1,128 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class client</title>
+<link rel="stylesheet" href="../../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../../../../index.html" title="Boost.Object">
+<link rel="up" href="../../../../boost_object/reference.html#header.boost.object.network.tcpclient_hpp" title="Header &lt;boost/object/network/tcpclient.hpp&gt;">
+<link rel="prev" href="../../utils/timer.html" title="Class timer">
+<link rel="next" href="server.html" title="Class server">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../utils/timer.html"><img src="../../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../boost_object/reference.html#header.boost.object.network.tcpclient_hpp"><img src="../../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="server.html"><img src="../../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.object.network.tcp.client"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class client</span></h2>
+<p>boost::object::network::tcp::client</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../../../boost_object/reference.html#header.boost.object.network.tcpclient_hpp" title="Header &lt;boost/object/network/tcpclient.hpp&gt;">boost/object/network/tcpclient.hpp</a>&gt;
+
+</span>
+<span class="keyword">class</span> <a class="link" href="client.html" title="Class client">client</a> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">object</span><span class="special">::</span><span class="identifier">network</span><span class="special">::</span><span class="identifier">tcp</span><span class="special">::</span><span class="identifier">socket</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="comment">// <a class="link" href="client.html#boost.object.network.tcp.clientconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">explicit</span> <a class="link" href="client.html#idp6111248-bb"><span class="identifier">client</span></a><span class="special">(</span><span class="identifier">object</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="client.html#idp6114080-bb"><span class="identifier">client</span></a><span class="special">(</span><span class="emphasis"><em><span class="identifier">unspecified</span></em></span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="client.html#idp6180528-bb">protected member functions</a></span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="client.html#idp6181104-bb"><span class="identifier">connect</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">uint16_t</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">signal</span> <span class="keyword">void</span> <a class="link" href="client.html#idp6109296-bb"><span class="identifier">connected</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="idp9098224"></a><h2>Description</h2>
+<p>The tcp client class. </p>
+<div class="refsect2">
+<a name="idp9098928"></a><h3>
+<a name="boost.object.network.tcp.clientconstruct-copy-destruct"></a><code class="computeroutput">client</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6111248-bb"></a><span class="identifier">client</span><span class="special">(</span><span class="identifier">object</span> <span class="special">*</span> parent <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>
+<p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">parent</code></span></p></td>
+<td><p>Makes this instance the child of <code class="computeroutput">parent</code> </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6114080-bb"></a><span class="identifier">client</span><span class="special">(</span><span class="emphasis"><em><span class="identifier">unspecified</span></em></span> p<span class="special">)</span><span class="special">;</span></pre>
+<p>Constructor for internal extensions of this class. </p>
+</li>
+</ol></div>
+</div>
+<div class="refsect2">
+<a name="idp9117312"></a><h3>
+<a name="idp6180528-bb"></a><code class="computeroutput">client</code> protected member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6181104-bb"></a><span class="identifier">connect</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> host<span class="special">,</span> <span class="identifier">uint16_t</span> port<span class="special">)</span><span class="special">;</span></pre>
+<p>
+This connects the socket to <code class="computeroutput">host:<code class="computeroutput">port</code>.</code> On success, the signal <code class="computeroutput">connected</code> is emitted. On failure, <code class="computeroutput">disconnected</code> is emitted. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">host</code></span></p></td>
+<td><p>A hostname or IPv4/6 address to connect to </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">port</code></span></p></td>
+<td><p>The port to connect to.</p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">signal</span> <span class="keyword">void</span> <a name="idp6109296-bb"></a><span class="identifier">connected</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>This signal is emitted when the socket successfully connects to the host and port given to the <code class="computeroutput">connect</code> function. </p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../utils/timer.html"><img src="../../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../../boost_object/reference.html#header.boost.object.network.tcpclient_hpp"><img src="../../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="server.html"><img src="../../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

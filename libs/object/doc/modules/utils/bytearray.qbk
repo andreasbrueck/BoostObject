@@ -1,0 +1,14 @@
+[section class bytearray]
+The [classref boost::object::utils::bytearray bytearray] class is the default contiguous data container class used by [*Boost.Object].
+When copying a ['bytearray], its internal data is not copied, but instead shared between all future copies of a ['bytearray].
+The internal data will only be copied when one shared instance of a ['bytearray] intends to perform non read-only access on it.
+
+This boosts performance when for example giving a ['bytearray] as a parameter to an [link boost_object.walkthrough.slots.auto_slot automatic slot] and you do not know or want to worry about
+whether its slot implementation will be executed directly or asynchronously - the latter requiring the parameters to be copied. 
+
+This behavior is illustrated in the ['basic_bytearray] example:
+[import ../../../examples/basic_bytearray/main.cpp]
+[basic_bytearray_cpp_main]
+Possible output:
+[basic_bytearray_cpp_main_possible_output]
+[endsect]

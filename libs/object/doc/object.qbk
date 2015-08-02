@@ -1,0 +1,17 @@
+
+[library Boost.Object
+	[quickbook 1.6]
+]
+
+[/=============================================================================]
+
+[include introduction.qbk]
+[include basicuse.qbk]
+[include walkthrough.qbk]
+[include advanced.qbk]
+[include modules.qbk]
+[section Reference]
+[xinclude object_core_doxy.xml]
+[xinclude object_utils_doxy.xml]
+[xinclude object_network_doxy.xml]
+[endsect]

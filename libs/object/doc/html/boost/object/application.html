@@ -1,0 +1,185 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class application</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../../index.html" title="Boost.Object">
+<link rel="up" href="../../boost_object/reference.html#header.boost.object.application_hpp" title="Header &lt;boost/object/application.hpp&gt;">
+<link rel="prev" href="../../boost_object/reference.html" title="Reference">
+<link rel="next" href="application/QuitBehavior.html" title="Type QuitBehavior">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../boost_object/reference.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_object/reference.html#header.boost.object.application_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="application/QuitBehavior.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.object.application"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class application</span></h2>
+<p>boost::object::application</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../boost_object/reference.html#header.boost.object.application_hpp" title="Header &lt;boost/object/application.hpp&gt;">boost/object/application.hpp</a>&gt;
+
+</span>
+<span class="keyword">class</span> <a class="link" href="application.html" title="Class application">application</a> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">object</span><span class="special">::</span><span class="identifier">object</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">enum</span> <a class="link" href="application/QuitBehavior.html" title="Type QuitBehavior">QuitBehavior</a><span class="special">;</span>
+  <span class="comment">// <a class="link" href="application.html#boost.object.applicationconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">explicit</span> <a class="link" href="application.html#idm12464-bb"><span class="identifier">application</span></a><span class="special">(</span><span class="identifier">QuitBehavior</span> <span class="special">=</span> <span class="identifier">QuitDefault</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="application.html#idp6315376-bb"><span class="identifier">application</span></a><span class="special">(</span><span class="emphasis"><em><span class="identifier">unspecified</span></em></span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="application.html#idm17984-bb"><span class="special">~</span><span class="identifier">application</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="application.html#idm28576-bb">public member functions</a></span>
+  <span class="keyword">int</span> <a class="link" href="application.html#idm28016-bb"><span class="identifier">exec</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="application.html#idm25136-bb"><span class="identifier">setLogHandler</span></a><span class="special">(</span><span class="identifier">log_handler_t</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">async_slot</span> <span class="keyword">void</span> <a class="link" href="application.html#idm23168-bb"><span class="identifier">quit</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">async_slot</span> <span class="keyword">void</span> <a class="link" href="application.html#idm19872-bb"><span class="identifier">exit</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="application.html#idm17696-bb">public static functions</a></span>
+  <span class="keyword">static</span> <a class="link" href="application.html" title="Class application">application</a> <span class="special">*</span> <a class="link" href="application.html#idm17136-bb"><span class="identifier">globalInstance</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="idp6534480"></a><h2>Description</h2>
+<p>Every Boost.Object application needs to create this class once, before any other objects inherited by <a class="link" href="object.html" title="Class object">boost::object::object</a> are created. Example: </p>
+<pre class="programlisting"> <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">object</span><span class="special">/</span><span class="identifier">application</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+ <span class="identifier">BOOST_OBJECT_INSTALL</span>
+
+ <span class="keyword">int</span> <span class="identifier">main</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span> <span class="special">*</span><span class="special">*</span> <span class="identifier">argv</span> <span class="special">)</span>
+ <span class="special">{</span>
+     <a class="link" href="application.html" title="Class application">boost::object::application</a> <span class="identifier">app</span><span class="special">;</span>
+
+     <span class="comment">// .</span>
+     <span class="comment">// .</span>
+     <span class="comment">// .</span>
+
+     <span class="keyword">return</span> <span class="identifier">app</span><span class="special">.</span><span class="identifier">exec</span> <span class="special">(</span><span class="special">)</span><span class="special">;</span>
+ <span class="special">}</span>
+</pre>
+<p> The application class will serve the main eventloop and will be the parent for every following class inherited by <a class="link" href="object.html" title="Class object">boost::object::object</a>, unless you specify a different parent via its constructor.</p>
+<p><b>Notes for when you compile with <span class="emphasis"><em>BOOST_OBJECT_DISABLE_HIERARCHY</em></span>:&#160;</b></p>
+<p>
+If you inherit from this class, and create bobjects ( classes that are directly or indirectly derived from BObject ), you have to directly delete them ( using <code class="computeroutput">delete</code> or they need to go out of scope, <code class="computeroutput">BObject::deleteLater()</code> is not an option ) before <code class="computeroutput">application::~application()</code> is invoked. Otherwise it will cause undefined behavior!</p>
+<p>Infact, all bobjects need to be deleted before <code class="computeroutput">application::~application()</code> is invoked. </p>
+<div class="refsect2">
+<a name="idp6565664"></a><h3>
+<a name="boost.object.applicationconstruct-copy-destruct"></a><code class="computeroutput">application</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idm12464-bb"></a><span class="identifier">application</span><span class="special">(</span><span class="identifier">QuitBehavior</span> qb <span class="special">=</span> <span class="identifier">QuitDefault</span><span class="special">)</span><span class="special">;</span></pre>Constructor. <p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">qb</code></span></p></td>
+<td><p>The QuitBehavior of this application </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6315376-bb"></a><span class="identifier">application</span><span class="special">(</span><span class="emphasis"><em><span class="identifier">unspecified</span></em></span><span class="special">)</span><span class="special">;</span></pre>
+<p>Constructor for internal extensions of this class. </p>
+</li>
+<li class="listitem"><pre class="literallayout"><a name="idm17984-bb"></a><span class="special">~</span><span class="identifier">application</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
+</ol></div>
+</div>
+<div class="refsect2">
+<a name="idp6586912"></a><h3>
+<a name="idm28576-bb"></a><code class="computeroutput">application</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">int</span> <a name="idm28016-bb"></a><span class="identifier">exec</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Enters the event loop. <p>
+This call blocks indefinitely, until <span class="emphasis"><em>this-&gt;quit()</em></span> is called. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>ExitCode given to <span class="emphasis"><em>this-&gt;quit()</em></span> </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">void</span> <a name="idm25136-bb"></a><span class="identifier">setLogHandler</span><span class="special">(</span><span class="identifier">log_handler_t</span> log_handler<span class="special">)</span><span class="special">;</span></pre>
+<p>Sets your custom log handler. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">async_slot</span> <span class="keyword">void</span> <a name="idm23168-bb"></a><span class="identifier">quit</span><span class="special">(</span><span class="keyword">int</span> exitCode<span class="special">)</span><span class="special">;</span></pre>
+<p>
+Makes <span class="emphasis"><em>this-&gt;exec()</em></span> return with the specified exitCode </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">exitCode</code></span></p></td>
+<td><p>The exitCode to be returned by <span class="emphasis"><em>this-&gt;exec()</em></span> </p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">async_slot</span> <span class="keyword">void</span> <a name="idm19872-bb"></a><span class="identifier">exit</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Calls <code class="computeroutput">quit()</code> with an exitCode of 0. </p>
+</li>
+</ol></div>
+</div>
+<div class="refsect2">
+<a name="idp6617040"></a><h3>
+<a name="idm17696-bb"></a><code class="computeroutput">application</code> public static functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><span class="keyword">static</span> <a class="link" href="application.html" title="Class application">application</a> <span class="special">*</span> <a name="idm17136-bb"></a><span class="identifier">globalInstance</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Access application from anywhere. <p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>Pointer to global instance of <a class="link" href="application.html" title="Class application">boost::object::application</a>, <span class="emphasis"><em>nullptr</em></span> if no application was created. </p></td>
+</tr></tbody>
+</table></div>
+</li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../../boost_object/reference.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../boost_object/reference.html#header.boost.object.application_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="application/QuitBehavior.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

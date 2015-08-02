@@ -1,0 +1,358 @@
+<?xml version="1.0" standalone="yes"?>
+<library-reference id="boost_object_core_header_reference"><title>Boost.Object.Core Header Reference</title><header name="boost/object/application.hpp">
+<namespace name="boost">
+<namespace name="object">
+<class name="application"><inherit access="public">boost::object::object</inherit><description><para>Every Boost.Object application needs to create this class once, before any other objects inherited by <classname alt="boost::object::object">boost::object::object</classname> are created. Example: <programlisting language="c++"> #include &lt;boost/object/application.hpp&gt;
+
+ BOOST_OBJECT_INSTALL
+
+ int main ( int argc, char ** argv )
+ {
+     <classname alt="boost::object::application">boost::object::application</classname> app;
+
+     // .
+     // .
+     // .
+
+     return app.exec ();
+ }
+</programlisting> The application class will serve the main eventloop and will be the parent for every following class inherited by <classname alt="boost::object::object">boost::object::object</classname>, unless you specify a different parent via its constructor.</para><para><formalpara><title>Notes for when you compile with <emphasis>BOOST_OBJECT_DISABLE_HIERARCHY</emphasis>:</title><para/></formalpara>
+If you inherit from this class, and create bobjects ( classes that are directly or indirectly derived from BObject ), you have to directly delete them ( using <computeroutput>delete</computeroutput> or they need to go out of scope, <computeroutput>BObject::deleteLater()</computeroutput> is not an option ) before <computeroutput>application::~application()</computeroutput> is invoked. Otherwise it will cause undefined behavior!</para><para>Infact, all bobjects need to be deleted before <computeroutput>application::~application()</computeroutput> is invoked. </para></description><enum name="QuitBehavior"><enumvalue name="QuitDefault"/><enumvalue name="QuitManual"><description><para><emphasis>exec()</emphasis> will return if: <itemizedlist>
+<listitem><para><emphasis>quit()</emphasis> is called </para></listitem>
+<listitem><para><emphasis>SIGINT</emphasis> or <emphasis>SIGTERM</emphasis> is emitted <emphasis>exec()</emphasis> will only return if you manually call <emphasis>quit()</emphasis> </para></listitem>
+</itemizedlist>
+</para></description></enumvalue><description><para>Defines when exec() will return </para></description></enum>
+<method-group name="public member functions">
+<method name="exec"><type>int</type><purpose>Enters the event loop. </purpose><description><para>
+This call blocks indefinitely, until <emphasis>this-&gt;quit()</emphasis> is called. </para></description><returns><para>ExitCode given to <emphasis>this-&gt;quit()</emphasis> </para></returns></method>
+<method name="setLogHandler"><type>void</type><parameter name="log_handler"><paramtype>log_handler_t</paramtype></parameter><description><para>Sets your custom log handler. </para></description></method>
+<method name="quit"><type>async_slot void</type><parameter name="exitCode"><paramtype>int</paramtype><description><para>The exitCode to be returned by <emphasis>this-&gt;exec()</emphasis> </para></description></parameter><description><para>
+Makes <emphasis>this-&gt;exec()</emphasis> return with the specified exitCode </para></description></method>
+<method name="exit"><type>async_slot void</type><description><para>Calls <computeroutput>quit()</computeroutput> with an exitCode of 0. </para></description></method>
+</method-group>
+<destructor/>
+<method-group name="public static functions">
+<method name="globalInstance" specifiers="static"><type><classname>application</classname> *</type><purpose>Access application from anywhere. </purpose><description><para>
+</para></description><returns><para>Pointer to global instance of <classname alt="boost::object::application">boost::object::application</classname>, <emphasis>nullptr</emphasis> if no application was created. </para></returns></method>
+</method-group>
+<method-group name="protected member functions">
+</method-group>
+<constructor specifiers="explicit"><parameter name="qb"><paramtype>QuitBehavior</paramtype><default>QuitDefault</default><description><para>The QuitBehavior of this application </para></description></parameter><purpose>Constructor. </purpose><description><para>
+</para></description></constructor>
+<constructor specifiers="explicit"><parameter name=""><paramtype><emphasis>unspecified</emphasis></paramtype></parameter><description><para>Constructor for internal extensions of this class. </para></description></constructor>
+</class></namespace>
+</namespace>
+<macro name="BOOST_OBJECT_INSTALL"><purpose>Installs static dependencies to use Boost.Object header only. </purpose></macro>
+<macro name="bApp"><description><para>Short macro to access the global instance of boost::object::unsafe::application from anywhere </para></description></macro>
+<typedef name="BApplication"><purpose>Global name for boost::object::unsafe::application. </purpose><type><classname>boost::object::application</classname></type></typedef>
+</header>
+<header name="boost/object/base.hpp">
+<namespace name="boost">
+<namespace name="object">
+<class name="base"><purpose>The base class for all BObjects. </purpose><description><para>Do not use this class directly, always use <classname alt="boost::object::object">boost::object::object</classname> instead. </para></description><method-group name="public member functions">
+<method name="deleteChildren"><type>void</type><description><para>Deletes all children of this object. </para></description></method>
+</method-group>
+<destructor><description><para>Destructor </para></description></destructor>
+</class></namespace>
+</namespace>
+</header>
+<header name="boost/object/connection.hpp">
+<namespace name="boost">
+<namespace name="object">
+<class name="connection"><description><para>The connection class is returned from the <computeroutput>connect()</computeroutput> function of a signal.</para><para>You can use it to test if the connection was successful, or to disconnect at a later point of time. </para></description><method-group name="public member functions">
+<method name="disconnect"><type>bool</type><purpose>Disconnect the connection. </purpose><description><para>
+The return value is no success indication for the disconnect. It only shows if you call was the cause of the disconnection, or if it already was disconnected before.</para><para>You can safely assume that a connection is successfully disconnected when calling this function if it wasn't already disconnected, regardless of the returned value. </para></description><returns><para>True if you disconnected the connection, false if it was already disconnected.</para></returns></method>
+<method name="connected" cv="const"><type>bool</type><description><para>
+</para></description><returns><para>True if connected, false if disconnected. </para></returns></method>
+<method name="conversion-operator" cv="const"><type>bool</type><description><para>Wrapper for <computeroutput>connected()</computeroutput> </para></description></method>
+</method-group>
+<constructor><description><para>Default constructor </para></description></constructor>
+</class></namespace>
+</namespace>
+<typedef name="BConnection"><purpose>Global name for <classname alt="boost::object::connection">boost::object::connection</classname>. </purpose><type><classname>boost::object::connection</classname></type></typedef>
+</header>
+<header name="boost/object/engine.hpp">
+<namespace name="boost">
+<namespace name="object">
+<class name="engine"><description><para>The default engine class that implements the eventloop for Boost.Object. You will not need to use this class. Use BApplication, BThread or BThreadpool instead.</para><para>This class will be moved into the detail namespace in near future. </para></description><method-group name="public member functions">
+<method name="exec"><type>void</type><description><para>Execute the engine. This function blocks indefinitely until <emphasis>this-&gt;stop()</emphasis> is called. </para></description></method>
+<method name="exec"><type>void</type><parameter name="startedUp"><paramtype>const std::function&lt; void()&gt; &amp;</paramtype><description><para>Called after the engine is set up and right before it enters the event loop. </para></description></parameter><description><para>Execute the engine. This function blocks indefinitely until <emphasis>this-&gt;stop()</emphasis> is called.</para><para>
+</para></description></method>
+<method name="stop"><type>void</type><purpose>Stops the engine. <emphasis>exec()</emphasis> will return shortly after. </purpose></method>
+<method name="threadId"><type><emphasis>unspecified</emphasis></type><description><para>
+</para></description><returns><para>ThreadId in which <computeroutput>exec()</computeroutput> was called with, or in which engine was constructed in if not <emphasis>exec()'ed</emphasis> yet. </para></returns></method>
+<method name="isInHomeThread" cv="const"><type>bool</type><purpose>Checks if the thread you're calling this function with is the thread the associated engine was executed with. </purpose><description><para>
+</para></description><returns><para>True if its the same thread, false if its a different thread. </para></returns></method>
+</method-group>
+<constructor specifiers="explicit"><parameter name=""><paramtype><emphasis>unspecified</emphasis></paramtype></parameter></constructor>
+<constructor specifiers="explicit"><parameter name=""><paramtype><emphasis>unspecified</emphasis></paramtype></parameter></constructor>
+<destructor/>
+</class></namespace>
+</namespace>
+</header>
+<header name="boost/object/object.hpp">
+<struct name="bobj"><description><para><emphasis>bobj</emphasis> is a typedef inside of your <emphasis>B_OBJECT</emphasis> macro.</para><para>This struct bobj shall attempt to document the real templated code as good as possible.</para><para>The members are all private, only accessible from the class which declared <emphasis>B_OBJECT</emphasis> </para></description><class name="async_slot_t"><template>
+      <template-nontype-parameter name="FUNCTION_SIGNATURE"><type>typename...</type><purpose><para>The signature of the slot. Can be a function signature or a list of parameters, the first being the return type: <itemizedlist>
+<listitem><para><emphasis><classname alt="bobj::async_slot_t">async_slot_t</classname>&lt;void(int)&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>async_slot_t&lt;void&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::async_slot_t">async_slot_t</classname>&lt;void()&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>async_slot_t&lt;void,int&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::async_slot_t">async_slot_t</classname>&lt;void(int)&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>async_slot_t&lt;&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::async_slot_t">async_slot_t</classname>&lt;void()&gt;</emphasis> </para></listitem>
+</itemizedlist>
+</para></purpose></template-nontype-parameter>
+    </template><description><para>
+</para></description><method-group name="public member functions">
+<method name="operator()"><type>RET</type><parameter name="args"><paramtype>ARGS...</paramtype></parameter><purpose>Calls the slot implementation in an asynchronous manner. </purpose><description><para>
+</para></description></method>
+</method-group>
+</class><class name="auto_slot_t"><template>
+      <template-nontype-parameter name="FUNCTION_SIGNATURE"><type>typename...</type><purpose><para>The signature of the slot. Can be a function signature or a list of parameters, the first being the return type: <itemizedlist>
+<listitem><para><emphasis><classname alt="bobj::auto_slot_t">auto_slot_t</classname>&lt;void(int)&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>auto_slot_t&lt;void&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::auto_slot_t">auto_slot_t</classname>&lt;void()&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>auto_slot_t&lt;void,int&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::auto_slot_t">auto_slot_t</classname>&lt;void(int)&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>auto_slot_t&lt;&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::auto_slot_t">auto_slot_t</classname>&lt;void()&gt;</emphasis> </para></listitem>
+</itemizedlist>
+</para></purpose></template-nontype-parameter>
+    </template><description><para>
+</para></description><method-group name="public member functions">
+<method name="operator()"><type>RET</type><parameter name="args"><paramtype>ARGS...</paramtype></parameter><purpose>Calls the slot implementation in a manner depending from which thread you call this function from. </purpose><description><para>
+</para></description></method>
+</method-group>
+</class><class name="direct_slot_t"><template>
+      <template-nontype-parameter name="FUNCTION_SIGNATURE"><type>typename...</type><purpose><para>The signature of the slot. Can be a function signature or a list of parameters, the first being the return type: <itemizedlist>
+<listitem><para><emphasis><classname alt="bobj::direct_slot_t">direct_slot_t</classname>&lt;void(int)&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>direct_slot_t&lt;void&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::direct_slot_t">direct_slot_t</classname>&lt;void()&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>direct_slot_t&lt;void,int&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::direct_slot_t">direct_slot_t</classname>&lt;void(int)&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>direct_slot_t&lt;&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::direct_slot_t">direct_slot_t</classname>&lt;void()&gt;</emphasis> </para></listitem>
+</itemizedlist>
+</para></purpose></template-nontype-parameter>
+    </template><description><para>
+</para></description><method-group name="public member functions">
+<method name="operator()"><type>RET</type><parameter name="args"><paramtype>ARGS...</paramtype></parameter><purpose>Calls the slot implementation directly. </purpose><description><para>
+</para></description></method>
+</method-group>
+</class><class name="signal_t"><template>
+      <template-nontype-parameter name="FUNCTION_SIGNATURE"><type>typename...</type><purpose><para>The signature of the signal. Can be a function signature or a list of parameters, the first being the return type: <itemizedlist>
+<listitem><para><emphasis><classname alt="bobj::signal_t">signal_t</classname>&lt;void(int)&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>signal_t&lt;void&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::signal_t">signal_t</classname>&lt;void()&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>signal_t&lt;void,int&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::signal_t">signal_t</classname>&lt;void(int)&gt;</emphasis> </para></listitem>
+<listitem><para><emphasis>signal_t&lt;&gt;</emphasis> Evaluates to <emphasis><classname alt="bobj::signal_t">signal_t</classname>&lt;void()&gt;</emphasis> </para></listitem>
+</itemizedlist>
+</para></purpose></template-nontype-parameter>
+    </template><description><para>
+</para></description><method-group name="private member functions">
+<method name="operator()"><type>RET</type><template>
+          <template-nontype-parameter name="CONTEXT"><type>typename...</type><purpose><para>Zero or more instances of subclasses from <classname alt="boost::object::signalcontext">boost::object::signalcontext</classname></para></purpose></template-nontype-parameter>
+        </template><parameter name="args"><paramtype>ARGS...</paramtype></parameter><parameter name="ctx"><paramtype>CONTEXT &amp;</paramtype></parameter><purpose>Emits the signal. </purpose><description><para>
+This member is private, having your bobject as friend. </para></description></method>
+</method-group>
+<method-group name="public member functions">
+<method name="connect"><type><classname>boost::object::connection</classname></type><template>
+          <template-type-parameter name="SLOT_TYPE"/>
+          <template-nontype-parameter name="DEFAULT_ARGS"><type>class...</type><purpose><para/></purpose></template-nontype-parameter>
+        </template><parameter name="slot"><paramtype>SLOT_TYPE &amp;</paramtype><description><para>The destination you want to connect this signal to</para></description></parameter><parameter name="..."><paramtype>DEFAULT_ARGS &amp;&amp;</paramtype></parameter><purpose>Connects <computeroutput>slot</computeroutput> to this signal. </purpose><description><para>
+
+<computeroutput>slot</computeroutput> may be one of the following: <itemizedlist>
+<listitem><para>A bobject slot </para></listitem>
+<listitem><para>A bobject signal </para></listitem>
+<listitem><para>A functor/lambda </para></listitem>
+<listitem><para>A (static) function</para></listitem>
+</itemizedlist>
+When connecting with a functor/lambda/(static)function, the connection will stay alive for as long as the signal does.</para><para>When connecting with another signal or a slot, the connection will automatically disconnect if either the owner bobject of <computeroutput>slot</computeroutput> is destroyed, or this signal - whichever happens first.</para><para>In both cases, you can also disconnect the connection by calling <computeroutput>disconnect()</computeroutput> on the returned <classname alt="boost::object::connection">boost::object::connection</classname> instance. </para></description></method>
+<method name="connect"><type><classname>boost::object::connection</classname></type><template>
+          <template-type-parameter name="SLOT_TYPE"/>
+          <template-nontype-parameter name="DEFAULT_ARGS"><type>class...</type><purpose><para/></purpose></template-nontype-parameter>
+        </template><parameter name="context"><paramtype><classname>boost::object::object</classname> *</paramtype><description><para>The context bobject for this connection</para></description></parameter><parameter name="slot"><paramtype>SLOT_TYPE &amp;</paramtype><description><para>The destination you want to connect this signal to </para></description></parameter><parameter name="..."><paramtype>DEFAULT_ARGS &amp;&amp;</paramtype></parameter><purpose>Connects <computeroutput>slot</computeroutput> to this signal. </purpose><description><para>
+
+<computeroutput>slot</computeroutput> may be one of the following: <itemizedlist>
+<listitem><para>A functor/lambda </para></listitem>
+<listitem><para>A (static) function</para></listitem>
+</itemizedlist>
+The connection will automatically disconnect if either the <computeroutput>context</computeroutput> bobject is destroyed, or this signal - whichever happens first.</para><para>You can also disconnect the connection by calling <computeroutput>disconnect()</computeroutput> on the returned <classname alt="boost::object::connection">boost::object::connection</classname> instance. </para></description></method>
+<method name="emit"><type>RET</type><template>
+          <template-nontype-parameter name="CONTEXT"><type>typename...</type></template-nontype-parameter>
+        </template><parameter name="args"><paramtype>ARGS...</paramtype></parameter><parameter name="ctx"><paramtype>CONTEXT...</paramtype></parameter><description><para>This is a public wrapper around the private operator(). </para></description></method>
+</method-group>
+</class><method-group name="public member functions">
+<method name="createSafe"><type>unspecified</type><template>
+          <template-nontype-parameter name="PARAMETERS"><type>typename...</type></template-nontype-parameter>
+        </template><parameter name=""><paramtype>PARAMETERS...</paramtype></parameter><description><para>Can be used to instantiate a safe bobject.</para><para><emphasis>createSafe</emphasis> is standalone, meaning it works without any declaration of <emphasis>BOOST_SAFE_OBJECT</emphasis> for this bobject.</para><para>Example: <programlisting language="c++"> namespace unsafe
+ {
+     class example : public <classname alt="boost::object::object">BObject</classname>
+     {
+         B_OBJECT(example)
+
+     public:
+         static example * create ()
+         {
+             // Creates a safe object of "type":
+             // BOOST_SAFE_OBJECT(example)
+             return bobj::createSafe ();
+         }
+     };
+ }
+</programlisting> </para></description></method>
+</method-group>
+</struct><namespace name="boost">
+<namespace name="object">
+<class name="object"><inherit access="public">boost::object::base</inherit><description><para>The base class to inherit from for every class that wants to enable Boost.Object signal/slot mechanisms. Example: <programlisting language="c++"> #include &lt;boost/object/object.hpp&gt;
+
+ class myClass : public boost::object::object
+ {
+     B_OBJECT(myClass)
+
+ protected:
+     myClass ( boost::object::base * parent = nullptr )
+         :
+           base ( parent )
+     {}
+
+ private:
+     void _slot_finish ( int exitCode )
+     {
+         bApp-&gt;quit ( exitCode );
+     }
+
+ public:
+     auto_slot(finish)
+ };
+</programlisting> </para></description><method-group name="public member functions">
+<method name="sender" cv="const"><type><classname>object</classname> *</type><description><para>When the execution of a slot implementation is caused by signal emission, the returned value is the bobject that owns the signal. Returns 0 if a signal emission was not the cause, or when not called from inside a slot implementation.</para><para>Warning: A direct slot returning void will not update the value returned by this function! </para></description></method>
+<method name="deleteLater"><type>async_slot void</type><description><para>Queues this object for deletion. It is save to call for the object that you're currently in ( this-&gt;deleteLater() ).</para><para>Note that it will not cancel any asynchronous operation for this object that is currently already in queue waiting to be dispatched. </para></description></method>
+<method name="destroyed"><type>signal void</type><parameter name="obj"><paramtype><classname>base</classname> *</paramtype></parameter><description><para>This signal emits when an objects is about to be deleted.</para><para>CAUTION: Depending on your slot type, <computeroutput>obj</computeroutput> might not live anymore by the time your slot implementation is called. If you don't know the internals of Boost.Object, it is generally discouraged to access any memory pointed to by <computeroutput>obj</computeroutput> </para></description></method>
+</method-group>
+<method-group name="protected member functions">
+</method-group>
+<constructor><parameter name="parent"><paramtype><classname>object</classname> *</paramtype><default>nullptr</default><description><para>Makes this instance the child of <computeroutput>parent</computeroutput> </para></description></parameter><purpose>Constructor. </purpose><description><para>
+If <computeroutput>parent</computeroutput> equals <emphasis>nullptr</emphasis>, <computeroutput>parent</computeroutput> will be internally set to your BApplication instance. </para></description></constructor>
+<constructor><parameter name="p"><paramtype><emphasis>unspecified</emphasis></paramtype></parameter><description><para>Constructor for internal extensions of this class. </para></description></constructor>
+</class></namespace>
+</namespace>
+<macro name="B_OBJECT" kind="functionlike"><macro-parameter name="CLASSNAME"><description><para>The type of your class</para></description></macro-parameter><description><para>This macro defines dependencies for your class that other utilities of Boost.Object ( signal/slots/etc ) need.</para><para>
+Possible use: <programlisting language="c++"> class myClass1 : public <classname alt="boost::object::object">BObject</classname>
+ {
+     B_OBJECT(myClass1)
+
+     // ..
+ };
+
+ template &lt; typename TARG1, typename TARG2, typename... TARGREST &gt;
+ class myClass2 : public <classname alt="boost::object::object">BObject</classname>
+ {
+     B_OBJECT(myClass2&lt;TARG1,TARG2,TARGREST...&gt;)
+
+     // ..
+ };
+</programlisting> </para></description></macro>
+<macro name="BOOST_SAFE_OBJECT" kind="functionlike"><macro-parameter name="CLASSNAME"><description><para>The name of your class nested in namespace unsafe </para></description></macro-parameter><macro-parameter name="..."><description><para>All template parameters required for your class, if any.</para></description></macro-parameter><description><para>This macro helps you define a safe version of your bobject.</para><para>
+Possible use: <programlisting language="c++"> namespace unsafe
+ {
+     class myObject : public <classname alt="boost::object::object">BObject</classname> {};
+
+     template &lt; typename TARG1, typename... TARGREST &gt;
+     class myOtherObject : public <classname alt="boost::object::object">BObject</classname> {};
+ }
+
+ BOOST_SAFE_OBJECT(myObject)
+
+ template &lt; typename TARG1, typename... TARGREST &gt;
+ BOOST_SAFE_OBJECT(myOtherObject,TARG1,TARGREST...)
+</programlisting></para><para>If you want to use a different nested namespace, use BOOST_SAFE_OBJECT_NS </para></description></macro>
+<macro name="BOOST_SAFE_OBJECT_NS" kind="functionlike"><macro-parameter name="NAMESPACE"><description><para>The namespace your class is nested in </para></description></macro-parameter><macro-parameter name="CLASSNAME"><description><para>The name of your class nested in namespace <computeroutput>NAMESPACE</computeroutput> </para></description></macro-parameter><macro-parameter name="..."><description><para>All template parameters required for your class, if any.</para></description></macro-parameter><description><para>This macro helps you define a safe version of your bobject.</para><para>
+Possible use: <programlisting language="c++"> namespace myownunsafenamespace
+ {
+     class myObject : public <classname alt="boost::object::object">BObject</classname> {};
+
+     template &lt; typename TARG1, typename... TARGREST &gt;
+     class myOtherObject : public <classname alt="boost::object::object">BObject</classname> {};
+ }
+
+ BOOST_SAFE_OBJECT_NS(myownunsafenamespace,myObject)
+
+ template &lt; typename TARG1, typename... TARGREST &gt;
+ BOOST_SAFE_OBJECT_NS(myownunsafenamespace,myOtherObject,TARG1,TARGREST...)
+</programlisting> </para></description></macro>
+<typedef name="BObject"><purpose>Global name for <classname alt="boost::object::object">boost::object::object</classname>. </purpose><type><classname>boost::object::object</classname></type></typedef>
+</header>
+<header name="boost/object/signal_macros.hpp">
+<macro name="BOOST_OBJECT_SIGNAL" kind="functionlike"><macro-parameter name="NAME"><description><para>The name of your signal </para></description></macro-parameter><macro-parameter name="PROTOTYPE"><description><para>The function prototype this signal shall have</para></description></macro-parameter><description><para>Declares a signal named <computeroutput>NAME</computeroutput> which will evaluate as a function of type <computeroutput>PROTOTYPE</computeroutput>.</para><para>
+Possible usage: <programlisting language="c++"> BOOST_OBJECT_SIGNAL(foo,void(int))
+</programlisting> </para></description></macro>
+<macro name="bsignal" kind="functionlike"><macro-parameter name="NAME"><description><para>The name of your signal </para></description></macro-parameter><macro-parameter name="PROTOTYPE"><description><para>The function prototype this signal shall have</para></description></macro-parameter><description><para>Declares a signal named <computeroutput>NAME</computeroutput> which will evaluate as a function of type <computeroutput>PROTOTYPE</computeroutput>.</para><para>
+Possible usage: <programlisting language="c++"> bsignal(foo,void(int))
+</programlisting></para><para>Define <emphasis>BOOST_OBJECT_NO_SHORT_SIGNAL_MACROS</emphasis> to disable this macro. </para></description></macro>
+</header>
+<header name="boost/object/signalcontext.hpp">
+<namespace name="boost">
+<namespace name="object">
+<class name="signalcontext"><struct name="dontSendTo"><description><para>When emitting a signal, pass one or more instances of <classname alt="boost::object::signalcontext::dontSendTo">dontSendTo</classname> to prohibit the signal to emit to a specifit bobject. </para></description><method-group name="public member functions">
+</method-group>
+<constructor><parameter name="obj"><paramtype><classname>object</classname> *</paramtype><description><para>The bobject you do not want the signal to be emitted towards. </para></description></parameter><purpose>Constructor of <classname alt="boost::object::signalcontext::dontSendTo">dontSendTo</classname>. </purpose><description><para>
+</para></description></constructor>
+</struct></class></namespace>
+</namespace>
+<typedef name="BSignalContext"><purpose>Global name for <classname alt="boost::object::signalcontext">boost::object::signalcontext</classname>. </purpose><type><classname>boost::object::signalcontext</classname></type></typedef>
+</header>
+<header name="boost/object/slot_macros.hpp">
+<macro name="BOOST_OBJECT_ASYNC_SLOT" kind="functionlike"><macro-parameter name="NAME"/><macro-parameter name="IMPL"/><description><para>Declare an asynchronous slot named <computeroutput>NAME</computeroutput>. The slot implementation will be <computeroutput>IMPL</computeroutput>.</para><para>If no parameter <computeroutput>IMPL</computeroutput> is provided, it will default to _slot_NAME</para><para>Possible usage: <programlisting language="c++"> BOOST_OBJECT_ASYNC_SLOT(foo)     // The slot implementation will be _slot_foo
+ BOOST_OBJECT_ASYNC_SLOT(foo,bar) // The slot implementation is bar
+</programlisting> </para></description></macro>
+<macro name="BOOST_OBJECT_DIRECT_SLOT" kind="functionlike"><macro-parameter name="NAME"/><macro-parameter name="IMPL"/><description><para>Declare a direct slot named <computeroutput>NAME</computeroutput>. The slot implementation will be <computeroutput>IMPL</computeroutput>.</para><para>If no parameter <computeroutput>IMPL</computeroutput> is provided, it will default to _slot_NAME</para><para>Possible usage: <programlisting language="c++"> BOOST_OBJECT_DIRECT_SLOT(foo)     //The slot implementation will be _slot_foo
+ BOOST_OBJECT_DIRECT_SLOT(foo,bar) //The slot implementation is bar
+</programlisting> </para></description></macro>
+<macro name="BOOST_OBJECT_AUTO_SLOT" kind="functionlike"><macro-parameter name="NAME"/><macro-parameter name="IMPL"/><description><para>Declare an automatic slot named <computeroutput>NAME</computeroutput>. The slot implementation will be <computeroutput>IMPL</computeroutput>.</para><para>If no parameter <computeroutput>IMPL</computeroutput> is provided, it will default to _slot_NAME</para><para>Possible usage: <programlisting language="c++"> BOOST_OBJECT_AUTO_SLOT(foo)     //The slot implementation will be _slot_foo
+ BOOST_OBJECT_AUTO_SLOT(foo,bar) //The slot implementation is bar
+</programlisting> </para></description></macro>
+<macro name="async_slot" kind="functionlike"><macro-parameter name="NAME"/><macro-parameter name="IMPL"/><description><para>Declare an asynchronous slot named <computeroutput>NAME</computeroutput>. The slot implementation will be <computeroutput>IMPL</computeroutput>.</para><para>If no parameter <computeroutput>IMPL</computeroutput> is provided, it will default to _slot_NAME</para><para>Possible usage: <programlisting language="c++"> async_slot(foo)     //The slot implementation will be _slot_foo
+ async_slot(foo,bar) //The slot implementation is bar
+</programlisting></para><para>Define <emphasis>BOOST_OBJECT_NO_SHORT_SLOT_MACROS</emphasis> to disable this macro. </para></description></macro>
+<macro name="direct_slot" kind="functionlike"><macro-parameter name="NAME"/><macro-parameter name="IMPL"/><description><para>Declare a direct slot named <computeroutput>NAME</computeroutput>. The slot implementation will be <computeroutput>IMPL</computeroutput>.</para><para>If no parameter <computeroutput>IMPL</computeroutput> is provided, it will default to _slot_NAME</para><para>Possible usage: <programlisting language="c++"> direct_slot(foo)     //The slot implementation will be _slot_foo
+ direct_slot(foo,bar) //The slot implementation is bar
+</programlisting></para><para>Define <emphasis>BOOST_OBJECT_NO_SHORT_SLOT_MACROS</emphasis> to disable this macro. </para></description></macro>
+<macro name="auto_slot" kind="functionlike"><macro-parameter name="NAME"/><macro-parameter name="IMPL"/><description><para>Declare an automatic slot named <computeroutput>NAME</computeroutput>. The slot implementation will be <computeroutput>IMPL</computeroutput>.</para><para>If no parameter <computeroutput>IMPL</computeroutput> is provided, it will default to _slot_NAME</para><para>Possible usage: <programlisting language="c++"> auto_slot(foo)     //The slot implementation will be _slot_foo
+ auto_slot(foo,bar) //The slot implementation is bar
+</programlisting></para><para>Define <emphasis>BOOST_OBJECT_NO_SHORT_SLOT_MACROS</emphasis> to disable this macro. </para></description></macro>
+</header>
+<header name="boost/object/thread.hpp">
+<namespace name="boost">
+<namespace name="object">
+<class name="thread_error"><purpose>The <classname alt="boost::object::thread_error">thread_error</classname> class. </purpose><description><para>Thrown by <classname alt="boost::object::thread">boost::object::thread</classname> </para></description><method-group name="public member functions">
+<method name="what" cv="const"><type>const char *</type></method>
+</method-group>
+<constructor><parameter name="error"><paramtype>const std::string &amp;</paramtype></parameter></constructor>
+<destructor/>
+</class><class name="thread"><inherit access="public">boost::object::object</inherit><description><para>Creates a new thread that can be assigned to a class that inherited from <classname alt="boost::object::base">boost::object::base</classname>. The thread will automatically be started when this class is constructed.</para><para>Make sure to not destruct this object in the same thread as the one it creates, because the destructor calls <emphasis>this-&gt;stop()</emphasis> and <emphasis>this-&gt;wait()</emphasis> if needed.</para><para><formalpara><title>Notes for when you compile with <emphasis>BOOST_OBJECT_DISABLE_HIERARCHY</emphasis>:</title><para/></formalpara>
+All bobjects assigned to this thread need to be directly deleted ( using <computeroutput>delete</computeroutput> or they need to go out of scope, <computeroutput>BObject::deleteLater()</computeroutput> is not an option ) before <computeroutput>thread::~thread()</computeroutput> is invoked. Otherwise it will cause undefined behavior! </para></description><method-group name="public member functions">
+<method name="stop"><type>void</type><purpose>Stops the thread. </purpose><description><para>The thread will exit at the next possible graceful way out.</para><para>Slots of bobjects assigned to this thread will stop working partially.</para><para>Threads cannot be restarted. </para></description></method>
+<method name="wait"><type>void</type><purpose>Blocks until the thread exited. </purpose></method>
+<method name="stopped"><type>signal void</type><purpose>Signal. </purpose><description><para>This signal emits after the event loop stopped and the thread is about to exit. </para></description></method>
+</method-group>
+<constructor specifiers="explicit"><parameter name="parent"><paramtype><classname>object</classname> *</paramtype><default>nullptr</default><description><para>Makes this instance the child of <computeroutput>parent</computeroutput> </para></description></parameter><purpose>Constructor. </purpose><description><para>
+
+</para></description><throws><simpara><classname>thread_error</classname> when the thread cannot be started </simpara></throws></constructor>
+<constructor specifiers="explicit"><parameter name="p"><paramtype><emphasis>unspecified</emphasis></paramtype></parameter><description><para>Constructor for internal extensions of this class. </para></description></constructor>
+<destructor><description><para>Destructor </para></description></destructor>
+<method-group name="public static functions">
+<method name="idealThreadCount" specifiers="static"><type>unsigned int</type><description><para>Returns the ideal number of concurrent threads on your system, or 0 if that information is not available. </para></description></method>
+</method-group>
+</class></namespace>
+</namespace>
+<typedef name="BThread"><purpose>Global name for <classname alt="boost::object::thread">boost::object::thread</classname>. </purpose><type><classname>boost::object::thread</classname></type></typedef>
+</header>
+<header name="boost/object/threadpool.hpp">
+<namespace name="boost">
+<namespace name="object">
+<class name="threadpool"><inherit access="public">boost::object::object</inherit><description><para>The threadpool manages multiple threads. Either use <computeroutput>getThread()</computeroutput>, or simply make another bobject the child of this pool to get a thread according to your <computeroutput>PickBehavior</computeroutput>.</para><para><formalpara><title>Notes for when you compile with <emphasis>BOOST_OBJECT_DISABLE_HIERARCHY</emphasis>:</title><para/></formalpara>
+All bobjects assigned to a thread of this pool need to be directly deleted ( using <computeroutput>delete</computeroutput> or they need to go out of scope, <computeroutput>BObject::deleteLater()</computeroutput> is not an option ) before <computeroutput>threadpool::~threadpool()</computeroutput> is invoked. Otherwise it will cause undefined behavior! </para></description><enum name="PickBehavior"><enumvalue name="PickIncrement"><description><para>Increment an internal counter that restarts at 0 if bigger than the amount of threads </para></description></enumvalue><enumvalue name="PickLeastUsed"><description><para>Pick the thread that has the least amount of bobjects assigned. </para></description></enumvalue><description><para>Defines the behavior with which the next thread will be picked. </para></description></enum>
+<method-group name="protected member functions">
+<method name="getThread"><type>auto_slot <classname>thread</classname> *</type><description><para>Returns the next thread according to your PickBehavior. </para></description></method>
+<method name="setPickBehavior"><type>auto_slot void</type><parameter name="pb"><paramtype>PickBehavior</paramtype></parameter><description><para>Sets the pick behavior to <computeroutput>pb</computeroutput>. </para></description></method>
+</method-group>
+<constructor><parameter name="threads"><paramtype>int</paramtype><description><para>Amount of threads this pool shall start </para></description></parameter><parameter name="parent"><paramtype><classname>object</classname> *</paramtype><default>0</default><description><para>Makes this instance the child of <computeroutput>parent</computeroutput> </para></description></parameter><description><para>
+PickBehavior defaults to PickLeastUsed </para></description></constructor>
+<constructor><parameter name="threads"><paramtype>int</paramtype><description><para>Amount of threads this pool shall start </para></description></parameter><parameter name="pb"><paramtype>PickBehavior</paramtype><default>PickLeastUsed</default><description><para>The pickbehavior for this pool </para></description></parameter><parameter name="parent"><paramtype><classname>object</classname> *</paramtype><default>0</default><description><para>Makes this instance the child of <computeroutput>parent</computeroutput> </para></description></parameter><description><para>
+</para></description></constructor>
+</class></namespace>
+</namespace>
+<typedef name="BThreadPool"><purpose>Global name for <classname alt="boost::object::threadpool">boost::object::threadpool</classname>. </purpose><type><classname>boost::object::threadpool</classname></type></typedef>
+</header>
+</library-reference>

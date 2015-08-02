@@ -1,0 +1,241 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class systemsignals</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../../../index.html" title="Boost.Object">
+<link rel="up" href="../../../boost_object/reference.html#header.boost.object.utils.systemsignals_hpp" title="Header &lt;boost/object/utils/systemsignals.hpp&gt;">
+<link rel="prev" href="bytearray.html" title="Class bytearray">
+<link rel="next" href="timer.html" title="Class timer">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="bytearray.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../boost_object/reference.html#header.boost.object.utils.systemsignals_hpp"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="timer.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.object.utils.systemsignals"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class systemsignals</span></h2>
+<p>boost::object::utils::systemsignals</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../../boost_object/reference.html#header.boost.object.utils.systemsignals_hpp" title="Header &lt;boost/object/utils/systemsignals.hpp&gt;">boost/object/utils/systemsignals.hpp</a>&gt;
+
+</span>
+<span class="keyword">class</span> <a class="link" href="systemsignals.html" title="Class systemsignals">systemsignals</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="comment">// <a class="link" href="systemsignals.html#boost.object.utils.systemsignalsconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <a class="link" href="systemsignals.html#idp6248256-bb"><span class="identifier">systemsignals</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="systemsignals.html#idp6252224-bb"><span class="identifier">systemsignals</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="systemsignals.html#idp6257312-bb"><span class="identifier">systemsignals</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="systemsignals.html#idp6239312-bb">protected member functions</a></span>
+  <span class="identifier">signal</span> <span class="keyword">void</span> <a class="link" href="systemsignals.html#idp6239888-bb"><span class="identifier">emitted</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="systemsignals.html#idp6242368-bb"><span class="identifier">add</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="systemsignals.html#idp6245232-bb"><span class="identifier">remove</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="idp8710480"></a><h2>Description</h2>
+<p>Emits when native signals such as <span class="emphasis"><em>SIGTERM</em></span> or <span class="emphasis"><em>SIGINT</em></span> are delived by your OS.</p>
+<p>This class is a wrapper around Boost.Asio's signal_set. Please also consult its <a href="http://www.boost.org/doc/libs/release/doc/html/boost_asio/reference/signal_set.html" target="_top">documentation</a> on how it handles native signals.</p>
+<p>You can have multiple instances of systemsignals to wait for the same signal number(s). </p>
+<div class="refsect2">
+<a name="idp8713632"></a><h3>
+<a name="boost.object.utils.systemsignalsconstruct-copy-destruct"></a><code class="computeroutput">systemsignals</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><a name="idp6248256-bb"></a><span class="identifier">systemsignals</span><span class="special">(</span><span class="keyword">int</span> sig1<span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> parent <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>Constructor. <p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">parent</code></span></p></td>
+<td><p>Makes this instance the child of <code class="computeroutput">parent</code> </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">sig1</code></span></p></td>
+<td><p>A native signal to wait for </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><a name="idp6252224-bb"></a><span class="identifier">systemsignals</span><span class="special">(</span><span class="keyword">int</span> sig1<span class="special">,</span> <span class="keyword">int</span> sig2<span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> parent <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>Constructor. <p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">parent</code></span></p></td>
+<td><p>Makes this instance the child of <code class="computeroutput">parent</code> </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">sig1</code></span></p></td>
+<td><p>A native signal to wait for </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">sig2</code></span></p></td>
+<td><p>A native signal to wait for </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><a name="idp6257312-bb"></a><span class="identifier">systemsignals</span><span class="special">(</span><span class="keyword">int</span> sig1<span class="special">,</span> <span class="keyword">int</span> sig2<span class="special">,</span> <span class="keyword">int</span> sig3<span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> parent <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>Constructor. <p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">parent</code></span></p></td>
+<td><p>Makes this instance the child of <code class="computeroutput">parent</code> </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">sig1</code></span></p></td>
+<td><p>A native signal to wait for </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">sig2</code></span></p></td>
+<td><p>A native signal to wait for </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">sig3</code></span></p></td>
+<td><p>A native signal to wait for </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+<div class="refsect2">
+<a name="idp8762064"></a><h3>
+<a name="idp6239312-bb"></a><code class="computeroutput">systemsignals</code> protected member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">signal</span> <span class="keyword">void</span> <a name="idp6239888-bb"></a><span class="identifier">emitted</span><span class="special">(</span><span class="keyword">int</span> sig<span class="special">)</span><span class="special">;</span></pre>
+<p>
+This bobject-signal is emitted when the OS emits one of the native signals you registered to this class. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">sig</code></span></p></td>
+<td><p>The native signal delived by the OS</p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6242368-bb"></a><span class="identifier">add</span><span class="special">(</span><span class="keyword">int</span> sig<span class="special">)</span><span class="special">;</span></pre>
+<p>
+Adds <code class="computeroutput">sig</code> to the list of native signals to wait for. It has no effect if the signal is already in the list. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">sig</code></span></p></td>
+<td><p>The native signal number to add to the list</p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6245232-bb"></a><span class="identifier">remove</span><span class="special">(</span><span class="keyword">int</span> sig<span class="special">)</span><span class="special">;</span></pre>
+<p>
+Removes <code class="computeroutput">sig</code> from the list of native signals to wait for. It has no effect if the signal is not in the list. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">sig</code></span></p></td>
+<td><p>The native signal number to remove from the list</p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="bytearray.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../boost_object/reference.html#header.boost.object.utils.systemsignals_hpp"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="timer.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

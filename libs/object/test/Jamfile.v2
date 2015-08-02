@@ -1,0 +1,35 @@
+
+project
+  : requirements
+    <library>/boost/system//boost_system
+    <library>/boost/thread//boost_thread
+    <library>/boost/test//boost_unit_test_framework
+    <define>BOOST_ALL_NO_LIB=1
+    <threading>multi
+    <os>NT:<define>_WIN32_WINNT=0x0501
+  ;
+
+#if someone wants to make these rules more generic, go ahead. I gave up on the documentation
+rule rotate_run ( source )
+{
+    run $(source) : : : <define>BOOST_OBJECT_USE_BOOST : $(source)_1 ;
+    run $(source) : : : <define>BOOST_OBJECT_USE_STD : $(source)_2 ;
+    run $(source) : : : <define>BOOST_OBJECT_USE_BOOST <define>BOOST_OBJECT_DISABLE_HIERARCHY : $(source)_3 ;
+    run $(source) : : : <define>BOOST_OBJECT_USE_STD <define>BOOST_OBJECT_DISABLE_HIERARCHY : $(source)_4 ;
+}
+
+rule rotate_run_folder ( source : folder )
+{
+    run $(folder)/$(source) : : : <define>BOOST_OBJECT_USE_BOOST : $(folder)_$(source)_1 ;
+    run $(folder)/$(source) : : : <define>BOOST_OBJECT_USE_STD : $(folder)_$(source)_2 ;
+    run $(folder)/$(source) : : : <define>BOOST_OBJECT_USE_BOOST <define>BOOST_OBJECT_DISABLE_HIERARCHY : $(folder)_$(source)_3 ;
+    run $(folder)/$(source) : : : <define>BOOST_OBJECT_USE_STD <define>BOOST_OBJECT_DISABLE_HIERARCHY : $(folder)_$(source)_4 ;
+}
+
+test-suite "object" :
+  [ rotate_run generic.cpp ]
+  [ rotate_run connection.cpp ]
+  [ rotate_run_folder tcp.cpp : network ]
+  [ run bbytearray.cpp ]
+  [ compile detail/callable.cpp ]
+  ;

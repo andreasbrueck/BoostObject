@@ -1,0 +1,155 @@
+<?xml version="1.0" standalone="yes"?>
+<library-reference id="boost_object_utils_header_reference"><title>Boost.Object.Utils Header Reference</title><header name="boost/object/utils/bytearray.hpp">
+<namespace name="boost">
+<namespace name="object">
+<namespace name="utils">
+<class name="bytearray"><description><para>The bytearray class is the default data container for Boost.Object.</para><para>Its internal data is not copied when the bytearray class is copied. Instead, it is only copied whenever there are 2 or more copies of a bytearray instance, and one of them intends to alter the data. All member functions that copy the internal data will say if and under which circumstances they do so. </para></description><typedef name="iterator"><type>std::vector&lt; unsigned char &gt;::iterator</type></typedef>
+<typedef name="const_iterator"><type>std::vector&lt; unsigned char &gt;::const_iterator</type></typedef>
+<method-group name="public member functions">
+<method name="size" cv="const"><type>size_t</type><description><para>
+Returns the size of this bytearray. </para></description><returns><para>The size of this bytearray</para></returns></method>
+<method name="data"><type>unsigned char *</type><description><para>
+If more than 1 copy of this bytearray exists ( isShared() == true ), this instance will copy all of its internal data before this function returns. After that, isShared() will return false. </para></description><returns><para>The data of this bytearray</para></returns></method>
+<method name="data" cv="const"><type>const unsigned char *</type><description><para>
+This function is the same as the non-const overload, except that it will not copy its internal data if more than 1 copy of this bytearray exists. </para></description><returns><para>The data of this bytearray</para></returns></method>
+<method name="constData" cv="const"><type>const unsigned char *</type><description><para>
+This function is the same as <computeroutput>bytearray::data()const</computeroutput>. </para></description><returns><para>The data of this bytearray</para></returns></method>
+<method name="begin"><type>iterator</type></method>
+<method name="begin" cv="const"><type>const_iterator</type></method>
+<method name="cbegin" cv="const"><type>const_iterator</type></method>
+<method name="constBegin" cv="const"><type>const_iterator</type></method>
+<method name="end"><type>iterator</type></method>
+<method name="end" cv="const"><type>const_iterator</type></method>
+<method name="cend" cv="const"><type>const_iterator</type></method>
+<method name="constEnd" cv="const"><type>const_iterator</type></method>
+<method name="toStdString" cv="const"><type>std::string</type><description><para>Converts the internal data to an <computeroutput>std::string</computeroutput>. </para></description></method>
+<method name="operator[]" cv="const"><type>unsigned char</type><parameter name="pos"><paramtype>size_t</paramtype></parameter><description><para>Access specified element. The behaviour is undefined if <computeroutput>pos</computeroutput> is out of range. </para></description></method>
+<method name="isShared" cv="const"><type>bool</type><description><para>
+</para></description><returns><para>true if more than 1 copy of this bytearray exists, otherwise false. </para></returns></method>
+<method name="isEmpty" cv="const"><type>bool</type><description><para>
+</para></description><returns><para>True if this bytearray does not contain any data ( <computeroutput>size()==0</computeroutput> ) </para></returns></method>
+<method name="clear"><type>void</type><description><para>Clears the internal buffer. After this call, <computeroutput>size()</computeroutput> is 0 and <computeroutput>isEmpty()</computeroutput> is true.</para><para>If the data is shared ( <computeroutput>isShared()==true</computeroutput> ), this function will not affect any other copy of this bytearray instance. </para></description></method>
+<method name="operator+="><type><classname>bytearray</classname> &amp;</type><parameter name="l"><paramtype>const <classname>bytearray</classname> &amp;</paramtype></parameter><description><para>... </para></description></method>
+<method name="operator+="><type><classname>bytearray</classname> &amp;</type><parameter name="l"><paramtype>const char *</paramtype></parameter></method>
+<method name="operator+="><type><classname>bytearray</classname> &amp;</type><parameter name="l"><paramtype>const std::string &amp;</paramtype></parameter></method>
+<method name="operator==" cv="const"><type>bool</type><parameter name="l"><paramtype>const <classname>bytearray</classname> &amp;</paramtype></parameter></method>
+<method name="operator==" cv="const"><type>bool</type><parameter name="l"><paramtype>const char *</paramtype></parameter></method>
+<method name="operator==" cv="const"><type>bool</type><parameter name="l"><paramtype>const std::string &amp;</paramtype></parameter></method>
+<method name="operator!=" cv="const"><type>bool</type><parameter name="l"><paramtype>const <classname>bytearray</classname> &amp;</paramtype></parameter></method>
+<method name="operator!=" cv="const"><type>bool</type><parameter name="l"><paramtype>const char *</paramtype></parameter></method>
+<method name="operator!=" cv="const"><type>bool</type><parameter name="l"><paramtype>const std::string &amp;</paramtype></parameter></method>
+<method name="operator+"><type><classname>bytearray</classname></type><parameter name="l"><paramtype>const <classname>bytearray</classname> &amp;</paramtype></parameter></method>
+<method name="operator+"><type><classname>bytearray</classname></type><parameter name="l"><paramtype>const char *</paramtype></parameter></method>
+<method name="operator+"><type><classname>bytearray</classname></type><parameter name="l"><paramtype>const std::string &amp;</paramtype></parameter></method>
+</method-group>
+<constructor specifiers="explicit"><description><para>Constructs an empty bytearray </para></description></constructor>
+<constructor specifiers="explicit"><parameter name="str"><paramtype>const char *</paramtype><description><para>A null terminated string to copy data from. Must point to a valid null terminated string.</para></description></parameter><parameter name="size"><paramtype>size_t</paramtype><default>-1</default><description><para>If -1, uses strlen() on <computeroutput>str</computeroutput>, if bigger than 0, <computeroutput>size</computeroutput> bytes of <computeroutput>str</computeroutput> are copied. </para></description></parameter><description><para>
+Constructs a bytearray from a null terminated string, not including the null termination character. </para></description></constructor>
+<constructor specifiers="explicit"><parameter name="data"><paramtype>const unsigned char *</paramtype></parameter><parameter name="size"><paramtype>size_t</paramtype></parameter><description><para>Constructs a bytearray with the first <computeroutput>size</computeroutput> bytes pointed to by <computeroutput>data</computeroutput>. </para></description></constructor>
+<constructor specifiers="explicit"><parameter name="size"><paramtype>size_t</paramtype></parameter><parameter name="def"><paramtype>unsigned char</paramtype><default>0</default></parameter><description><para>Construct a bytearray with the size <computeroutput>size</computeroutput> initialized to <computeroutput>def</computeroutput> </para></description></constructor>
+<constructor specifiers="explicit"><parameter name="str"><paramtype>const std::string &amp;</paramtype></parameter><description><para>Constructs a bytearray from std::string, not including null terminate </para></description></constructor>
+<destructor/>
+<constructor><parameter name="other"><paramtype>const <classname>bytearray</classname> &amp;</paramtype></parameter></constructor>
+<constructor><parameter name="other"><paramtype><classname>bytearray</classname> &amp;&amp;</paramtype></parameter></constructor>
+<copy-assignment><type><classname>bytearray</classname> &amp;</type><parameter name="other"><paramtype>const <classname>bytearray</classname> &amp;</paramtype></parameter></copy-assignment>
+<copy-assignment><type><classname>bytearray</classname> &amp;</type><parameter name="other"><paramtype><classname>bytearray</classname> &amp;&amp;</paramtype></parameter></copy-assignment>
+</class></namespace>
+</namespace>
+</namespace>
+<typedef name="BByteArray"><purpose>Global name for <classname alt="boost::object::utils::bytearray">boost::object::utils::bytearray</classname>. </purpose><type><classname>boost::object::utils::bytearray</classname></type></typedef>
+</header>
+<header name="boost/object/utils/systemsignals.hpp">
+<namespace name="boost">
+<namespace name="object">
+<namespace name="utils">
+<class name="systemsignals"><description><para>Emits when native signals such as <emphasis>SIGTERM</emphasis> or <emphasis>SIGINT</emphasis> are delived by your OS.</para><para>This class is a wrapper around Boost.Asio's signal_set. Please also consult its <ulink url="http://www.boost.org/doc/libs/release/doc/html/boost_asio/reference/signal_set.html">documentation</ulink> on how it handles native signals.</para><para>You can have multiple instances of systemsignals to wait for the same signal number(s). </para></description><method-group name="protected member functions">
+<method name="emitted"><type>signal void</type><parameter name="sig"><paramtype>int</paramtype><description><para>The native signal delived by the OS</para></description></parameter><description><para>
+This bobject-signal is emitted when the OS emits one of the native signals you registered to this class. </para></description></method>
+<method name="add"><type>auto_slot void</type><parameter name="sig"><paramtype>int</paramtype><description><para>The native signal number to add to the list</para></description></parameter><description><para>
+Adds <computeroutput>sig</computeroutput> to the list of native signals to wait for. It has no effect if the signal is already in the list. </para></description></method>
+<method name="remove"><type>auto_slot void</type><parameter name="sig"><paramtype>int</paramtype><description><para>The native signal number to remove from the list</para></description></parameter><description><para>
+Removes <computeroutput>sig</computeroutput> from the list of native signals to wait for. It has no effect if the signal is not in the list. </para></description></method>
+</method-group>
+<constructor><parameter name="sig1"><paramtype>int</paramtype><description><para>A native signal to wait for </para></description></parameter><parameter name="parent"><paramtype>object *</paramtype><default>0</default><description><para>Makes this instance the child of <computeroutput>parent</computeroutput> </para></description></parameter><purpose>Constructor. </purpose><description><para>
+</para></description></constructor>
+<constructor><parameter name="sig1"><paramtype>int</paramtype><description><para>A native signal to wait for </para></description></parameter><parameter name="sig2"><paramtype>int</paramtype><description><para>A native signal to wait for </para></description></parameter><parameter name="parent"><paramtype>object *</paramtype><default>0</default><description><para>Makes this instance the child of <computeroutput>parent</computeroutput> </para></description></parameter><purpose>Constructor. </purpose><description><para>
+</para></description></constructor>
+<constructor><parameter name="sig1"><paramtype>int</paramtype><description><para>A native signal to wait for </para></description></parameter><parameter name="sig2"><paramtype>int</paramtype><description><para>A native signal to wait for </para></description></parameter><parameter name="sig3"><paramtype>int</paramtype><description><para>A native signal to wait for </para></description></parameter><parameter name="parent"><paramtype>object *</paramtype><default>0</default><description><para>Makes this instance the child of <computeroutput>parent</computeroutput> </para></description></parameter><purpose>Constructor. </purpose><description><para>
+</para></description></constructor>
+</class></namespace>
+</namespace>
+</namespace>
+<typedef name="BSystemSignals"><purpose>Global name for <classname alt="boost::object::utils::systemsignals">boost::object::utils::systemsignals</classname>. </purpose><type><classname>boost::object::utils::systemsignals</classname></type></typedef>
+</header>
+<header name="boost/object/utils/timer.hpp">
+<namespace name="boost">
+<namespace name="object">
+<namespace name="utils">
+<class name="timer"><description><para>The timer class is a high level interface to repetitive or single shot timers.</para><para>Whenever the timer fires, the <emphasis>timeout()</emphasis> signal is emitted.</para><para>Example: <programlisting language="c++"> namespace unsafe
+ {
+     class receiver : public BObject
+     {
+         B_OBJECT(receiver)
+
+     private:
+         void _slot_print()
+         {
+             std::cout &lt;&lt; "timer fired" &lt;&lt; std::endl;
+         }
+     public:
+         auto_slot(print)
+     };
+ }
+
+ BOOST_SAFE_OBJECT(receiver)
+
+ int main ()
+ {
+     BApplication app;
+
+     receiver r;
+
+     BTimer repeatingTimer,
+            singleShotTimer ( true );
+
+     repeatingTimer.timeout.connect ( r.print );
+     singleShotTimer.timeout.connect ( app.exit );
+
+     repeatingTimer.start ( 1000 );
+     singleShotTimer.start ( 9000 );
+
+     return app.exec ();
+ }
+</programlisting> </para></description><method-group name="protected member functions">
+</method-group>
+<constructor specifiers="explicit"><parameter name="singleShot"><paramtype>bool</paramtype><default>false</default><description><para>Determines if the timer is repititive (false) or single shot (true) </para></description></parameter><parameter name="parent"><paramtype>object *</paramtype><default>0</default><description><para>Makes this instance the child of <computeroutput>parent</computeroutput> </para></description></parameter><description><para>
+</para></description></constructor>
+<method-group name="public static functions">
+<method name="singleShot" specifiers="static"><type>void</type><template>
+          <template-type-parameter name="SLOT_TYPE"/>
+          <template-nontype-parameter name="DEFAULT_ARGS"><type>typename...</type></template-nontype-parameter>
+        </template><parameter name="milliseconds"><paramtype>int</paramtype><description><para>Milliseconds till the timer timeouts</para></description></parameter><parameter name="slot"><paramtype>SLOT_TYPE &amp;</paramtype><description><para>The slot that will be called on timeout </para></description></parameter><parameter name="def"><paramtype>DEFAULT_ARGS &amp;&amp;...</paramtype><description><para>Optional default args passed to the connection </para></description></parameter><description><para>
+Creates a single shot timer and automatically deletes it on timeout.</para><para>Example: <programlisting language="c++"> int main ()
+ {
+     BApplication app;
+     BTimer::singleShot ( 5000, app.quit, EXIT_SUCCESS );
+     return app.exec ();
+ }
+</programlisting> </para></description></method>
+</method-group>
+<method-group name="public member functions">
+<method name="start"><type>auto_slot void</type><parameter name="milliseconds"><paramtype>int</paramtype><description><para>Milliseconds till the timer timeouts</para></description></parameter><description><para>
+Starts the timer and will timeout after <computeroutput>milliseconds</computeroutput>.</para><para>This function has no effect if the timer is already running. </para></description></method>
+<method name="stop"><type>auto_slot void</type><description><para>Stops a running timer. If the timer is not already in the timeout state, no <emphasis>timeout()</emphasis> signal will be emitted.</para><para>This function has no effect if the timer is not running. </para></description></method>
+<method name="setSingleShot"><type>auto_slot void</type><parameter name="val"><paramtype>bool</paramtype><description><para>True for single shot, false for repetitive</para></description></parameter><description><para>
+Sets the timer to single shot or repetitive mode.</para><para>Can be called while the time is running. </para></description></method>
+<method name="setInterval"><type>auto_slot void</type><parameter name="milliseconds"><paramtype>int</paramtype><description><para>Milliseconds till the timer timeouts</para></description></parameter><description><para>
+Sets the timeout interval for the timer.</para><para>Can be called while the timer is running. However, it will not alter the running timer, but instead will accept the new value the next time the internal timer is being run again ( which happens automatically if the timer is in repetitive mode ). </para></description></method>
+<method name="timeout"><type>signal void</type><description><para>This signal emits when the timer times out. </para></description></method>
+</method-group>
+</class></namespace>
+</namespace>
+</namespace>
+<typedef name="BTimer"><purpose>Global name for <classname alt="boost::object::utils::timer">boost::object::utils::timer</classname>. </purpose><type><classname>boost::object::utils::timer</classname></type></typedef>
+</header>
+</library-reference>

@@ -1,0 +1,34 @@
+[section Configuring the library]
+The library will default to header only. You can optionally build it as static or semi-shared:
+[section Static Build]
+To build the [*Build.Object] as a static library, define [^BOOST_OBJECT_LIBRARY] and [^BOOST_OBJECT_STATIC_LINK].
+
+Using the static built library in your application then only requires the [^BOOST_OBJECT_STATIC_LINK] macro to be defined.
+[endsect]
+[section Semi-Shared Build]
+If you intend to use [*Boost.Object] across the boundaries of multiple modules ( e.g. an exe and one or more dlls ), you will most probably want them all to share the same static resources. For example, all calls to [memberref boost::object::application::globalInstance BApplication::globalInstance()] shall return the same value, independent from which module you call it.
+For illustration purposes, let us say you have your application ( foo ) and your own shared library ( bar ) that your application depends on, making it 2 modules.
+
+*In your library "bar", defining [^BOOST_OBJECT_SHARED_INSTALL] will export the static resources of [*Boost.Object].
+*In your application "foo", defining [^BOOST_OBJECT_SHARED] will import the static resources of [*Boost.Object], and find them in your library "bar".
+
+You can have even more modules, simply define [^BOOST_OBJECT_SHARED] and make them depend on your library "bar".
+[note In the Semi-Shared Build, [*Boost.Object] is still header only! Only the resources that are needed to make [*Boost.Object] behave like it's one unit are exported. Other classes like [classref boost::object::object BObject] are not exported!]  
+[endsect]
+[section Configuration macros]
+There is a number of macros to configure the behavior of the library:
+
+[table [*Boost.Object] configuration macros
+    [[Macro][Effect]]
+    [[[^BOOST_OBJECT_DISABLE_HIERARCHY]][If defined, parent/child hierarchy is disabled and children will no longer be deleted when their parents are deleted. The [^parent] parameter of a ['bobject] will only be used for thread affiliation. Define this macro if you want to use smart pointers with [*Boost.Object]]]
+    [[[^BOOST_OBJECT_USE_BOOST]][[*Boost.Object] will depend on [*Boost.Thread]. This behavior is default if [^BOOST_OBJECT_USE_STD] is not defined]]
+    [[[^BOOST_OBJECT_USE_STD]][[*Boost.Object] will not depend on [*Boost.Thread] and instead use the standard library.]]
+    [[[^BOOST_OBJECT_VERIFY_SAFE_OBJECT]][[*Boost.Object] will verify at runtime that your bobjects are safe. If an unsafe bobject is detected, the application will output a fatal log message. This macro is defined by default in debug build.]]
+    [[[^BOOST_OBJECT_NO_DEBUG]][Disable debug functionality for [*Boost.Object] even if [^NDEBUG] is not defined. This does not affect assertions.]]
+    [[[^BOOST_OBJECT_SHARED]][Enables sharing the static resources of [*Boost.Object] across library boundaries. [link boost_object.introduction.configuring_the_library.semi_shared_build See Semi-Shared Build for more information]]]
+    [[[^BOOST_OBJECT_SHARED_INSTALL]][Will export the static resources of [*Boost.Object]. [link boost_object.introduction.configuring_the_library.semi_shared_build See Semi-Shared Build for more information]]]
+    [[[^BOOST_OBJECT_NO_TLS]][Disable usage of TLS. If disabled, performance of [*Boost.Object] will significantly drop at certain areas.]]
+]
+[note [*Boost.Object] ignores the [^BOOST_ALL_*_LINK] macros.]
+[endsect]
+[endsect]

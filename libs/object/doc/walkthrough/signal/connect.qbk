@@ -1,0 +1,44 @@
+[section Connecting to a slot]
+All signals have a member function called [memberref bobj::signal_t::connect connect], which is used to connect slots to it.
+
+When connecting to a slot, the first parameter will be the slot:
+``
+bsignal(mySignal,void(int))
+auto_slot(mySlot) // slot implementation: void _slot_mySlot(int);
+
+// ...
+
+mySignal.connect(mySlot);
+``
+You can also give default arguments that are only used for this specific connection:
+``
+bsignal(mySignal_1,void())
+bsignal(mySignal_2,void())
+auto_slot(mySlot) // slot implementation: void _slot_mySlot(int);
+
+// ...
+
+mySignal_1.connect(mySlot,123);
+mySignal_2.connect(mySlot,456);
+
+// ...
+
+mySignal_1(); // _slot_mySlot will be called like _slot_mySlot(123); 
+mySignal_2(); // _slot_mySlot will be called like _slot_mySlot(456); 
+``
+Default arguments are always appended to the parameter list:
+``
+bsignal(mySignal,void(const std::string &))
+auto_slot(mySlot) // slot implementation: void _slot_mySlot(const std::string &, int);
+
+// ...
+
+mySignal.connect(mySlot,3);
+
+// ...
+
+mySignal("abc"); // _slot_mySlot will be called like _slot_mySlot("abc",3); 
+``
+
+[link boost_object.advanced.signal_connections Advanced Signal Connections] goes into more detail.
+[endsect]

@@ -1,0 +1,15 @@
+[section:auto_slot Automatic slot]
+[h5 Rule]
+Depends on whether you have [link boost_object.walkthrough.slots.auto_slot.auto_slot_void void] or 
+[link boost_object.walkthrough.slots.auto_slot.auto_slot_nonvoid non-void] return type.
+
+[h5 Macro definitions]
+* [macroref auto_slot [^auto_slot]]
+* [macroref BOOST_OBJECT_AUTO_SLOT [^BOOST_OBJECT_AUTO_SLOT]]
+
+[h5 C++ definitions]
+* [classref bobj::auto_slot_t [^bobj::auto_slot_t]]
+
+[include auto_slot_void.qbk]
+[include auto_slot_nonvoid.qbk]
+[endsect]

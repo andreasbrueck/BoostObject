@@ -1,0 +1,21 @@
+[section:slots Slots]
+Slots have two main purposes.
+
+* Defining the manner ( synchronous or asynchronous ) in which their slot implementation will be called 
+* Slots can be connected to signals
+
+You can also call slots directly just like a member function. Connecting them to a signal is not required.
+
+There are 3 different types of slots:
+
+* [link boost_object.walkthrough.slots.async_slot Queued ( asynchronous ) slot] ( type: async )
+* [link boost_object.walkthrough.slots.direct_slot Direct ( synchronous ) slot] ( type: direct )
+* [link boost_object.walkthrough.slots.auto_slot Automatic slot] ( type: auto )
+
+[include slot/async_slot.qbk]
+[include slot/direct_slot.qbk]
+[include slot/auto_slot.qbk]
+[include slot/declare_slot.qbk]
+[include slot/bind_to_overload.qbk]
+
+[endsect]

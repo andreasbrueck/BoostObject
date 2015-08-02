@@ -1,0 +1,14 @@
+[section Supported platforms and compiler]
+[*Boost.Object] requires a c++11 compliant compiler and was successfully built and tested on following platforms:
+
+* Windows 7. MSVC 2013 or later.
+* Linux. GCC 4.9.2 and newer.
+
+Compilers/Platforms not listed above may work, but haven't been tested yet.
+
+[*Boost.Object] also depends on other boost libraries. Please consult their documentation for platform support and dependencies.
+
+* [@boost:/doc/html/boost_asio.html Boost.Asio]
+* If [^BOOST_OBJECT_USE_BOOST] is defined, [*Boost.Object] depends on [@boost:/doc/html/thread.html Boost.Thread].
+
+[endsect]

@@ -1,0 +1,8 @@
+[section Introduction]
+[*Boost.Object] implements simple object-bound signal/slot mechanisms with optional parent/child hierarchy, along with a growing range of utilities and modules.
+
+[include introduction/howtoread.qbk]
+[include introduction/configure.qbk]
+[include introduction/supported_plat_comp.qbk]
+[include introduction/qt.qbk]
+[endsect]

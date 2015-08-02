@@ -1,0 +1,270 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Basic Usage</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../index.html" title="Boost.Object">
+<link rel="up" href="../index.html" title="Boost.Object">
+<link rel="prev" href="../index.html" title="Boost.Object">
+<link rel="next" href="walkthrough.html" title="Walkthrough">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="walkthrough.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_object.basic_usage"></a><a class="link" href="basic_usage.html" title="Basic Usage">Basic Usage</a>
+</h2></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">object</span><span class="special">/</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">object</span><span class="special">/</span><span class="identifier">application</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="identifier">BOOST_OBJECT_INSTALL</span>
+
+<span class="keyword">namespace</span> <span class="identifier">unsafe</span>
+<span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">foo</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">BObject</span>
+    <span class="special">{</span>
+        <span class="identifier">B_OBJECT</span><span class="special">(</span><span class="identifier">foo</span><span class="special">)</span>
+
+    <span class="keyword">private</span><span class="special">:</span>
+        <span class="keyword">void</span> <span class="identifier">_slot_bar</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">exitCode</span> <span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"About to tell the application to quit ..."</span>
+                      <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+            <span class="identifier">bApp</span><span class="special">-&gt;</span><span class="identifier">quit</span> <span class="special">(</span> <span class="identifier">exitCode</span> <span class="special">);</span>
+
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Told the application to quit ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="special">}</span>
+
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="identifier">async_slot</span><span class="special">(</span><span class="identifier">bar</span><span class="special">)</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+
+<span class="identifier">BOOST_SAFE_OBJECT</span><span class="special">(</span><span class="identifier">foo</span><span class="special">)</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">BApplication</span> <span class="identifier">app</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Created BApplication ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="identifier">foo</span> <span class="identifier">f</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Created foo ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="identifier">f</span><span class="special">.</span><span class="identifier">bar</span> <span class="special">(</span> <span class="number">1</span> <span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Called foo::bar ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"About to enter event loop ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">exitCode</span> <span class="special">=</span> <span class="identifier">app</span><span class="special">.</span><span class="identifier">exec</span> <span class="special">();</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Exited event loop with code "</span>
+              <span class="special">&lt;&lt;</span> <span class="identifier">exitCode</span> <span class="special">&lt;&lt;</span> <span class="string">" ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="keyword">return</span> <span class="identifier">exitCode</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      This is a small example that creates one <span class="emphasis"><em>bobject</em></span> and uses
+      asynchronous slots to exit the application. Lets walk through this step for
+      step.
+    </p>
+<pre class="programlisting"><span class="identifier">BOOST_OBJECT_INSTALL</span>
+</pre>
+<p>
+      <code class="literal">BOOST_OBJECT_INSTALL</code> needs to be in at least one of your
+      translation units if you use <span class="bold"><strong>Boost.Object</strong></span>
+      header only. It defines some static dependencies. If you decide to use <span class="bold"><strong>Boost.Object</strong></span> as a static or semi-shared library, you
+      can omit <code class="literal">BOOST_OBJECT_INSTALL</code>.
+    </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">foo</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">BObject</span>
+<span class="special">{</span>
+    <span class="identifier">B_OBJECT</span><span class="special">(</span><span class="identifier">foo</span><span class="special">)</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">_slot_bar</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">exitCode</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"About to tell the application to quit ..."</span>
+                  <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+        <span class="identifier">bApp</span><span class="special">-&gt;</span><span class="identifier">quit</span> <span class="special">(</span> <span class="identifier">exitCode</span> <span class="special">);</span>
+
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Told the application to quit ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">async_slot</span><span class="special">(</span><span class="identifier">bar</span><span class="special">)</span>
+<span class="special">};</span>
+</pre>
+<p>
+      This is the <span class="emphasis"><em>bobject</em></span>. Requirements for a valid <span class="emphasis"><em>bobject</em></span>
+      that wants to use signals or slots are:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+<p class="simpara">
+          It is inherited from <code class="computeroutput"><a class="link" href="../boost/object/object.html" title="Class object">BObject</a></code>
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">foo</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">BObject</span>
+</pre>
+</li>
+<li class="listitem">
+<p class="simpara">
+          It has <code class="literal">B_OBJECT</code> in its body, topmost if possible.
+        </p>
+<pre class="programlisting"><span class="identifier">B_OBJECT</span><span class="special">(</span><span class="identifier">foo</span><span class="special">)</span>
+</pre>
+</li>
+</ul></div>
+<p>
+      To my knowledge, there is currently no way to retrieve the class type automatically
+      in the context its needed using standard c++ techniques. You have to insert
+      the type of your class as the parameter for <code class="literal">B_OBJECT</code>. However,
+      once instantiated, <code class="literal">B_OBJECT</code> will verify if you made any
+      typos.
+    </p>
+<p>
+      Next, lets have a look at the slot, in opposite order.
+    </p>
+<pre class="programlisting"><span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">async_slot</span><span class="special">(</span><span class="identifier">bar</span><span class="special">)</span>
+</pre>
+<p>
+      This declares and defines a public member named <code class="literal">bar</code>, that
+      will function as an asynchronous slot. Because it has only 1 parameter, it
+      will retrieve all the information it needs by searching for a member function
+      named <code class="literal">_slot_<em class="replaceable"><code>param</code></em></code>, in this case:
+      <code class="literal">_slot_bar</code>.
+    </p>
+<pre class="programlisting"><span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">_slot_bar</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">exitCode</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"About to tell the application to quit ..."</span>
+                  <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+        <span class="identifier">bApp</span><span class="special">-&gt;</span><span class="identifier">quit</span> <span class="special">(</span> <span class="identifier">exitCode</span> <span class="special">);</span>
+
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Told the application to quit ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+</pre>
+<p>
+      With that, <code class="literal">bar</code> knows it has to overload its <code class="literal">operator()</code>
+      with a return type of <code class="literal">void</code> and one parameter <code class="literal">int</code>
+    </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        This deduction only works if there is no overloaded <code class="literal">_slot_bar</code>
+        function. If you have multiple <code class="literal">_slot_bar</code> member functions,
+        you have to manually declare the slot.
+      </p></td></tr>
+</table></div>
+<p>
+      And thats all there is you need to implement a slot. Use one of the slot macros
+      to declare a slot ( <code class="literal">async_slot(P)</code> ), make a member function
+      with the name <code class="literal">_slot_P</code> and <span class="bold"><strong>Boost.Object</strong></span>
+      will take care of the rest.
+    </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top">
+<p>
+        You are not required to name your slot implementation in the format <code class="literal">_slot_PARAMETER</code>,
+        the slot macros can be called with a second parameter naming the slot implementation
+        function to use.
+      </p>
+<pre class="programlisting"><span class="identifier">async_slot</span><span class="special">(</span><span class="identifier">bar</span><span class="special">,</span><span class="identifier">my_implementation</span><span class="special">)</span></pre>
+<p>
+        will search for a slot implementation <code class="literal">my_implementation</code>
+        instead of <code class="literal">_slot_bar</code>.
+      </p>
+</td></tr>
+</table></div>
+<p>
+      Now we arrive at the point of inspecting a part that you are probably wondering
+      about since the very beginning: <code class="literal">foo</code> is nested in <code class="computeroutput"><span class="keyword">namespace</span> <span class="identifier">unsafe</span></code>
+      and there is some macro
+    </p>
+<pre class="programlisting"><span class="identifier">BOOST_SAFE_OBJECT</span><span class="special">(</span><span class="identifier">foo</span><span class="special">)</span>
+</pre>
+<p>
+      Explaining this is a little too much for the scope of this section, just imagine
+      <code class="literal">BOOST_SAFE_OBJECT</code> expands to <code class="computeroutput"><span class="keyword">typedef</span>
+      <span class="identifier">unsafe</span><span class="special">::</span><span class="identifier">foo</span> <span class="identifier">foo</span><span class="special">;</span></code> to understand the rest of this example. If
+      you absolutely must know everything about <code class="literal">BOOST_SAFE_OBJECT</code>
+      right now, you can skip to where its explained.
+    </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">BApplication</span> <span class="identifier">app</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Created BApplication ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="identifier">foo</span> <span class="identifier">f</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Created foo ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="identifier">f</span><span class="special">.</span><span class="identifier">bar</span> <span class="special">(</span> <span class="number">1</span> <span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Called foo::bar ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"About to enter event loop ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">exitCode</span> <span class="special">=</span> <span class="identifier">app</span><span class="special">.</span><span class="identifier">exec</span> <span class="special">();</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Exited event loop with code "</span>
+              <span class="special">&lt;&lt;</span> <span class="identifier">exitCode</span> <span class="special">&lt;&lt;</span> <span class="string">" ..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="keyword">return</span> <span class="identifier">exitCode</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      Every <span class="bold"><strong>Boost.Object</strong></span> application needs to instantiate
+      a <code class="computeroutput"><a class="link" href="../boost/object/application.html" title="Class application">BApplication</a></code> before
+      instantiating any other classes derived from <code class="computeroutput"><a class="link" href="../boost/object/object.html" title="Class object">BObject</a></code>.
+      After that, we can create an object of our class <code class="literal">foo</code>.
+    </p>
+<p>
+      Now we are already calling our slot: <code class="literal">bar</code>. But remember,
+      this is an asynchronous slot, so it will return immediately without calling
+      <code class="literal">_slot_bar</code>, but queuing to do so.
+    </p>
+<p>
+      With <code class="literal">app.exec()</code> we are entering the event loop. This call
+      blocks indefinitely, until <code class="literal">app.quit</code> is called. Since we
+      are now in the event loop, our previous call to <code class="literal">f.bar(1)</code>
+      will be invoked, executing <code class="literal">_slot_bar</code>
+    </p>
+<pre class="programlisting"><span class="identifier">bApp</span><span class="special">-&gt;</span><span class="identifier">quit</span> <span class="special">(</span> <span class="identifier">exitCode</span> <span class="special">);</span>
+</pre>
+<p>
+      which will then tell the application to quit. The eventloop will exit at the
+      next possible way out, and <code class="literal">app.exec()</code> returns with 1.
+    </p>
+<p>
+      This is the programs output:
+    </p>
+<pre class="programlisting"><span class="identifier">Created</span> <span class="identifier">BApplication</span> <span class="special">...</span>
+<span class="identifier">Created</span> <span class="identifier">foo</span> <span class="special">...</span>
+<span class="identifier">Called</span> <span class="identifier">foo</span><span class="special">::</span><span class="identifier">bar</span> <span class="special">...</span>
+<span class="identifier">About</span> <span class="identifier">to</span> <span class="identifier">enter</span> <span class="identifier">event</span> <span class="identifier">loop</span> <span class="special">...</span>
+<span class="identifier">About</span> <span class="identifier">to</span> <span class="identifier">tell</span> <span class="identifier">the</span> <span class="identifier">application</span> <span class="identifier">to</span> <span class="identifier">quit</span> <span class="special">...</span>
+<span class="identifier">Told</span> <span class="identifier">the</span> <span class="identifier">application</span> <span class="identifier">to</span> <span class="identifier">quit</span> <span class="special">...</span>
+<span class="identifier">Exited</span> <span class="identifier">event</span> <span class="identifier">loop</span> <span class="identifier">with</span> <span class="identifier">code</span> <span class="number">1</span> <span class="special">...</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="walkthrough.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

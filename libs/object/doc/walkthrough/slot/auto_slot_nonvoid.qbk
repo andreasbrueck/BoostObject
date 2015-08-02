@@ -1,0 +1,12 @@
+[section:auto_slot_nonvoid Automatic slot returning non-void]
+[h5 Rule]
+The automatic slot will, upon call, check which thread you called from. 
+If that thread is the same one its owning bobject instantiation was assigned with, the automatic slot directly calls its slot implementation.
+Otherwise it will queue its call to the slot implementation and [*block] until the event-loop of that other thread has processed this call.
+
+[h5 Requirements]
+* The returned type must be default and copy constructible.
+
+[h5 Additional information]
+If executing the slot implementation in the target thread fails, the return value is default constructed.
+[endsect]

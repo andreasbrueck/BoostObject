@@ -1,0 +1,26 @@
+[section:declare_slot Declaring a slot]
+After all that theory, lets put it to use after just a little bit more theory.
+
+All slots have helper macros in the form of
+
+* short: [^[~\[type\]]_slot]
+* long:  [^BOOST_OBJECT_[~\[TYPE\]]_SLOT]
+
+[note You can disable the short macros by defining [^BOOST_OBJECT_NO_SHORT_SLOT_MACROS].]
+
+Both the short and the long macro, for all 3 slot types, have the same prototype. We will be using [^auto_slot] for illustration:
+``
+auto_slot(SlotName)                          // SlotImplementationName will default to _slot_SlotName
+auto_slot(SlotName, SlotImplementationName)
+``
+Following examples and more can be found in [@boost:/libs/object/examples/slot/main.cpp $BOOST_ROOT/libs/object/examples/slot/main.cpp]
+[import ../../../examples/slot/main.cpp]
+[slot_slot_test1]
+[slot_slotimpl_test1]
+[slot_slot_test2]
+[slot_slotimpl_test2]
+
+They can be called just like member functions that have the name that you gave as the first parameter to the macro.
+[slot_slot_test1test2_call]
+
+[endsect]

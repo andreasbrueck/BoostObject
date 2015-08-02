@@ -1,0 +1,113 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Struct bobj</title>
+<link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Boost.Object">
+<link rel="up" href="boost_object/reference.html#header.boost.object.object_hpp" title="Header &lt;boost/object/object.hpp&gt;">
+<link rel="prev" href="boost/object/engine.html" title="Class engine">
+<link rel="next" href="bobj/async_slot_t.html" title="Class template async_slot_t">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="boost/object/engine.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="boost_object/reference.html#header.boost.object.object_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bobj/async_slot_t.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="bobj"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct bobj</span></h2>
+<p>bobj</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="boost_object/reference.html#header.boost.object.object_hpp" title="Header &lt;boost/object/object.hpp&gt;">boost/object/object.hpp</a>&gt;
+
+</span>
+<span class="keyword">struct</span> <a class="link" href="bobj.html" title="Struct bobj">bobj</a> <span class="special">{</span>
+  <span class="comment">// member classes/structs/unions</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> FUNCTION_SIGNATURE<span class="special">&gt;</span> 
+  <span class="keyword">class</span> <a class="link" href="bobj/async_slot_t.html" title="Class template async_slot_t">async_slot_t</a> <span class="special">{</span>
+  <span class="keyword">public</span><span class="special">:</span>
+
+    <span class="comment">// <a class="link" href="bobj/async_slot_t.html#idp6367344-bb">public member functions</a></span>
+    <span class="identifier">RET</span> <a class="link" href="bobj/async_slot_t.html#idp6367840-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="identifier">ARGS</span><span class="special">...</span><span class="special">)</span><span class="special">;</span>
+  <span class="special">}</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> FUNCTION_SIGNATURE<span class="special">&gt;</span> 
+  <span class="keyword">class</span> <a class="link" href="bobj/auto_slot_t.html" title="Class template auto_slot_t">auto_slot_t</a> <span class="special">{</span>
+  <span class="keyword">public</span><span class="special">:</span>
+
+    <span class="comment">// <a class="link" href="bobj/auto_slot_t.html#idp6378928-bb">public member functions</a></span>
+    <span class="identifier">RET</span> <a class="link" href="bobj/auto_slot_t.html#idp6379424-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="identifier">ARGS</span><span class="special">...</span><span class="special">)</span><span class="special">;</span>
+  <span class="special">}</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> FUNCTION_SIGNATURE<span class="special">&gt;</span> 
+  <span class="keyword">class</span> <a class="link" href="bobj/direct_slot_t.html" title="Class template direct_slot_t">direct_slot_t</a> <span class="special">{</span>
+  <span class="keyword">public</span><span class="special">:</span>
+
+    <span class="comment">// <a class="link" href="bobj/direct_slot_t.html#idp6390544-bb">public member functions</a></span>
+    <span class="identifier">RET</span> <a class="link" href="bobj/direct_slot_t.html#idp6391040-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="identifier">ARGS</span><span class="special">...</span><span class="special">)</span><span class="special">;</span>
+  <span class="special">}</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> FUNCTION_SIGNATURE<span class="special">&gt;</span> 
+  <span class="keyword">class</span> <a class="link" href="bobj/signal_t.html" title="Class template signal_t">signal_t</a> <span class="special">{</span>
+  <span class="keyword">public</span><span class="special">:</span>
+
+    <span class="comment">// <a class="link" href="bobj/signal_t.html#idp6402048-bb">private member functions</a></span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> CONTEXT<span class="special">&gt;</span> <span class="identifier">RET</span> <a class="link" href="bobj/signal_t.html#idp6402544-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="identifier">ARGS</span><span class="special">...</span><span class="special">,</span> <span class="identifier">CONTEXT</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+
+    <span class="comment">// <a class="link" href="bobj/signal_t.html#idp6407280-bb">public member functions</a></span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> SLOT_TYPE<span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> DEFAULT_ARGS<span class="special">&gt;</span> 
+      <a class="link" href="boost/object/connection.html" title="Class connection">boost::object::connection</a> <a class="link" href="bobj/signal_t.html#idp6407776-bb"><span class="identifier">connect</span></a><span class="special">(</span><span class="identifier">SLOT_TYPE</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">DEFAULT_ARGS</span> <span class="special">&amp;&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> SLOT_TYPE<span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> DEFAULT_ARGS<span class="special">&gt;</span> 
+      <a class="link" href="boost/object/connection.html" title="Class connection">boost::object::connection</a> 
+      <a class="link" href="bobj/signal_t.html#idp6418224-bb"><span class="identifier">connect</span></a><span class="special">(</span><a class="link" href="boost/object/object.html" title="Class object">boost::object::object</a> <span class="special">*</span><span class="special">,</span> <span class="identifier">SLOT_TYPE</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">DEFAULT_ARGS</span> <span class="special">&amp;&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> CONTEXT<span class="special">&gt;</span> <span class="identifier">RET</span> <a class="link" href="bobj/signal_t.html#idp6428384-bb"><span class="identifier">emit</span></a><span class="special">(</span><span class="identifier">ARGS</span><span class="special">...</span><span class="special">,</span> <span class="identifier">CONTEXT</span><span class="special">...</span><span class="special">)</span><span class="special">;</span>
+  <span class="special">}</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="bobj.html#idp6431984-bb">public member functions</a></span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> PARAMETERS<span class="special">&gt;</span> <span class="identifier">unspecified</span> <a class="link" href="bobj.html#idp6432480-bb"><span class="identifier">createSafe</span></a><span class="special">(</span><span class="identifier">PARAMETERS</span><span class="special">...</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="idp7019168"></a><h2>Description</h2>
+<p><span class="emphasis"><em>bobj</em></span> is a typedef inside of your <span class="emphasis"><em>B_OBJECT</em></span> macro.</p>
+<p>This struct bobj shall attempt to document the real templated code as good as possible.</p>
+<p>The members are all private, only accessible from the class which declared <span class="emphasis"><em>B_OBJECT</em></span> </p>
+<div class="refsect2">
+<a name="idp7021744"></a><h3>
+<a name="idp6431984-bb"></a><code class="computeroutput">bobj</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> PARAMETERS<span class="special">&gt;</span> <span class="identifier">unspecified</span> <a name="idp6432480-bb"></a><span class="identifier">createSafe</span><span class="special">(</span><span class="identifier">PARAMETERS</span><span class="special">...</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Can be used to instantiate a safe bobject.</p>
+<p><span class="emphasis"><em>createSafe</em></span> is standalone, meaning it works without any declaration of <span class="emphasis"><em>BOOST_SAFE_OBJECT</em></span> for this bobject.</p>
+<p>Example: </p>
+<pre class="programlisting"> <span class="keyword">namespace</span> <span class="identifier">unsafe</span>
+ <span class="special">{</span>
+     <span class="keyword">class</span> <span class="identifier">example</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="boost/object/object.html" title="Class object">BObject</a>
+     <span class="special">{</span>
+         <span class="identifier">B_OBJECT</span><span class="special">(</span><span class="identifier">example</span><span class="special">)</span>
+
+     <span class="keyword">public</span><span class="special">:</span>
+         <span class="keyword">static</span> <span class="identifier">example</span> <span class="special">*</span> <span class="identifier">create</span> <span class="special">(</span><span class="special">)</span>
+         <span class="special">{</span>
+             <span class="comment">// Creates a safe object of "type":</span>
+             <span class="comment">// BOOST_SAFE_OBJECT(example)</span>
+             <span class="keyword">return</span> <span class="identifier">bobj</span><span class="special">::</span><span class="identifier">createSafe</span> <span class="special">(</span><span class="special">)</span><span class="special">;</span>
+         <span class="special">}</span>
+     <span class="special">}</span><span class="special">;</span>
+ <span class="special">}</span>
+</pre>
+<p> </p>
+</li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="boost/object/engine.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="boost_object/reference.html#header.boost.object.object_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bobj/async_slot_t.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

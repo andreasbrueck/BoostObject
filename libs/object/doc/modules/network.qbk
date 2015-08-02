@@ -1,0 +1,4 @@
+[section Network]
+The network module is vastly incomplete. Please look at the [link boost_object_network_header_reference Network reference] or the ['network_*] examples while this module and its documentation is 
+under construction.
+[endsect]

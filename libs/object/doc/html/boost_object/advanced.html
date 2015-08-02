@@ -1,0 +1,356 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Advanced</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../index.html" title="Boost.Object">
+<link rel="up" href="../index.html" title="Boost.Object">
+<link rel="prev" href="walkthrough.html" title="Walkthrough">
+<link rel="next" href="modules.html" title="Modules">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="walkthrough.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="modules.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_object.advanced"></a><a class="link" href="advanced.html" title="Advanced">Advanced</a>
+</h2></div></div></div>
+<div class="toc"><dl class="toc"><dt><span class="section"><a href="advanced.html#boost_object.advanced.signal_connections">Signal connections</a></span></dt></dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_object.advanced.signal_connections"></a><a class="link" href="advanced.html#boost_object.advanced.signal_connections" title="Signal connections">Signal connections</a>
+</h3></div></div></div>
+<p>
+        So far, the documentation only talked about simple signal to slot connections.
+        That is, if we have these signals:
+      </p>
+<pre class="programlisting"><span class="identifier">bsignal</span><span class="special">(</span><span class="identifier">mySignalInt</span><span class="special">,</span><span class="keyword">void</span><span class="special">(</span><span class="keyword">int</span><span class="special">))</span>
+<span class="identifier">bsignal</span><span class="special">(</span><span class="identifier">myOtherSignalInt</span><span class="special">,</span><span class="keyword">void</span><span class="special">(</span><span class="keyword">int</span><span class="special">))</span>
+<span class="identifier">bsignal</span><span class="special">(</span><span class="identifier">mySignalVoid</span><span class="special">,</span><span class="keyword">void</span><span class="special">())</span>
+</pre>
+<p>
+        and this slot:
+      </p>
+<pre class="programlisting"><span class="identifier">auto_slot</span><span class="special">(</span><span class="identifier">mySlot</span><span class="special">)</span>
+</pre>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">_slot_mySlot</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">)</span>
+</pre>
+<p>
+        you have been told that a connection can be made like this
+      </p>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalInt</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(</span><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySlot</span><span class="special">);</span>
+</pre>
+<p>
+        However, the <span class="emphasis"><em>connect</em></span> function is alot more powerful.
+        First of all, you can not only connect to slots, you can also connect to
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+<p class="simpara">
+            Signals:
+          </p>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalInt</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(</span><span class="identifier">obj</span><span class="special">.</span><span class="identifier">myOtherSignalInt</span><span class="special">);</span>
+</pre>
+</li>
+<li class="listitem">
+<p class="simpara">
+            Functions
+          </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">myFunction</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"myFunction("</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="string">") called"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalInt</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(&amp;</span><span class="identifier">myFunction</span><span class="special">);</span>
+</pre>
+</li>
+<li class="listitem">
+<p class="simpara">
+            Static Functions
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">myStruct</span>
+<span class="special">{</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">myStaticFunc</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"myStaticFunc("</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="string">") called"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalInt</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(&amp;</span><span class="identifier">myStruct</span><span class="special">::</span><span class="identifier">myStaticFunc</span><span class="special">);</span>
+</pre>
+</li>
+<li class="listitem">
+<p class="simpara">
+            Lambdas/Functors
+          </p>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalInt</span><span class="special">.</span><span class="identifier">connect</span><span class="special">([&amp;](</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"lambda("</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="string">") called"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">);</span>
+</pre>
+</li>
+</ul></div>
+<p>
+        Connecting to (static)functions/lambdas/functors has the <a class="link" href="walkthrough.html#boost_object.walkthrough.slots.direct_slot.rule">same
+        rule as a direct slot</a>, meaning they will be synchronously (directly)
+        called from the same thread that called the signal emission. Their connections
+        will stay connected for as long as the signal lives, or until you manually
+        disconnect them by calling <code class="computeroutput"><a class="link" href="../boost/object/connection.html#idp6329664-bb">disconnect</a></code>
+        on the <code class="computeroutput"><a class="link" href="../boost/object/connection.html" title="Class connection">connection</a></code>
+        instance returned.
+      </p>
+<p>
+        If you automatically want to disconnect a connection to a (static)function/lambda/functor,
+        you can pass a context bobject as the first parameter:
+      </p>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalInt</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(&amp;</span><span class="identifier">context_obj</span><span class="special">,&amp;</span><span class="identifier">myFunction</span><span class="special">);</span>
+</pre>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalInt</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(&amp;</span><span class="identifier">context_obj</span><span class="special">,&amp;</span><span class="identifier">myStruct</span><span class="special">::</span><span class="identifier">myStaticFunc</span><span class="special">);</span>
+</pre>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalInt</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(&amp;</span><span class="identifier">context_obj</span><span class="special">,[&amp;](</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"lambda("</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="string">") called"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">);</span>
+</pre>
+<p>
+        Now, the connection will automatically disconnect if either the bobject that
+        holds the signal ( <span class="emphasis"><em>obj</em></span> ) goes out of scope/deletes,
+        or <span class="emphasis"><em>context_obj</em></span> does - whichever happens first.
+      </p>
+<p>
+        For all destinations to connect to, you can also provide default arguments
+        that are private to the connection made. It was already mentioned <a class="link" href="walkthrough.html#boost_object.walkthrough.signals.connecting_to_a_slot" title="Connecting to a slot">here</a>,
+        but lets go into more detail:
+      </p>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalVoid</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(</span><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySlot</span><span class="special">,</span><span class="number">123</span><span class="special">);</span>
+</pre>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalVoid</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(</span><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalInt</span><span class="special">,</span><span class="number">123</span><span class="special">);</span>
+</pre>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalVoid</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(&amp;</span><span class="identifier">myFunction</span><span class="special">,</span><span class="number">123</span><span class="special">);</span>
+</pre>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalVoid</span><span class="special">.</span><span class="identifier">connect</span><span class="special">(&amp;</span><span class="identifier">myStruct</span><span class="special">::</span><span class="identifier">myStaticFunc</span><span class="special">,</span><span class="number">123</span><span class="special">);</span>
+</pre>
+<pre class="programlisting"><span class="identifier">obj</span><span class="special">.</span><span class="identifier">mySignalVoid</span><span class="special">.</span><span class="identifier">connect</span><span class="special">([&amp;](</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"lambda("</span> <span class="special">&lt;&lt;</span> <span class="identifier">i</span> <span class="special">&lt;&lt;</span> <span class="string">") called"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">},</span>
+    <span class="number">123</span>
+<span class="special">);</span>
+</pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          You can also provide a context bobject as first parameter when using default
+          arguments
+        </p></td></tr>
+</table></div>
+<p>
+        You can see above that the signature of <span class="emphasis"><em>mySignalVoid</em></span>
+        is <em class="replaceable"><code>void()</code></em>. However, the signatures of the destinations
+        are <em class="replaceable"><code>void(int)</code></em>. As you read in <a class="link" href="walkthrough.html#boost_object.walkthrough.signals.signal_slot_function_mismatch" title="Signal/Slot function mismatch">Connection
+        Policies</a>, this signal should fail to connect to any of those slots/(static)functions/lambdas/functors.
+        However, there was a default argument of type <span class="emphasis"><em>int</em></span> provided
+        that appends to the parameters in the signals signature. The signature <em class="replaceable"><code>void()</code></em>
+        thus evaluates to <em class="replaceable"><code>void(int)</code></em>, which matches to
+        the slots signature, and the connection can be successfully made.
+      </p>
+<p>
+        Here are some examples of what happens with default arguments:
+      </p>
+<div class="table">
+<a name="boost_object.advanced.signal_connections.default_arguments_signature_eval"></a><p class="title"><b>Table&#160;6.&#160;Default arguments signature evaluation</b></p>
+<div class="table-contents"><table class="table" summary="Default arguments signature evaluation">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Signal signature
+                </p>
+              </th>
+<th>
+                <p>
+                  Slot signature
+                </p>
+              </th>
+<th>
+                <p>
+                  Connecting
+                </p>
+              </th>
+<th>
+                <p>
+                  Signal signature evaluates to:
+                </p>
+              </th>
+<th>
+                <p>
+                  Emitting signal:
+                </p>
+              </th>
+<th>
+                <p>
+                  Slot called with:
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  void()
+                </p>
+              </td>
+<td>
+                <p>
+                  void(int)
+                </p>
+              </td>
+<td>
+                <p>
+                  signal.connect(slot,5);
+                </p>
+              </td>
+<td>
+                <p>
+                  void(int)
+                </p>
+              </td>
+<td>
+                <p>
+                  signal();
+                </p>
+              </td>
+<td>
+                <p>
+                  slot(5);
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  void(int)
+                </p>
+              </td>
+<td>
+                <p>
+                  void(int,float)
+                </p>
+              </td>
+<td>
+                <p>
+                  signal.connect(slot,.1f);
+                </p>
+              </td>
+<td>
+                <p>
+                  void(int,float)
+                </p>
+              </td>
+<td>
+                <p>
+                  signal(5);
+                </p>
+              </td>
+<td>
+                <p>
+                  slot(5,.1f);
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  void()
+                </p>
+              </td>
+<td>
+                <p>
+                  void(int,float)
+                </p>
+              </td>
+<td>
+                <p>
+                  signal.connect(slot,5,.1f);
+                </p>
+              </td>
+<td>
+                <p>
+                  void(int,float)
+                </p>
+              </td>
+<td>
+                <p>
+                  signal();
+                </p>
+              </td>
+<td>
+                <p>
+                  slot(5,.1f);
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  void(int)
+                </p>
+              </td>
+<td>
+                <p>
+                  void(int,int,int,int)
+                </p>
+              </td>
+<td>
+                <p>
+                  signal.connect(slot,1,2,3);
+                </p>
+              </td>
+<td>
+                <p>
+                  void(int,int,int,int)
+                </p>
+              </td>
+<td>
+                <p>
+                  signal(0);
+                </p>
+              </td>
+<td>
+                <p>
+                  slot(0,1,2,3);
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="walkthrough.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="modules.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

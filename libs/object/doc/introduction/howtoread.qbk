@@ -1,0 +1,12 @@
+[section How to read this documentation]
+[*Boost.Object] introduces new design patterns. Thus, following new terminology is used in this documentation to describe parts of said design patterns:
+[import ../../examples/basic_use/main.cpp]
+[table Boost.Object terminology
+    [[Term][Description]]
+    [[['bobject]][Any class ( and their instances ) that was directly or indirectly derived from [classref boost::object::object BObject]]]
+    [[['Slot]][A slot is a class member of a ['bobject] usually declared by using one of the slot macros. The [link boost_object.basic_usage Basic Usage] example implements an asynchronous slot named [^bar]:[basic_use_cpp_class_foo_slot_bar_term]]]
+    [[['Slot implementation]][The ['slot implementation] is the function that a ['slot] will execute when the ['slot] itself was called. Above mentioned ['slot] [^bar]'s ['slot implementation] is:[basic_use_cpp_class_foo_slot_bar_implementation_term]]]
+    [[['Signal]][The documentation will refer to a [*Boost.Object] signal if not otherwise stated]]
+]
+To get a basic overview for the architecture of a ['bobject], it is recommended to have a look at the [link boost_object.basic_usage Basic Usage] example before starting through with the documentation.
+[endsect]

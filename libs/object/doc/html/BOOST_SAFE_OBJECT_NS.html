@@ -1,0 +1,87 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Macro BOOST_SAFE_OBJECT_NS</title>
+<link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Boost.Object">
+<link rel="up" href="boost_object/reference.html#header.boost.object.object_hpp" title="Header &lt;boost/object/object.hpp&gt;">
+<link rel="prev" href="BOOST_SAFE_OBJECT.html" title="Macro BOOST_SAFE_OBJECT">
+<link rel="next" href="BOOST_OBJECT_SIGNAL.html" title="Macro BOOST_OBJECT_SIGNAL">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_SAFE_OBJECT.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="boost_object/reference.html#header.boost.object.object_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_OBJECT_SIGNAL.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="BOOST_SAFE_OBJECT_NS"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Macro BOOST_SAFE_OBJECT_NS</span></h2>
+<p>BOOST_SAFE_OBJECT_NS</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="boost_object/reference.html#header.boost.object.object_hpp" title="Header &lt;boost/object/object.hpp&gt;">boost/object/object.hpp</a>&gt;
+
+</span>BOOST_SAFE_OBJECT_NS(NAMESPACE, CLASSNAME, ...)</pre></div>
+<div class="refsect1">
+<a name="idp7548624"></a><h2>Description</h2>
+<p>This macro helps you define a safe version of your bobject.</p>
+<p>
+Possible use: </p>
+<pre class="programlisting"> <span class="keyword">namespace</span> <span class="identifier">myownunsafenamespace</span>
+ <span class="special">{</span>
+     <span class="keyword">class</span> <span class="identifier">myObject</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="boost/object/object.html" title="Class object">BObject</a> <span class="special">{</span><span class="special">}</span><span class="special">;</span>
+
+     <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">TARG1</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TARGREST</span> <span class="special">&gt;</span>
+     <span class="keyword">class</span> <span class="identifier">myOtherObject</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="boost/object/object.html" title="Class object">BObject</a> <span class="special">{</span><span class="special">}</span><span class="special">;</span>
+ <span class="special">}</span>
+
+ <span class="identifier">BOOST_SAFE_OBJECT_NS</span><span class="special">(</span><span class="identifier">myownunsafenamespace</span><span class="special">,</span><span class="identifier">myObject</span><span class="special">)</span>
+
+ <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">TARG1</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TARGREST</span> <span class="special">&gt;</span>
+ <span class="identifier">BOOST_SAFE_OBJECT_NS</span><span class="special">(</span><span class="identifier">myownunsafenamespace</span><span class="special">,</span><span class="identifier">myOtherObject</span><span class="special">,</span><span class="identifier">TARG1</span><span class="special">,</span><span class="identifier">TARGREST</span><span class="special">...</span><span class="special">)</span>
+</pre>
+<p> </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">...</code></span></p></td>
+<td><p>All template parameters required for your class, if any.</p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">CLASSNAME</code></span></p></td>
+<td><p>The name of your class nested in namespace <code class="computeroutput">NAMESPACE</code> </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">NAMESPACE</code></span></p></td>
+<td><p>The namespace your class is nested in </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="BOOST_SAFE_OBJECT.html"><img src="../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="boost_object/reference.html#header.boost.object.object_hpp"><img src="../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="BOOST_OBJECT_SIGNAL.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

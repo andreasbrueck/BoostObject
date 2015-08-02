@@ -1,0 +1,272 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class timer</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../../../index.html" title="Boost.Object">
+<link rel="up" href="../../../boost_object/reference.html#header.boost.object.utils.timer_hpp" title="Header &lt;boost/object/utils/timer.hpp&gt;">
+<link rel="prev" href="systemsignals.html" title="Class systemsignals">
+<link rel="next" href="../network/tcp/client.html" title="Class client">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="systemsignals.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../boost_object/reference.html#header.boost.object.utils.timer_hpp"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../network/tcp/client.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.object.utils.timer"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class timer</span></h2>
+<p>boost::object::utils::timer</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../../boost_object/reference.html#header.boost.object.utils.timer_hpp" title="Header &lt;boost/object/utils/timer.hpp&gt;">boost/object/utils/timer.hpp</a>&gt;
+
+</span>
+<span class="keyword">class</span> <a class="link" href="timer.html" title="Class timer">timer</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="comment">// <a class="link" href="timer.html#boost.object.utils.timerconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">explicit</span> <a class="link" href="timer.html#idp6272336-bb"><span class="identifier">timer</span></a><span class="special">(</span><span class="keyword">bool</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="timer.html#idp6276608-bb">public static functions</a></span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> SLOT_TYPE<span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> DEFAULT_ARGS<span class="special">&gt;</span> 
+    <span class="keyword">static</span> <span class="keyword">void</span> <a class="link" href="timer.html#idp6277168-bb"><span class="identifier">singleShot</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">SLOT_TYPE</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">DEFAULT_ARGS</span> <span class="special">&amp;&amp;</span><span class="special">...</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="timer.html#idp6284992-bb">public member functions</a></span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="timer.html#idp6285552-bb"><span class="identifier">start</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="timer.html#idp6288688-bb"><span class="identifier">stop</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="timer.html#idp6290720-bb"><span class="identifier">setSingleShot</span></a><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">auto_slot</span> <span class="keyword">void</span> <a class="link" href="timer.html#idp6293280-bb"><span class="identifier">setInterval</span></a><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">signal</span> <span class="keyword">void</span> <a class="link" href="timer.html#idp6582608-bb"><span class="identifier">timeout</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="idp8868512"></a><h2>Description</h2>
+<p>The timer class is a high level interface to repetitive or single shot timers.</p>
+<p>Whenever the timer fires, the <span class="emphasis"><em>timeout()</em></span> signal is emitted.</p>
+<p>Example: </p>
+<pre class="programlisting"> <span class="keyword">namespace</span> <span class="identifier">unsafe</span>
+ <span class="special">{</span>
+     <span class="keyword">class</span> <span class="identifier">receiver</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">BObject</span>
+     <span class="special">{</span>
+         <span class="identifier">B_OBJECT</span><span class="special">(</span><span class="identifier">receiver</span><span class="special">)</span>
+
+     <span class="keyword">private</span><span class="special">:</span>
+         <span class="keyword">void</span> <span class="identifier">_slot_print</span><span class="special">(</span><span class="special">)</span>
+         <span class="special">{</span>
+             <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"timer fired"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+         <span class="special">}</span>
+     <span class="keyword">public</span><span class="special">:</span>
+         <span class="identifier">auto_slot</span><span class="special">(</span><span class="identifier">print</span><span class="special">)</span>
+     <span class="special">}</span><span class="special">;</span>
+ <span class="special">}</span>
+
+ <span class="identifier">BOOST_SAFE_OBJECT</span><span class="special">(</span><span class="identifier">receiver</span><span class="special">)</span>
+
+ <span class="keyword">int</span> <span class="identifier">main</span> <span class="special">(</span><span class="special">)</span>
+ <span class="special">{</span>
+     <span class="identifier">BApplication</span> <span class="identifier">app</span><span class="special">;</span>
+
+     <span class="identifier">receiver</span> <span class="identifier">r</span><span class="special">;</span>
+
+     <span class="identifier">BTimer</span> <span class="identifier">repeatingTimer</span><span class="special">,</span>
+            <span class="identifier">singleShotTimer</span> <span class="special">(</span> <span class="keyword">true</span> <span class="special">)</span><span class="special">;</span>
+
+     <span class="identifier">repeatingTimer</span><span class="special">.</span><span class="identifier">timeout</span><span class="special">.</span><span class="identifier">connect</span> <span class="special">(</span> <span class="identifier">r</span><span class="special">.</span><span class="identifier">print</span> <span class="special">)</span><span class="special">;</span>
+     <span class="identifier">singleShotTimer</span><span class="special">.</span><span class="identifier">timeout</span><span class="special">.</span><span class="identifier">connect</span> <span class="special">(</span> <span class="identifier">app</span><span class="special">.</span><span class="identifier">exit</span> <span class="special">)</span><span class="special">;</span>
+
+     <span class="identifier">repeatingTimer</span><span class="special">.</span><span class="identifier">start</span> <span class="special">(</span> <span class="number">1000</span> <span class="special">)</span><span class="special">;</span>
+     <span class="identifier">singleShotTimer</span><span class="special">.</span><span class="identifier">start</span> <span class="special">(</span> <span class="number">9000</span> <span class="special">)</span><span class="special">;</span>
+
+     <span class="keyword">return</span> <span class="identifier">app</span><span class="special">.</span><span class="identifier">exec</span> <span class="special">(</span><span class="special">)</span><span class="special">;</span>
+ <span class="special">}</span>
+</pre>
+<p> </p>
+<div class="refsect2">
+<a name="idp8936480"></a><h3>
+<a name="boost.object.utils.timerconstruct-copy-destruct"></a><code class="computeroutput">timer</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6272336-bb"></a><span class="identifier">timer</span><span class="special">(</span><span class="keyword">bool</span> singleShot <span class="special">=</span> <span class="keyword">false</span><span class="special">,</span> <span class="identifier">object</span> <span class="special">*</span> parent <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>
+<p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">parent</code></span></p></td>
+<td><p>Makes this instance the child of <code class="computeroutput">parent</code> </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">singleShot</code></span></p></td>
+<td><p>Determines if the timer is repititive (false) or single shot (true) </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li></ol></div>
+</div>
+<div class="refsect2">
+<a name="idp8953440"></a><h3>
+<a name="idp6276608-bb"></a><code class="computeroutput">timer</code> public static functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> SLOT_TYPE<span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> DEFAULT_ARGS<span class="special">&gt;</span> 
+  <span class="keyword">static</span> <span class="keyword">void</span> <a name="idp6277168-bb"></a><span class="identifier">singleShot</span><span class="special">(</span><span class="keyword">int</span> milliseconds<span class="special">,</span> <span class="identifier">SLOT_TYPE</span> <span class="special">&amp;</span> slot<span class="special">,</span> 
+                         <span class="identifier">DEFAULT_ARGS</span> <span class="special">&amp;&amp;</span><span class="special">...</span> def<span class="special">)</span><span class="special">;</span></pre>
+<p>
+Creates a single shot timer and automatically deletes it on timeout.</p>
+<p>Example: </p>
+<pre class="programlisting"> <span class="keyword">int</span> <span class="identifier">main</span> <span class="special">(</span><span class="special">)</span>
+ <span class="special">{</span>
+     <span class="identifier">BApplication</span> <span class="identifier">app</span><span class="special">;</span>
+     <span class="identifier">BTimer</span><span class="special">::</span><span class="identifier">singleShot</span> <span class="special">(</span> <span class="number">5000</span><span class="special">,</span> <span class="identifier">app</span><span class="special">.</span><span class="identifier">quit</span><span class="special">,</span> <span class="identifier">EXIT_SUCCESS</span> <span class="special">)</span><span class="special">;</span>
+     <span class="keyword">return</span> <span class="identifier">app</span><span class="special">.</span><span class="identifier">exec</span> <span class="special">(</span><span class="special">)</span><span class="special">;</span>
+ <span class="special">}</span>
+</pre>
+<p> </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">def</code></span></p></td>
+<td><p>Optional default args passed to the connection </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">milliseconds</code></span></p></td>
+<td><p>Milliseconds till the timer timeouts</p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">slot</code></span></p></td>
+<td><p>The slot that will be called on timeout </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li></ol></div>
+</div>
+<div class="refsect2">
+<a name="idp8994816"></a><h3>
+<a name="idp6284992-bb"></a><code class="computeroutput">timer</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6285552-bb"></a><span class="identifier">start</span><span class="special">(</span><span class="keyword">int</span> milliseconds<span class="special">)</span><span class="special">;</span></pre>
+<p>
+Starts the timer and will timeout after <code class="computeroutput">milliseconds</code>.</p>
+<p>This function has no effect if the timer is already running. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">milliseconds</code></span></p></td>
+<td><p>Milliseconds till the timer timeouts</p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6288688-bb"></a><span class="identifier">stop</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Stops a running timer. If the timer is not already in the timeout state, no <span class="emphasis"><em>timeout()</em></span> signal will be emitted.</p>
+<p>This function has no effect if the timer is not running. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6290720-bb"></a><span class="identifier">setSingleShot</span><span class="special">(</span><span class="keyword">bool</span> val<span class="special">)</span><span class="special">;</span></pre>
+<p>
+Sets the timer to single shot or repetitive mode.</p>
+<p>Can be called while the time is running. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">val</code></span></p></td>
+<td><p>True for single shot, false for repetitive</p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">auto_slot</span> <span class="keyword">void</span> <a name="idp6293280-bb"></a><span class="identifier">setInterval</span><span class="special">(</span><span class="keyword">int</span> milliseconds<span class="special">)</span><span class="special">;</span></pre>
+<p>
+Sets the timeout interval for the timer.</p>
+<p>Can be called while the timer is running. However, it will not alter the running timer, but instead will accept the new value the next time the internal timer is being run again ( which happens automatically if the timer is in repetitive mode ). </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">milliseconds</code></span></p></td>
+<td><p>Milliseconds till the timer timeouts</p></td>
+</tr></tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">signal</span> <span class="keyword">void</span> <a name="idp6582608-bb"></a><span class="identifier">timeout</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>This signal emits when the timer times out. </p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="systemsignals.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../boost_object/reference.html#header.boost.object.utils.timer_hpp"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../network/tcp/client.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

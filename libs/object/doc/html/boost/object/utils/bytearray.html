@@ -1,0 +1,283 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class bytearray</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../../../index.html" title="Boost.Object">
+<link rel="up" href="../../../boost_object/reference.html#header.boost.object.utils.bytearray_hpp" title="Header &lt;boost/object/utils/bytearray.hpp&gt;">
+<link rel="prev" href="../threadpool/PickBehavior.html" title="Type PickBehavior">
+<link rel="next" href="systemsignals.html" title="Class systemsignals">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../threadpool/PickBehavior.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../boost_object/reference.html#header.boost.object.utils.bytearray_hpp"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="systemsignals.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.object.utils.bytearray"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class bytearray</span></h2>
+<p>boost::object::utils::bytearray</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../../boost_object/reference.html#header.boost.object.utils.bytearray_hpp" title="Header &lt;boost/object/utils/bytearray.hpp&gt;">boost/object/utils/bytearray.hpp</a>&gt;
+
+</span>
+<span class="keyword">class</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="comment">// types</span>
+  <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">iterator</span>       <a name="boost.object.utils.bytearray.iterator"></a><span class="identifier">iterator</span><span class="special">;</span>      
+  <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">const_iterator</span> <a name="boost.object.utils.bytearray.const_iterator"></a><span class="identifier">const_iterator</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="bytearray.html#boost.object.utils.bytearrayconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">explicit</span> <a class="link" href="bytearray.html#idp6209984-bb"><span class="identifier">bytearray</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="bytearray.html#idp6210976-bb"><span class="identifier">bytearray</span></a><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="special">,</span> <span class="identifier">size_t</span> <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="bytearray.html#idp6215968-bb"><span class="identifier">bytearray</span></a><span class="special">(</span><span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">*</span><span class="special">,</span> <span class="identifier">size_t</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="bytearray.html#idp6219232-bb"><span class="identifier">bytearray</span></a><span class="special">(</span><span class="identifier">size_t</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="bytearray.html#idp6222784-bb"><span class="identifier">bytearray</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html#idp6224784-bb"><span class="identifier">bytearray</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html#idp6226208-bb"><span class="identifier">bytearray</span></a><span class="special">(</span><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a class="link" href="bytearray.html#idp6227472-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a class="link" href="bytearray.html#idp6229472-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html#idp6224496-bb"><span class="special">~</span><span class="identifier">bytearray</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="bytearray.html#idp6041952-bb">public member functions</a></span>
+  <span class="identifier">size_t</span> <a class="link" href="bytearray.html#idp6042512-bb"><span class="identifier">size</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">*</span> <a class="link" href="bytearray.html#idp6044496-bb"><span class="identifier">data</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">*</span> <a class="link" href="bytearray.html#idp6046368-bb"><span class="identifier">data</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">*</span> <a class="link" href="bytearray.html#idp6048464-bb"><span class="identifier">constData</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">iterator</span> <a class="link" href="bytearray.html#idp6050896-bb"><span class="identifier">begin</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">const_iterator</span> <a class="link" href="bytearray.html#idp6051744-bb"><span class="identifier">begin</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">const_iterator</span> <a class="link" href="bytearray.html#idp6052864-bb"><span class="identifier">cbegin</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">const_iterator</span> <a class="link" href="bytearray.html#idp6296208-bb"><span class="identifier">constBegin</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">iterator</span> <a class="link" href="bytearray.html#idp6297216-bb"><span class="identifier">end</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">const_iterator</span> <a class="link" href="bytearray.html#idp6298064-bb"><span class="identifier">end</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">const_iterator</span> <a class="link" href="bytearray.html#idp6299184-bb"><span class="identifier">cend</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">const_iterator</span> <a class="link" href="bytearray.html#idp6300304-bb"><span class="identifier">constEnd</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <a class="link" href="bytearray.html#idp6301424-bb"><span class="identifier">toStdString</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">unsigned</span> <span class="keyword">char</span> <a class="link" href="bytearray.html#idp6303424-bb"><span class="keyword">operator</span><span class="special">[</span><span class="special">]</span></a><span class="special">(</span><span class="identifier">size_t</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bytearray.html#idp6306144-bb"><span class="identifier">isShared</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bytearray.html#idp6308144-bb"><span class="identifier">isEmpty</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="bytearray.html#idp6310512-bb"><span class="identifier">clear</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a class="link" href="bytearray.html#idp6186304-bb"><span class="keyword">operator</span><span class="special">+=</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a class="link" href="bytearray.html#idp6188992-bb"><span class="keyword">operator</span><span class="special">+=</span></a><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a class="link" href="bytearray.html#idp6190816-bb"><span class="keyword">operator</span><span class="special">+=</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bytearray.html#idp6192640-bb"><span class="keyword">operator</span><span class="special">==</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bytearray.html#idp6194896-bb"><span class="keyword">operator</span><span class="special">==</span></a><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bytearray.html#idp6196704-bb"><span class="keyword">operator</span><span class="special">==</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bytearray.html#idp6198512-bb"><span class="keyword">operator</span><span class="special">!=</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bytearray.html#idp6200768-bb"><span class="keyword">operator</span><span class="special">!=</span></a><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="keyword">bool</span> <a class="link" href="bytearray.html#idp6202576-bb"><span class="keyword">operator</span><span class="special">!=</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <a class="link" href="bytearray.html#idp6204384-bb"><span class="keyword">operator</span><span class="special">+</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <a class="link" href="bytearray.html#idp6206496-bb"><span class="keyword">operator</span><span class="special">+</span></a><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <a class="link" href="bytearray.html#idp6208160-bb"><span class="keyword">operator</span><span class="special">+</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="idp8357008"></a><h2>Description</h2>
+<p>The bytearray class is the default data container for Boost.Object.</p>
+<p>Its internal data is not copied when the bytearray class is copied. Instead, it is only copied whenever there are 2 or more copies of a bytearray instance, and one of them intends to alter the data. All member functions that copy the internal data will say if and under which circumstances they do so. </p>
+<div class="refsect2">
+<a name="idp8358336"></a><h3>
+<a name="boost.object.utils.bytearrayconstruct-copy-destruct"></a><code class="computeroutput">bytearray</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6209984-bb"></a><span class="identifier">bytearray</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Constructs an empty bytearray </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6210976-bb"></a><span class="identifier">bytearray</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> str<span class="special">,</span> <span class="identifier">size_t</span> size <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">)</span><span class="special">;</span></pre>
+<p>
+Constructs a bytearray from a null terminated string, not including the null termination character. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">size</code></span></p></td>
+<td><p>If -1, uses strlen() on <code class="computeroutput">str</code>, if bigger than 0, <code class="computeroutput">size</code> bytes of <code class="computeroutput">str</code> are copied. </p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">str</code></span></p></td>
+<td><p>A null terminated string to copy data from. Must point to a valid null terminated string.</p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6215968-bb"></a><span class="identifier">bytearray</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">*</span> data<span class="special">,</span> <span class="identifier">size_t</span> size<span class="special">)</span><span class="special">;</span></pre>
+<p>Constructs a bytearray with the first <code class="computeroutput">size</code> bytes pointed to by <code class="computeroutput">data</code>. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6219232-bb"></a><span class="identifier">bytearray</span><span class="special">(</span><span class="identifier">size_t</span> size<span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> def <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Construct a bytearray with the size <code class="computeroutput">size</code> initialized to <code class="computeroutput">def</code> </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6222784-bb"></a><span class="identifier">bytearray</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> str<span class="special">)</span><span class="special">;</span></pre>
+<p>Constructs a bytearray from std::string, not including null terminate </p>
+</li>
+<li class="listitem"><pre class="literallayout"><a name="idp6224784-bb"></a><span class="identifier">bytearray</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> other<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a name="idp6226208-bb"></a><span class="identifier">bytearray</span><span class="special">(</span><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;&amp;</span> other<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a name="idp6227472-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> other<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a name="idp6229472-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;&amp;</span> other<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a name="idp6224496-bb"></a><span class="special">~</span><span class="identifier">bytearray</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
+</ol></div>
+</div>
+<div class="refsect2">
+<a name="idp8439440"></a><h3>
+<a name="idp6041952-bb"></a><code class="computeroutput">bytearray</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">size_t</span> <a name="idp6042512-bb"></a><span class="identifier">size</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>
+Returns the size of this bytearray. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The size of this bytearray</p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">*</span> <a name="idp6044496-bb"></a><span class="identifier">data</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>
+If more than 1 copy of this bytearray exists ( isShared() == true ), this instance will copy all of its internal data before this function returns. After that, isShared() will return false. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The data of this bytearray</p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">*</span> <a name="idp6046368-bb"></a><span class="identifier">data</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>
+This function is the same as the non-const overload, except that it will not copy its internal data if more than 1 copy of this bytearray exists. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The data of this bytearray</p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="special">*</span> <a name="idp6048464-bb"></a><span class="identifier">constData</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>
+This function is the same as <code class="computeroutput">bytearray::data()const</code>. </p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>The data of this bytearray</p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">iterator</span> <a name="idp6050896-bb"></a><span class="identifier">begin</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">const_iterator</span> <a name="idp6051744-bb"></a><span class="identifier">begin</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">const_iterator</span> <a name="idp6052864-bb"></a><span class="identifier">cbegin</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">const_iterator</span> <a name="idp6296208-bb"></a><span class="identifier">constBegin</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">iterator</span> <a name="idp6297216-bb"></a><span class="identifier">end</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">const_iterator</span> <a name="idp6298064-bb"></a><span class="identifier">end</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">const_iterator</span> <a name="idp6299184-bb"></a><span class="identifier">cend</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="identifier">const_iterator</span> <a name="idp6300304-bb"></a><span class="identifier">constEnd</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <a name="idp6301424-bb"></a><span class="identifier">toStdString</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>Converts the internal data to an <code class="computeroutput">std::string</code>. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">unsigned</span> <span class="keyword">char</span> <a name="idp6303424-bb"></a><span class="keyword">operator</span><span class="special">[</span><span class="special">]</span><span class="special">(</span><span class="identifier">size_t</span> pos<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>Access specified element. The behaviour is undefined if <code class="computeroutput">pos</code> is out of range. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">bool</span> <a name="idp6306144-bb"></a><span class="identifier">isShared</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>true if more than 1 copy of this bytearray exists, otherwise false. </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">bool</span> <a name="idp6308144-bb"></a><span class="identifier">isEmpty</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>
+</p>
+<div class="variablelist"><table border="0" class="variablelist compact">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody><tr>
+<td><p><span class="term">Returns:</span></p></td>
+<td><p>True if this bytearray does not contain any data ( <code class="computeroutput">size()==0</code> ) </p></td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="keyword">void</span> <a name="idp6310512-bb"></a><span class="identifier">clear</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Clears the internal buffer. After this call, <code class="computeroutput">size()</code> is 0 and <code class="computeroutput">isEmpty()</code> is true.</p>
+<p>If the data is shared ( <code class="computeroutput">isShared()==true</code> ), this function will not affect any other copy of this bytearray instance. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a name="idp6186304-bb"></a><span class="keyword">operator</span><span class="special">+=</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> l<span class="special">)</span><span class="special">;</span></pre>
+<p>... </p>
+</li>
+<li class="listitem"><pre class="literallayout"><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a name="idp6188992-bb"></a><span class="keyword">operator</span><span class="special">+=</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> l<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> <a name="idp6190816-bb"></a><span class="keyword">operator</span><span class="special">+=</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> l<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp6192640-bb"></a><span class="keyword">operator</span><span class="special">==</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> l<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp6194896-bb"></a><span class="keyword">operator</span><span class="special">==</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> l<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp6196704-bb"></a><span class="keyword">operator</span><span class="special">==</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> l<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp6198512-bb"></a><span class="keyword">operator</span><span class="special">!=</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> l<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp6200768-bb"></a><span class="keyword">operator</span><span class="special">!=</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> l<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">bool</span> <a name="idp6202576-bb"></a><span class="keyword">operator</span><span class="special">!=</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> l<span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <a name="idp6204384-bb"></a><span class="keyword">operator</span><span class="special">+</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <span class="special">&amp;</span> l<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <a name="idp6206496-bb"></a><span class="keyword">operator</span><span class="special">+</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> l<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a class="link" href="bytearray.html" title="Class bytearray">bytearray</a> <a name="idp6208160-bb"></a><span class="keyword">operator</span><span class="special">+</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span> l<span class="special">)</span><span class="special">;</span></pre></li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../threadpool/PickBehavior.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../../boost_object/reference.html#header.boost.object.utils.bytearray_hpp"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="systemsignals.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
